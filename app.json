@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Nethrlands-App",
-    "slug": "Nethrlands-App",
+    "slug": "restaurant-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +15,30 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "Netherlands.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "Netherlands.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8852ced2-2da9-42da-9821-c2c2d8229549"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/8852ced2-2da9-42da-9821-c2c2d8229549"
+    },
+    "owner": "bigdickdaddies"
   }
 }
