@@ -1,0 +1,27 @@
+### Create new reservation
+POST http://localhost:3000/reservations
+Content-Type: application/json
+
+{
+  "name": "John",
+  "phone": "555-0000",
+  "dateTime": "2023-03-15T17:00:00.000Z", 
+  "numGuests": 2
+}
+
+### Get all reservations
+GET http://localhost:3000/reservations
+
+### Get reservation by ID 
+GET http://localhost:3000/reservations/65d3cd3bc414aa5ac1de8d3c
+
+### Update reservation
+PATCH http://localhost:3000/reservations/65d3cd3bc414aa5ac1de8d3c
+Content-Type: application/json
+
+{
+  "numGuests": 3
+}
+
+### Delete reservation
+DELETE http://localhost:3000/reservations/65d3cc1ac414aa5ac1de8d29
