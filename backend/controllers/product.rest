@@ -3,9 +3,9 @@ POST http://localhost:3000/products
 Content-Type: application/json
 
 {
-  "name": "Coke",
-  "price": "2",
-  "ingredients": "Coke, ice", 
+  "name": "Orange Juice",
+  "price": "1",
+  "ingredients": "Orange juice, ice", 
   "category": "drink",
   "options": [{"name": "No ice", "price": 0}]
 }
@@ -15,7 +15,7 @@ GET http://localhost:3000/products
 role: employee
 
 ###
-GET http://localhost:3000/products/categories/food
+GET http://localhost:3000/products/categories/drink
 
 ### Get reservation by ID 
 GET http://localhost:3000/products/65d4720710a0f7f51bc7a179
