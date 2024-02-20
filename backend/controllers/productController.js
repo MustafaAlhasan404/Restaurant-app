@@ -15,6 +15,16 @@ router.get("/", async (req, res) => {
 	res.status(200).json(products);
 });
 
+// GET products by category
+router.get("/categories/:category", async (req, res) => {
+	const userRole = req.headers["role"];
+
+	const category = req.params.category;
+	const product = await Product.find({ category: category });
+	if (!product) return res.status(404);
+	res.json(product);
+});
+
 // GET product by ID
 router.get("/:id", async (req, res) => {
 	const product = await Product.findById(req.params.id);
