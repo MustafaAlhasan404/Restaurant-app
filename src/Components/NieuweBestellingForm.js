@@ -64,80 +64,145 @@ const renderTabBar = (props) => (
   />
 );
 
-const FirstRoute = () => (
-  <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
-    <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
-      {menucardFood.map((menuItem, index) => (
-        <View key={index} style={styles.menuItem}>
-          <View style={styles.menuItemGroup}>
-            <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
-            <TouchableNativeFeedback>
-              <View style={styles.buybutton}>
-                <MaterialCommunityIcons
-                  color="white"
-                  size={25}
-                  name="plus"
-                  style={{ marginTop: 0 }}
-                />
-              </View>
-            </TouchableNativeFeedback>
-          </View>
-          <Text style={styles.menuItemPrice}>${menuItem.price}</Text>
-        </View>
-      ))}
-    </ScrollView>
-  </View>
-);
+const FirstRoute = () => {
+  const [menuItems, setMenuItems] = useState([]);
 
-const SecondRoute = () => (
-  <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
-    <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
-      {menucardDrinks.map((menuItem, index) => (
-        <View key={index} style={styles.menuItem}>
-          <View style={styles.menuItemGroup}>
-            <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
-            <TouchableNativeFeedback>
-              <View style={styles.buybutton}>
-                <MaterialCommunityIcons
-                  color="white"
-                  size={25}
-                  name="plus"
-                  style={{ marginTop: 0 }}
-                />
-              </View>
-            </TouchableNativeFeedback>
-          </View>
-          <Text style={styles.menuItemPrice}>${menuItem.price}</Text>
-        </View>
-      ))}
-    </ScrollView>
-  </View>
-);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/products/categories/food");
+        const data = await response.json();
+        setMenuItems(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-const ThirdRoute = () => (
-  <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
-  <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
-    {menucardSnacks.map((menuItem, index) => (
-      <View key={index} style={styles.menuItem}>
-        <View style={styles.menuItemGroup}>
-          <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
-          <TouchableNativeFeedback>
-            <View style={styles.buybutton}>
-              <MaterialCommunityIcons
-                color="white"
-                size={25}
-                name="plus"
-                style={{ marginTop: 0 }}
-              />
+    fetchData();
+  }, []);
+
+  return (
+    <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
+      <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
+        {menuItems.map((menuItem, index) => (
+          <View key={index} style={styles.menuItem}>
+            <View style={styles.menuItemGroup}>
+              <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
+              <TouchableNativeFeedback>
+                <View style={styles.buybutton}>
+                  <MaterialCommunityIcons
+                    color="white"
+                    size={25}
+                    name="plus"
+                    style={{ marginTop: 0 }}
+                  />
+                </View>
+              </TouchableNativeFeedback>
             </View>
-          </TouchableNativeFeedback>
-        </View>
-        <Text style={styles.menuItemPrice}>${menuItem.price}</Text>
-      </View>
-    ))}
-  </ScrollView>
-</View>
-);
+            <Text style={styles.menuItemName}>{menuItem.name}</Text>
+            <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
+            <Text style={styles.menuItemName}>{menuItem.options[0].name}</Text>
+            <Text style={styles.menuItemName}>{menuItem.options[0].price}</Text>
+            <Text style={styles.menuItemPrice}>{menuItem.price}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
+const SecondRoute = () => {
+  const [menuItems, setMenuItems] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/products/categories/drink");
+        const data = await response.json();
+        setMenuItems(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
+      <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
+        {menuItems.map((menuItem, index) => (
+          <View key={index} style={styles.menuItem}>
+            <View style={styles.menuItemGroup}>
+              <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
+              <TouchableNativeFeedback>
+                <View style={styles.buybutton}>
+                  <MaterialCommunityIcons
+                    color="white"
+                    size={25}
+                    name="plus"
+                    style={{ marginTop: 0 }}
+                  />
+                </View>
+              </TouchableNativeFeedback>
+            </View>
+            <Text style={styles.menuItemName}>{menuItem.name}</Text>
+            <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
+            <Text style={styles.menuItemName}>{menuItem.options[0].name}</Text>
+            <Text style={styles.menuItemName}>{menuItem.options[0].price}</Text>
+            <Text style={styles.menuItemPrice}>{menuItem.price}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
+
+const ThirdRoute = () => {
+  const [menuItems, setMenuItems] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/products/categories/snack");
+        const data = await response.json();
+        setMenuItems(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
+      <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
+        {menuItems.map((menuItem, index) => (
+          <View key={index} style={styles.menuItem}>
+            <View style={styles.menuItemGroup}>
+              <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
+              <TouchableNativeFeedback>
+                <View style={styles.buybutton}>
+                  <MaterialCommunityIcons
+                    color="white"
+                    size={25}
+                    name="plus"
+                    style={{ marginTop: 0 }}
+                  />
+                </View>
+              </TouchableNativeFeedback>
+            </View>
+            <Text style={styles.menuItemName}>{menuItem.name}</Text>
+            <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
+            <Text style={styles.menuItemName}>{menuItem.options[0].name}</Text>
+            <Text style={styles.menuItemName}>{menuItem.options[0].price}</Text>
+            <Text style={styles.menuItemPrice}>{menuItem.price}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
 
 export function TabViewExample() {
   const layout = useWindowDimensions();
