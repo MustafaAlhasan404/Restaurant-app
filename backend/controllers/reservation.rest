@@ -3,9 +3,9 @@ POST http://localhost:3000/reservations
 Content-Type: application/json
 
 {
-  "name": "Johnny",
+  "name": "Nour",
   "phone": "565-0000",
-  "dateTime": "2023-03-15T17:00:00.000Z", 
+  "dateTime": "2024-03-15T17:00:00.000Z", 
   "numGuests": 4
 }
 
