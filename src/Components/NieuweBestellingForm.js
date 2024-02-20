@@ -245,14 +245,14 @@ const ThirdRoute = () => {
 						<Text style={styles.menuItemName}>
 							{menuItem.ingredients}
 						</Text>
-						{menuItems.options.map((option, index) => (
+						{/* {menuItems.options.map((option, index) => (
 							<Text style={styles.menuItemName}>
 								{option.name}
 							</Text>
 							// <Text style={styles.menuItemName}>
 							// {option.price}
 							// </Text>
-						))}
+						))} */}
 						<Text style={styles.menuItemPrice}>
 							{menuItem.price}
 						</Text>
