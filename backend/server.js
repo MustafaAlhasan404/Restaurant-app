@@ -18,9 +18,11 @@ app.use(cors());
 app.use(express.json());
 
 // Import & use reservations router
-const reservationsRouter = require("./controllers/reservationsController");
+const reservationsRouter = require("./controllers/reservationController");
+const productRouter = require("./controllers/productController");
 // reservationsRouter(app);
 app.use("/reservations", reservationsRouter);
+app.use("/products", productRouter);
 
 // MongoDB Connection
 const uri =

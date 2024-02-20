@@ -1,0 +1,29 @@
+### Create new reservation
+POST http://localhost:3000/products
+Content-Type: application/json
+
+{
+  "name": "Coke",
+  "price": "2",
+  "ingredients": "Coke, ice", 
+  "category": "drink",
+  "options": [{"name": "No ice", "price": 0}]
+}
+
+### Get all products
+GET http://localhost:3000/products
+role: employee
+
+### Get reservation by ID 
+GET http://localhost:3000/products/65d4720710a0f7f51bc7a179
+
+### Update reservation
+PATCH http://localhost:3000/products/65d4720710a0f7f51bc7a179
+Content-Type: application/json
+
+{
+  "category": "snack"
+}
+
+### Delete reservation
+DELETE http://localhost:3000/products/65d4720710a0f7f51bc7a179
