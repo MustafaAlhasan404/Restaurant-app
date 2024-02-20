@@ -3,14 +3,15 @@ POST http://localhost:3000/reservations
 Content-Type: application/json
 
 {
-  "name": "John",
-  "phone": "555-0000",
+  "name": "Johnny",
+  "phone": "565-0000",
   "dateTime": "2023-03-15T17:00:00.000Z", 
-  "numGuests": 2
+  "numGuests": 4
 }
 
 ### Get all reservations
 GET http://localhost:3000/reservations
+role: employee
 
 ### Get reservation by ID 
 GET http://localhost:3000/reservations/65d3cd3bc414aa5ac1de8d3c
@@ -20,8 +21,9 @@ PATCH http://localhost:3000/reservations/65d3cd3bc414aa5ac1de8d3c
 Content-Type: application/json
 
 {
-  "numGuests": 3
+  "phone": "555-5555",
+  "numGuests": 5
 }
 
 ### Delete reservation
-DELETE http://localhost:3000/reservations/65d3cc1ac414aa5ac1de8d29
+DELETE http://localhost:3000/reservations/65d43456ad47c835b3502b02
