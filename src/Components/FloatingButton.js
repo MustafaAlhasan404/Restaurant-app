@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
+import { FAB } from 'react-native-paper'; // Import FAB 
 
 const FloatingButton = () => {
   animation = new Animated.Value(0);
@@ -87,16 +88,12 @@ const FloatingButton = () => {
           </Animated.View>
         </TouchableWithoutFeedback>
 
-        <TouchableWithoutFeedback onPress={this.toggleMenu}>
-          <Animated.View style={[styles.button, styles.menu, rotation]}>
-            <MaterialCommunityIcons
-              color="white"
-              size={22}
-              name="plus"
-              style={{ marginTop: 0 }}
-            />
-          </Animated.View>
-        </TouchableWithoutFeedback>
+        {/* Replace the toggle button with FAB */}
+        <FAB 
+            style={styles.fab} // Add a 'fab' style
+            icon="plus"
+            onPress={this.toggleMenu}
+        /> 
       </View>
     );
   }
@@ -106,11 +103,13 @@ export default FloatingButton;
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    top: 670,
-    left: 330,
+    // Adjust for positioning in your specific layout
+    position: "absolute", 
+    top: 670, 
+    left: 330,  
   },
-  button: {
+   button: { 
+    // Modify if needed for FAB appearance
     position: "absolute",
     width: 65,
     height: 65,
@@ -138,5 +137,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     backgroundColor: "#ebcda9",
+  },
+  fab: {
+    position: 'absolute',
+    bottom: -85, // Adjust placement to match other code
+    right: -40,    // Adjust placement to match other code
+    backgroundColor: '#e27b00',
   },
 });
