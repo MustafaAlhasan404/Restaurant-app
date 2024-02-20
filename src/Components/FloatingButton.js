@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -7,141 +7,141 @@ import {
   Pressable,
   TouchableWithoutFeedback,
 } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
-import { FAB } from 'react-native-paper'; // Import FAB 
+import { FAB } from 'react-native-paper';
 
 const FloatingButton = () => {
-  animation = new Animated.Value(0);
+  const [open, setOpen] = useState(false);
+  const animation = useRef(new Animated.Value(0)).current; // Use useRef to persist the animated value
 
-  toggleMenu = () => {
-    const toValue = this.open ? 0 : 1;
+  const toggleMenu = () => {
+    const toValue = open ? 0 : 1;
 
-    Animated.spring(this.animation, {
+    Animated.spring(animation, {
       toValue,
       useNativeDriver: true,
-      friction: 100,
+      friction: 5,
     }).start();
 
-    this.open = !this.open;
+    setOpen(!open);
   };
 
-  {
-    const navigation = useNavigation();
-    const NweBestellingStyle = {
-      transform: [
-        { scale: this.animation },
-        {
-          translateY: this.animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, -80],
-          }),
-        },
-      ],
-    };
+  const navigation = useNavigation();
+  const NweBestellingStyle = {
+    transform: [
+      { scale: animation },
+      {
+        translateX: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -80], // Adjust the horizontal position
+        }),
+      },
+      {
+        translateY: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -80],
+        }),
+      },
+    ],
+  };
 
-    const NweReserveringStyle = {
-      transform: [
-        { scale: this.animation },
-        {
-          translateY: this.animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, -140],
-          }),
-        },
-      ],
-    };
+  const NweReserveringStyle = {
+    transform: [
+      { scale: animation },
+      {
+        translateX: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -80], // Adjust the horizontal position
+        }),
+      },
+      {
+        translateY: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -140],
+        }),
+      },
+    ],
+  };
 
-    const rotation = {
-      transform: [
-        {
-          rotate: this.animation.interpolate({
-            inputRange: [0, 1],
-            outputRange: ["0deg", "45deg"],
-          }),
-        },
-      ],
-    };
+  const rotation = {
+    transform: [
+      {
+        rotate: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: ["0deg", "45deg"],
+        }),
+      },
+    ],
+  };
 
-    return (
-      <View style={[styles.container]}>
-        <TouchableWithoutFeedback>
-          <Animated.View style={[styles.secondary, NweReserveringStyle]}>
-            <Pressable
-              android_ripple={{ color: "#e27b00", borderless: false }}
-              style={styles.Pbutton}
-              onPress={() => navigation.navigate("Nieuwe reservering")}
-            >
-              <Text>Nieuwe reservering</Text>
-            </Pressable>
-          </Animated.View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback>
-          <Animated.View style={[styles.secondary, NweBestellingStyle]}>
-            <Pressable
-              android_ripple={{ color: "#e27b00", borderless: false }}
-              style={styles.Pbutton}
-              onPress={() => navigation.navigate("Nieuwe bestelling")}
-            >
-              <Text>Nieuwe bestelling</Text>
-            </Pressable>
-          </Animated.View>
-        </TouchableWithoutFeedback>
+  return (
+    <View style={[styles.container]}>
+      <TouchableWithoutFeedback>
+        <Animated.View style={[styles.button, styles.secondary, NweReserveringStyle]}>
+          <Pressable
+            onPress={() => {
+              toggleMenu(); // Close the menu when an option is selected
+              navigation.navigate("Nieuwe reservering"); // Navigate to NieuweReservering
+            }}
+          >
+            <Text style={styles.text}>Nieuwe reservering</Text>
+          </Pressable>
+        </Animated.View>
+      </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback>
+        <Animated.View style={[styles.button, styles.secondary, NweBestellingStyle]}>
+          <Pressable
+            onPress={() => {
+              toggleMenu(); // Close the menu when an option is selected
+              navigation.navigate("Nieuwe bestelling"); // Navigate to NieuweBestelling
+            }}
+          >
+            <Text style={styles.text}>Nieuwe bestelling</Text>
+          </Pressable>
+        </Animated.View>
+      </TouchableWithoutFeedback>
 
-        {/* Replace the toggle button with FAB */}
-        <FAB 
-            style={styles.fab} // Add a 'fab' style
-            icon="plus"
-            onPress={this.toggleMenu}
-        /> 
-      </View>
-    );
-  }
+      <FAB 
+        style={[styles.fab, rotation]}
+        icon="plus"
+        onPress={toggleMenu} // Make sure this is correctly bound
+      />
+    </View>
+  );
 };
 
 export default FloatingButton;
 
 const styles = StyleSheet.create({
   container: {
-    // Adjust for positioning in your specific layout
-    position: "absolute", 
-    top: 670, 
-    left: 330,  
-  },
-   button: { 
-    // Modify if needed for FAB appearance
     position: "absolute",
-    width: 65,
-    height: 65,
-    borderRadius: 100 / 2,
+    bottom: 20,
+    right: 20,
+  },
+  button: {
+    position: "absolute",
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    elevation: 0,
-    zIndex: 999999999,
-  },
-  menu: {
-    backgroundColor: "#e27b00",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowColor: "#333",
+    shadowOffset: { height: 3, width: 0 },
+    elevation: 2,
   },
   secondary: {
-    position: "absolute",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 4,
-    right: -60,
-    top: 25,
+    width: 150,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#e27b00",
   },
-  Pbutton: {
-    borderRadius: 2,
-    borderColor: "#e27b00",
-    borderWidth: 0.5,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    backgroundColor: "#ebcda9",
+  text: {
+    color: "#555",
   },
   fab: {
-    position: 'absolute',
-    bottom: -85, // Adjust placement to match other code
-    right: -40,    // Adjust placement to match other code
     backgroundColor: '#e27b00',
   },
 });
