@@ -70,7 +70,7 @@ const FirstRoute = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/products/categories/food");
+        const response = await fetch("https://nl-app.onrender.com/products/categories/food");
         const data = await response.json();
         setMenuItems(data);
       } catch (error) {
@@ -116,7 +116,7 @@ const SecondRoute = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/products/categories/drink");
+        const response = await fetch("https://nl-app.onrender.com/products/categories/drink");
         const data = await response.json();
         setMenuItems(data);
       } catch (error) {
@@ -163,7 +163,7 @@ const ThirdRoute = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/products/categories/snack");
+        const response = await fetch("https://nl-app.onrender.com/products/categories/snack");
         const data = await response.json();
         setMenuItems(data);
       } catch (error) {
