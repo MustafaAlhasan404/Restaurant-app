@@ -64,202 +64,185 @@ const renderTabBar = (props) => (
 	/>
 );
 
-const FirstRoute = () => {
+const renderMenuItemOptions = (menuItem) => {
+	return menuItem.options.map((option, index) => (
+	  <View key={index} style={styles.menuItemOption}>
+		<Text style={styles.menuItemOptionName}>{option.name}</Text>
+		<Text style={styles.menuItemOptionPrice}>{option.price}</Text>
+	  </View>
+	));
+  };
+  
+
+  const FirstRoute = () => {
 	const [menuItems, setMenuItems] = useState([]);
-
+  
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(
-					"https://nl-app.onrender.com/products/categories/food"
-				);
-				const data = await response.json();
-				setMenuItems(data);
-			} catch (error) {
-				console.error("Error fetching data:", error);
-			}
-		};
-
-		fetchData();
+	  const fetchData = async () => {
+		try {
+		  const response = await fetch(
+			"https://nl-app.onrender.com/products/categories/food"
+		  );
+		  const data = await response.json();
+		  setMenuItems(data);
+		} catch (error) {
+		  console.error("Error fetching data:", error);
+		}
+	  };
+  
+	  fetchData();
 	}, []);
-
-	return (
-		<View
-			style={{
-				flex: 1,
-				paddingTop: 0,
-				paddingHorizontal: 0,
-				height: 500,
-			}}
-		>
-			<ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
-				{menuItems.map((menuItem, index) => (
-					<View key={index} style={styles.menuItem}>
-						<View style={styles.menuItemGroup}>
-							<Text style={styles.menuItemTitle}>
-								{menuItem.title}
-							</Text>
-							<TouchableNativeFeedback>
-								<View style={styles.buybutton}>
-									<MaterialCommunityIcons
-										color="white"
-										size={25}
-										name="plus"
-										style={{ marginTop: 0 }}
-									/>
-								</View>
-							</TouchableNativeFeedback>
-						</View>
-						<Text style={styles.menuItemName}>{menuItem.name}</Text>
-						<Text style={styles.menuItemName}>
-							{menuItem.ingredients}
-						</Text>
-						<Text style={styles.menuItemName}>
-							{menuItem.options[0].name}
-						</Text>
-						<Text style={styles.menuItemName}>
-							{menuItem.options[0].price}
-						</Text>
-						<Text style={styles.menuItemPrice}>
-							{menuItem.price}
-						</Text>
-					</View>
-				))}
-			</ScrollView>
+  
+	const renderMenuItemOptions = (menuItem) => {
+	  return menuItem.options.map((option, index) => (
+		<View key={index} style={styles.menuItemOption}>
+		  <Text style={styles.menuItemOptionName}>{option.name}</Text>
+		  <Text style={styles.menuItemOptionPrice}>{option.price}</Text>
 		</View>
+	  ));
+	};
+  
+	return (
+	  <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
+		<ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
+		  {menuItems.map((menuItem, index) => (
+			<View key={index} style={styles.menuItem}>
+			  <View style={styles.menuItemGroup}>
+				<Text style={styles.menuItemTitle}>{menuItem.title}</Text>
+				<TouchableNativeFeedback>
+				  <View style={styles.buybutton}>
+					<MaterialCommunityIcons
+					  color="white"
+					  size={25}
+					  name="plus"
+					  style={{ marginTop: 0 }}
+					/>
+				  </View>
+				</TouchableNativeFeedback>
+			  </View>
+			  <Text style={styles.menuItemName}>{menuItem.name}</Text>
+			  <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
+			  {menuItem.options && renderMenuItemOptions(menuItem)}
+			  <Text style={styles.menuItemPrice}>{menuItem.price}</Text>
+			</View>
+		  ))}
+		</ScrollView>
+	  </View>
 	);
-};
+  };
+  
+  
 const SecondRoute = () => {
 	const [menuItems, setMenuItems] = useState([]);
-
+  
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(
-					"https://nl-app.onrender.com/products/categories/drink"
-				);
-				const data = await response.json();
-				setMenuItems(data);
-			} catch (error) {
-				console.error("Error fetching data:", error);
-			}
-		};
-
-		fetchData();
+	  const fetchData = async () => {
+		try {
+		  const response = await fetch(
+			"https://nl-app.onrender.com/products/categories/food"
+		  );
+		  const data = await response.json();
+		  setMenuItems(data);
+		} catch (error) {
+		  console.error("Error fetching data:", error);
+		}
+	  };
+  
+	  fetchData();
 	}, []);
-
-	return (
-		<View
-			style={{
-				flex: 1,
-				paddingTop: 0,
-				paddingHorizontal: 0,
-				height: 500,
-			}}
-		>
-			<ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
-				{menuItems.map((menuItem, index) => (
-					<View key={index} style={styles.menuItem}>
-						<View style={styles.menuItemGroup}>
-							<Text style={styles.menuItemTitle}>
-								{menuItem.title}
-							</Text>
-							<TouchableNativeFeedback>
-								<View style={styles.buybutton}>
-									<MaterialCommunityIcons
-										color="white"
-										size={25}
-										name="plus"
-										style={{ marginTop: 0 }}
-									/>
-								</View>
-							</TouchableNativeFeedback>
-						</View>
-						<Text style={styles.menuItemName}>{menuItem.name}</Text>
-						<Text style={styles.menuItemName}>
-							{menuItem.ingredients}
-						</Text>
-						<Text style={styles.menuItemName}>
-							{menuItem.options[0].name}
-						</Text>
-						<Text style={styles.menuItemName}>
-							{menuItem.options[0].price}
-						</Text>
-						<Text style={styles.menuItemPrice}>
-							{menuItem.price}
-						</Text>
-					</View>
-				))}
-			</ScrollView>
+  
+	const renderMenuItemOptions = (menuItem) => {
+	  return menuItem.options.map((option, index) => (
+		<View key={index} style={styles.menuItemOption}>
+		  <Text style={styles.menuItemOptionName}>{option.name}</Text>
+		  <Text style={styles.menuItemOptionPrice}>{option.price}</Text>
 		</View>
+	  ));
+	};
+  
+	return (
+	  <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
+		<ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
+		  {menuItems.map((menuItem, index) => (
+			<View key={index} style={styles.menuItem}>
+			  <View style={styles.menuItemGroup}>
+				<Text style={styles.menuItemTitle}>{menuItem.title}</Text>
+				<TouchableNativeFeedback>
+				  <View style={styles.buybutton}>
+					<MaterialCommunityIcons
+					  color="white"
+					  size={25}
+					  name="plus"
+					  style={{ marginTop: 0 }}
+					/>
+				  </View>
+				</TouchableNativeFeedback>
+			  </View>
+			  <Text style={styles.menuItemName}>{menuItem.name}</Text>
+			  <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
+			  {menuItem.options && renderMenuItemOptions(menuItem)}
+			  <Text style={styles.menuItemPrice}>{menuItem.price}</Text>
+			</View>
+		  ))}
+		</ScrollView>
+	  </View>
 	);
 };
 
 const ThirdRoute = () => {
 	const [menuItems, setMenuItems] = useState([]);
-
+  
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(
-					"https://nl-app.onrender.com/products/categories/snack"
-				);
-				const data = await response.json();
-				setMenuItems(data);
-			} catch (error) {
-				console.error("Error fetching data:", error);
-			}
-		};
-
-		fetchData();
+	  const fetchData = async () => {
+		try {
+		  const response = await fetch(
+			"https://nl-app.onrender.com/products/categories/food"
+		  );
+		  const data = await response.json();
+		  setMenuItems(data);
+		} catch (error) {
+		  console.error("Error fetching data:", error);
+		}
+	  };
+  
+	  fetchData();
 	}, []);
-
-	return (
-		<View
-			style={{
-				flex: 1,
-				paddingTop: 0,
-				paddingHorizontal: 0,
-				height: 500,
-			}}
-		>
-			<ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
-				{menuItems.map((menuItem, index) => (
-					<View key={index} style={styles.menuItem}>
-						<View style={styles.menuItemGroup}>
-							<Text style={styles.menuItemTitle}>
-								{menuItem.title}
-							</Text>
-							<TouchableNativeFeedback>
-								<View style={styles.buybutton}>
-									<MaterialCommunityIcons
-										color="white"
-										size={25}
-										name="plus"
-										style={{ marginTop: 0 }}
-									/>
-								</View>
-							</TouchableNativeFeedback>
-						</View>
-						<Text style={styles.menuItemName}>{menuItem.name}</Text>
-						<Text style={styles.menuItemName}>
-							{menuItem.ingredients}
-						</Text>
-						{/* {menuItems.options.map((option, index) => (
-							<Text style={styles.menuItemName}>
-								{option.name}
-							</Text>
-							// <Text style={styles.menuItemName}>
-							// {option.price}
-							// </Text>
-						))} */}
-						<Text style={styles.menuItemPrice}>
-							{menuItem.price}
-						</Text>
-					</View>
-				))}
-			</ScrollView>
+  
+	const renderMenuItemOptions = (menuItem) => {
+	  return menuItem.options.map((option, index) => (
+		<View key={index} style={styles.menuItemOption}>
+		  <Text style={styles.menuItemOptionName}>{option.name}</Text>
+		  <Text style={styles.menuItemOptionPrice}>{option.price}</Text>
 		</View>
+	  ));
+	};
+  
+	return (
+	  <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
+		<ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
+		  {menuItems.map((menuItem, index) => (
+			<View key={index} style={styles.menuItem}>
+			  <View style={styles.menuItemGroup}>
+				<Text style={styles.menuItemTitle}>{menuItem.title}</Text>
+				<TouchableNativeFeedback>
+				  <View style={styles.buybutton}>
+					<MaterialCommunityIcons
+					  color="white"
+					  size={25}
+					  name="plus"
+					  style={{ marginTop: 0 }}
+					/>
+				  </View>
+				</TouchableNativeFeedback>
+			  </View>
+			  <Text style={styles.menuItemName}>{menuItem.name}</Text>
+			  <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
+			  {menuItem.options && renderMenuItemOptions(menuItem)}
+			  <Text style={styles.menuItemPrice}>{menuItem.price}</Text>
+			</View>
+		  ))}
+		</ScrollView>
+	  </View>
 	);
 };
 
