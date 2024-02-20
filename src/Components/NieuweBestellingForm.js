@@ -145,6 +145,7 @@ const renderMenuItemOptions = (menuItem) => {
   
 const SecondRoute = () => {
 	const [menuItems, setMenuItems] = useState([]);
+	const [selectedOptions, setSelectedOptions] = useState({});
   
 	useEffect(() => {
 	  const fetchData = async () => {
@@ -162,46 +163,74 @@ const SecondRoute = () => {
 	  fetchData();
 	}, []);
   
-	const renderMenuItemOptions = (menuItem) => {
-	  return menuItem.options.map((option, index) => (
-		<View key={index} style={styles.menuItemOption}>
-		  <Text style={styles.menuItemOptionName}>{option.name}</Text>
-		  <Text style={styles.menuItemOptionPrice}>{option.price}</Text>
-		</View>
+	const handleSelectOption = (menuItemIndex, optionIndex, optionPrice) => {
+	  setSelectedOptions((prevSelectedOptions) => {
+		const optionKey = `${menuItemIndex}-${optionIndex}`;
+		const currentOption = prevSelectedOptions[optionKey] || { quantity: 0, price: optionPrice };
+		return {
+		  ...prevSelectedOptions,
+		  [optionKey]: {
+			...currentOption,
+			quantity: currentOption.quantity + 1
+		  }
+		};
+	  });
+	};
+  
+	const renderMenuItemOptions = (menuItem, menuItemIndex) => {
+	  return menuItem.options.map((option, optionIndex) => (
+		<Pressable key={optionIndex} onPress={() => handleSelectOption(menuItemIndex, optionIndex, option.price)}>
+		  <View style={styles.menuItemOption}>
+			<Text style={styles.menuItemOptionName}>{option.name}</Text>
+			<Text style={styles.menuItemOptionPrice}>{option.price}</Text>
+			<Text style={styles.menuItemOptionQuantity}>
+			  {selectedOptions[`${menuItemIndex}-${optionIndex}`] ? selectedOptions[`${menuItemIndex}-${optionIndex}`].quantity : 0}
+			</Text>
+		  </View>
+		</Pressable>
 	  ));
 	};
   
 	return (
 	  <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
 		<ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
-		  {menuItems.map((menuItem, index) => (
-			<View key={index} style={styles.menuItem}>
-			  <View style={styles.menuItemGroup}>
-				<Text style={styles.menuItemTitle}>{menuItem.title}</Text>
-				<TouchableNativeFeedback>
-				  <View style={styles.buybutton}>
-					<MaterialCommunityIcons
-					  color="white"
-					  size={25}
-					  name="plus"
-					  style={{ marginTop: 0 }}
-					/>
-				  </View>
-				</TouchableNativeFeedback>
+		  {menuItems.map((menuItem, index) => {
+			const totalItemPrice = (menuItem.price || 0) + Object.keys(selectedOptions).reduce((acc, key) => {
+			  if (key.startsWith(`${index}-`)) {
+				acc += selectedOptions[key].price * selectedOptions[key].quantity;
+			  }
+			  return acc;
+			}, 0);
+			return (
+			  <View key={index} style={styles.menuItem}>
+				<View style={styles.menuItemGroup}>
+				  <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
+				  <TouchableNativeFeedback>
+					<View style={styles.buybutton}>
+					  <MaterialCommunityIcons
+						color="white"
+						size={25}
+						name="plus"
+						style={{ marginTop: 0 }}
+					  />
+					</View>
+				  </TouchableNativeFeedback>
+				</View>
+				<Text style={styles.menuItemName}>{menuItem.name}</Text>
+				<Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
+				{menuItem.options && renderMenuItemOptions(menuItem, index)}
+				<Text style={styles.menuItemPrice}>Total: {totalItemPrice.toFixed(2)}</Text>
 			  </View>
-			  <Text style={styles.menuItemName}>{menuItem.name}</Text>
-			  <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
-			  {menuItem.options && renderMenuItemOptions(menuItem)}
-			  <Text style={styles.menuItemPrice}>{menuItem.price}</Text>
-			</View>
-		  ))}
+			);
+		  })}
 		</ScrollView>
 	  </View>
 	);
-};
+  };
 
-const ThirdRoute = () => {
+const ThirdRoute  = () => {
 	const [menuItems, setMenuItems] = useState([]);
+	const [selectedOptions, setSelectedOptions] = useState({});
   
 	useEffect(() => {
 	  const fetchData = async () => {
@@ -219,43 +248,70 @@ const ThirdRoute = () => {
 	  fetchData();
 	}, []);
   
-	const renderMenuItemOptions = (menuItem) => {
-	  return menuItem.options.map((option, index) => (
-		<View key={index} style={styles.menuItemOption}>
-		  <Text style={styles.menuItemOptionName}>{option.name}</Text>
-		  <Text style={styles.menuItemOptionPrice}>{option.price}</Text>
-		</View>
+	const handleSelectOption = (menuItemIndex, optionIndex, optionPrice) => {
+	  setSelectedOptions((prevSelectedOptions) => {
+		const optionKey = `${menuItemIndex}-${optionIndex}`;
+		const currentOption = prevSelectedOptions[optionKey] || { quantity: 0, price: optionPrice };
+		return {
+		  ...prevSelectedOptions,
+		  [optionKey]: {
+			...currentOption,
+			quantity: currentOption.quantity + 1
+		  }
+		};
+	  });
+	};
+  
+	const renderMenuItemOptions = (menuItem, menuItemIndex) => {
+	  return menuItem.options.map((option, optionIndex) => (
+		<Pressable key={optionIndex} onPress={() => handleSelectOption(menuItemIndex, optionIndex, option.price)}>
+		  <View style={styles.menuItemOption}>
+			<Text style={styles.menuItemOptionName}>{option.name}</Text>
+			<Text style={styles.menuItemOptionPrice}>{option.price}</Text>
+			<Text style={styles.menuItemOptionQuantity}>
+			  {selectedOptions[`${menuItemIndex}-${optionIndex}`] ? selectedOptions[`${menuItemIndex}-${optionIndex}`].quantity : 0}
+			</Text>
+		  </View>
+		</Pressable>
 	  ));
 	};
   
 	return (
 	  <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
 		<ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
-		  {menuItems.map((menuItem, index) => (
-			<View key={index} style={styles.menuItem}>
-			  <View style={styles.menuItemGroup}>
-				<Text style={styles.menuItemTitle}>{menuItem.title}</Text>
-				<TouchableNativeFeedback>
-				  <View style={styles.buybutton}>
-					<MaterialCommunityIcons
-					  color="white"
-					  size={25}
-					  name="plus"
-					  style={{ marginTop: 0 }}
-					/>
-				  </View>
-				</TouchableNativeFeedback>
+		  {menuItems.map((menuItem, index) => {
+			const totalItemPrice = (menuItem.price || 0) + Object.keys(selectedOptions).reduce((acc, key) => {
+			  if (key.startsWith(`${index}-`)) {
+				acc += selectedOptions[key].price * selectedOptions[key].quantity;
+			  }
+			  return acc;
+			}, 0);
+			return (
+			  <View key={index} style={styles.menuItem}>
+				<View style={styles.menuItemGroup}>
+				  <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
+				  <TouchableNativeFeedback>
+					<View style={styles.buybutton}>
+					  <MaterialCommunityIcons
+						color="white"
+						size={25}
+						name="plus"
+						style={{ marginTop: 0 }}
+					  />
+					</View>
+				  </TouchableNativeFeedback>
+				</View>
+				<Text style={styles.menuItemName}>{menuItem.name}</Text>
+				<Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
+				{menuItem.options && renderMenuItemOptions(menuItem, index)}
+				<Text style={styles.menuItemPrice}>Total: {totalItemPrice.toFixed(2)}</Text>
 			  </View>
-			  <Text style={styles.menuItemName}>{menuItem.name}</Text>
-			  <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
-			  {menuItem.options && renderMenuItemOptions(menuItem)}
-			  <Text style={styles.menuItemPrice}>{menuItem.price}</Text>
-			</View>
-		  ))}
+			);
+		  })}
 		</ScrollView>
 	  </View>
 	);
-};
+  };
 
 export function TabViewExample() {
 	const layout = useWindowDimensions();
