@@ -10,8 +10,14 @@ const productSchema = new mongoose.Schema({
 		default: "food",
 	},
 	options: [{ name: String, price: Number }],
+	stockable: { type: Boolean, required: true },
+	qty: {
+		type: Number,
+		required: () => {
+			return this.stockable === true;
+		},
+	},
 });
 
 const Product = mongoose.model("Product", productSchema);
-
 module.exports = Product;

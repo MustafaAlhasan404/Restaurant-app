@@ -15,7 +15,7 @@ GET http://localhost:3000/products
 role: employee
 
 ###
-GET http://localhost:3000/products/categories/drink
+GET http://localhost:3000/products/categories/food
 
 ### Get reservation by ID 
 GET http://localhost:3000/products/65d4720710a0f7f51bc7a179
