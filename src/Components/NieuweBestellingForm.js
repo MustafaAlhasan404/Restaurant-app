@@ -10,12 +10,32 @@ import {
   TouchableNativeFeedback,
   ScrollView,
   Modal,
+  FlatList,
 } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { Picker } from "@react-native-picker/picker";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+const menucardFood = [
+  { title: "Pizza Margherita", price: 850 },
+  { title: "Pizza Vegi", price: 100 },
+  // ... more menu items
+];
+
+const menucardDrinks = [
+  { title: "Coffee", price: 100 },
+  { title: "Tea", price: 100 },
+  { title: "Coca Cola", price: 850 },
+  { title: "Pepsi", price: 850 },
+  // ... more menu items
+];
+
+const menucardSnacks = [
+  { title: "Chips", price: 100 },
+  // ... more menu items
+];
 
 const renderTabBar = (props) => (
   <TabBar
@@ -45,187 +65,78 @@ const renderTabBar = (props) => (
 );
 
 const FirstRoute = () => (
-  <View
-    style={{
-      flex: 1,
-      paddingTop: 0,
-      paddingHorizontal: 0,
-      height: 500,
-    }}
-  >
+  <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
     <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
-      <View style={styles.menuItem}>
-        <View style={styles.menuItemGroup}>
-          <Text style={styles.menuItemTitle}>Coca Cola (Blik 33cl)</Text>
-          <TouchableNativeFeedback>
-            <View style={styles.buybutton}>
-              <MaterialCommunityIcons
-                color="white"
-                size={25}
-                name="plus"
-                style={{ marginTop: 0 }}
-              />
-            </View>
-          </TouchableNativeFeedback>
+      {menucardFood.map((menuItem, index) => (
+        <View key={index} style={styles.menuItem}>
+          <View style={styles.menuItemGroup}>
+            <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
+            <TouchableNativeFeedback>
+              <View style={styles.buybutton}>
+                <MaterialCommunityIcons
+                  color="white"
+                  size={25}
+                  name="plus"
+                  style={{ marginTop: 0 }}
+                />
+              </View>
+            </TouchableNativeFeedback>
+          </View>
+          <Text style={styles.menuItemPrice}>${menuItem.price}</Text>
         </View>
-        <Text style={styles.menuItemPrice}>$100</Text>
-      </View>
-      <View style={styles.menuItem}>
-        <View style={styles.menuItemGroup}>
-          <Text style={styles.menuItemTitle}>Coca Cola (Blik 33cl)</Text>
-          <TouchableNativeFeedback>
-            <View style={styles.buybutton}>
-              <MaterialCommunityIcons
-                color="white"
-                size={25}
-                name="plus"
-                style={{ marginTop: 0 }}
-              />
-            </View>
-          </TouchableNativeFeedback>
-        </View>
-        <Text style={styles.menuItemPrice}>$100</Text>
-      </View>
-      <View style={styles.menuItem}>
-        <View style={styles.menuItemGroup}>
-          <Text style={styles.menuItemTitle}>Coca Cola (Blik 33cl)</Text>
-          <TouchableNativeFeedback>
-            <View style={styles.buybutton}>
-              <MaterialCommunityIcons
-                color="white"
-                size={25}
-                name="plus"
-                style={{ marginTop: 0 }}
-              />
-            </View>
-          </TouchableNativeFeedback>
-        </View>
-        <Text style={styles.menuItemPrice}>$100</Text>
-      </View>
-      <View style={styles.menuItem}>
-        <View style={styles.menuItemGroup}>
-          <Text style={styles.menuItemTitle}>Coca Cola (Blik 33cl)</Text>
-          <TouchableNativeFeedback>
-            <View style={styles.buybutton}>
-              <MaterialCommunityIcons
-                color="white"
-                size={25}
-                name="plus"
-                style={{ marginTop: 0 }}
-              />
-            </View>
-          </TouchableNativeFeedback>
-        </View>
-        <Text style={styles.menuItemPrice}>$100</Text>
-      </View>
-      <View style={styles.menuItem}>
-        <View style={styles.menuItemGroup}>
-          <Text style={styles.menuItemTitle}>Coca Cola (Blik 33cl)</Text>
-          <TouchableNativeFeedback>
-            <View style={styles.buybutton}>
-              <MaterialCommunityIcons
-                color="white"
-                size={25}
-                name="plus"
-                style={{ marginTop: 0 }}
-              />
-            </View>
-          </TouchableNativeFeedback>
-        </View>
-        <Text style={styles.menuItemPrice}>$100</Text>
-      </View>
-      <View style={styles.menuItem}>
-        <View style={styles.menuItemGroup}>
-          <Text style={styles.menuItemTitle}>Coca Cola (Blik 33cl)</Text>
-          <TouchableNativeFeedback>
-            <View style={styles.buybutton}>
-              <MaterialCommunityIcons
-                color="white"
-                size={25}
-                name="plus"
-                style={{ marginTop: 0 }}
-              />
-            </View>
-          </TouchableNativeFeedback>
-        </View>
-        <Text style={styles.menuItemPrice}>$100</Text>
-      </View>
-      <View style={styles.menuItem}>
-        <View style={styles.menuItemGroup}>
-          <Text style={styles.menuItemTitle}>Coca Cola (Blik 33cl)</Text>
-          <TouchableNativeFeedback>
-            <View style={styles.buybutton}>
-              <MaterialCommunityIcons
-                color="white"
-                size={25}
-                name="plus"
-                style={{ marginTop: 0 }}
-              />
-            </View>
-          </TouchableNativeFeedback>
-        </View>
-        <Text style={styles.menuItemPrice}>$100</Text>
-      </View>
-      <View style={styles.menuItem}>
-        <View style={styles.menuItemGroup}>
-          <Text style={styles.menuItemTitle}>Coca Cola (Blik 33cl)</Text>
-          <TouchableNativeFeedback>
-            <View style={styles.buybutton}>
-              <MaterialCommunityIcons
-                color="white"
-                size={25}
-                name="plus"
-                style={{ marginTop: 0 }}
-              />
-            </View>
-          </TouchableNativeFeedback>
-        </View>
-        <Text style={styles.menuItemPrice}>$100</Text>
-      </View>
-      <View style={styles.menuItem}>
-        <View style={styles.menuItemGroup}>
-          <Text style={styles.menuItemTitle}>Coca Cola (Blik 33cl)</Text>
-          <TouchableNativeFeedback>
-            <View style={styles.buybutton}>
-              <MaterialCommunityIcons
-                color="white"
-                size={25}
-                name="plus"
-                style={{ marginTop: 0 }}
-              />
-            </View>
-          </TouchableNativeFeedback>
-        </View>
-        <Text style={styles.menuItemPrice}>$100</Text>
-      </View>
+      ))}
     </ScrollView>
   </View>
 );
 
 const SecondRoute = () => (
-  <View
-    style={{
-      flex: 1,
-      backgroundColor: "#e0d5d6",
-      paddingTop: 30,
-      paddingHorizontal: 20,
-    }}
-  >
-    <Text>Tab 2</Text>
+  <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
+    <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
+      {menucardDrinks.map((menuItem, index) => (
+        <View key={index} style={styles.menuItem}>
+          <View style={styles.menuItemGroup}>
+            <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
+            <TouchableNativeFeedback>
+              <View style={styles.buybutton}>
+                <MaterialCommunityIcons
+                  color="white"
+                  size={25}
+                  name="plus"
+                  style={{ marginTop: 0 }}
+                />
+              </View>
+            </TouchableNativeFeedback>
+          </View>
+          <Text style={styles.menuItemPrice}>${menuItem.price}</Text>
+        </View>
+      ))}
+    </ScrollView>
   </View>
 );
 
 const ThirdRoute = () => (
-  <View
-    style={{
-      flex: 1,
-      backgroundColor: "#e0d5d6",
-      paddingTop: 30,
-      paddingHorizontal: 20,
-    }}
-  >
-    <Text>Tab 3</Text>
-  </View>
+  <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
+  <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
+    {menucardSnacks.map((menuItem, index) => (
+      <View key={index} style={styles.menuItem}>
+        <View style={styles.menuItemGroup}>
+          <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
+          <TouchableNativeFeedback>
+            <View style={styles.buybutton}>
+              <MaterialCommunityIcons
+                color="white"
+                size={25}
+                name="plus"
+                style={{ marginTop: 0 }}
+              />
+            </View>
+          </TouchableNativeFeedback>
+        </View>
+        <Text style={styles.menuItemPrice}>${menuItem.price}</Text>
+      </View>
+    ))}
+  </ScrollView>
+</View>
 );
 
 export function TabViewExample() {
