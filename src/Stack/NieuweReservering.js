@@ -1,18 +1,7 @@
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  FlatList, 
-  TouchableOpacity, 
-  TouchableNativeFeedback  
-} from "react-native";
-import { FAB } from 'react-native-paper'; // Import FAB
-
-const reservations = [ 
-  { id: '1', name: 'John Doe', date: '2024-02-21', time: '18:00' },
-  { id: '2', name: 'Jane Smith', date: '2024-02-22', time: '12:30' },
-  // ...more reservations
-];
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { FAB } from 'react-native-paper';
+import axios from 'axios'; // Make sure to install axios if you haven't already
 
 const ReservationItem = ({ item, onEdit, onDelete }) => {
   return (
@@ -29,25 +18,56 @@ const ReservationItem = ({ item, onEdit, onDelete }) => {
         </TouchableOpacity>
       </View>
     </View>
-  ); 
+  );
 };
 
 const NieuweReservering = () => {
+  const [reservations, setReservations] = useState([]);
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        // Replace with your backend server URL
+        const response = await axios.get('https://nl-app.onrender.com/reservations');
+        setReservations(response.data);
+      } catch (error) {
+        console.error('Error fetching reservations:', error);
+        // Handle error, e.g., set an error state, show a message, etc.
+      }
+    };
+
+    fetchReservations();
+  }, []);
+
+  const handleEdit = (item) => {
+    // Handle edit action
+    console.log('Edit item:', item);
+  };
+
+  const handleDelete = (id) => {
+    // Handle delete action
+    console.log('Delete item with id:', id);
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={reservations}
         renderItem={({ item }) => (
-          <ReservationItem item={item} onEdit={() => alert('Edit')} onDelete={() => alert('Delete')} />
+          <ReservationItem
+            item={item}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
       />
 
-      <FAB 
+      <FAB
         style={styles.fab}
         icon="plus"
-        onPress={() => alert('Add Reservation')} // Replace with your add action
-      /> 
+        onPress={() => console.log('Add Reservation')} // Replace with your add action
+      />
     </View>
   );
 };
@@ -79,19 +99,10 @@ const styles = StyleSheet.create({
   deleteButton: {
     color: 'red',
   },
-  // No changes needed for addButton styles 
-  addButton: {
-    backgroundColor: '#f0f0f0', 
-    padding: 15,
-    borderRadius: 5,
-  },
-  addButtonText: {
-    textAlign: 'center',
-  },
   fab: {
     position: 'absolute',
-    bottom: 20, 
-    right: 20, 
+    bottom: 20,
+    right: 20,
     backgroundColor: '#e27b00',
   },
 });
