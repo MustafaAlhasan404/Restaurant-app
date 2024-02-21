@@ -18,7 +18,6 @@ const reservationItems = [
         dateTime: new Date("2024-03-10T19:00:00Z"),
         numGuests: 4,
         notes: "Allergic to peanuts",
-        userRole: "employee" // Added userRole field
     },
     {
         name: "Bob Smith",
@@ -26,7 +25,6 @@ const reservationItems = [
         dateTime: new Date("2024-03-11T17:00:00Z"),
         numGuests: 2,
         notes: "Window seat preferred",
-        userRole: "manager" // Added userRole field
     },
     // ... more reservations with the userRole field included
 ];
