@@ -23,6 +23,26 @@ router.get("/stock", async (req, res) => {
 	res.status(200).json(products);
 });
 
+// Change stock of item by ID
+router.patch("/stock/:id", async (req, res) => {
+	const userRole = req.headers["role"];
+	const id = req.params.id;
+
+	const product = await Product.find({ _id: id, stockable: true });
+
+	if (!product) return res.status(404);
+
+	const UpdateProduct = await Product.findByIdAndUpdate(
+		req.params.id,
+		req.body,
+		{
+			new: true,
+		}
+	);
+
+	res.status(200).json(UpdateProduct);
+});
+
 // GET products by category
 router.get("/categories/:category", async (req, res) => {
 	const userRole = req.headers["role"];
