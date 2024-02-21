@@ -45,15 +45,6 @@ const renderTabBar = (props) => (
 		}}
 	/>
 );
-
-const renderMenuItemOptions = (menuItem) => {
-	return menuItem.options.map((option, index) => (
-	  <View key={index} style={styles.menuItemOption}>
-		<Text style={styles.menuItemOptionName}>{option.name}</Text>
-		<Text style={styles.menuItemOptionPrice}>{option.price}</Text>
-	  </View>
-	));
-  };
   
 
   const FirstRoute = () => {
@@ -77,32 +68,41 @@ const renderMenuItemOptions = (menuItem) => {
 	}, []);
   
 	const handleSelectOption = (menuItemIndex, optionIndex, optionPrice) => {
-	  setSelectedOptions((prevSelectedOptions) => {
-		const optionKey = `${menuItemIndex}-${optionIndex}`;
-		const currentOption = prevSelectedOptions[optionKey] || { quantity: 0, price: optionPrice };
-		return {
-		  ...prevSelectedOptions,
-		  [optionKey]: {
-			...currentOption,
-			quantity: currentOption.quantity + 1
-		  }
-		};
-	  });
-	};
+		setSelectedOptions((prevSelectedOptions) => {
+		  const optionKey = `${menuItemIndex}-${optionIndex}`;
+		  const currentOption = prevSelectedOptions[optionKey] || { quantity: 0, price: optionPrice };
+		  const newQuantity = currentOption.quantity > 0 ? 0 : 1; // Toggle between 0 and 1
+		  return {
+			...prevSelectedOptions,
+			[optionKey]: {
+			  ...currentOption,
+			  quantity: newQuantity
+			}
+		  };
+		});
+	  };
   
-	const renderMenuItemOptions = (menuItem, menuItemIndex) => {
-	  return menuItem.options.map((option, optionIndex) => (
-		<Pressable key={optionIndex} onPress={() => handleSelectOption(menuItemIndex, optionIndex, option.price)}>
-		  <View style={styles.menuItemOption}>
-			<Text style={styles.menuItemOptionName}>{option.name}</Text>
-			<Text style={styles.menuItemOptionPrice}>{option.price}</Text>
-			<Text style={styles.menuItemOptionQuantity}>
-			  {selectedOptions[`${menuItemIndex}-${optionIndex}`] ? selectedOptions[`${menuItemIndex}-${optionIndex}`].quantity : 0}
-			</Text>
-		  </View>
-		</Pressable>
-	  ));
-	};
+	  const renderMenuItemOptions = (menuItem, menuItemIndex) => {
+		return menuItem.options.map((option, optionIndex) => {
+		  const optionKey = `${menuItemIndex}-${optionIndex}`;
+		  const isSelected = selectedOptions[optionKey] && selectedOptions[optionKey].quantity > 0;
+	  
+		  return (
+			<Pressable
+			  key={optionIndex}
+			  onPress={() => handleSelectOption(menuItemIndex, optionIndex, option.price)}
+			  style={styles.menuItemOption}
+			>
+			  <View style={styles.checkbox}>
+				{isSelected && <MaterialCommunityIcons name="check" size={20} color="black" />}
+			  </View>
+			  <Text style={styles.menuItemOptionName}>{option.name}</Text>
+			  <Text style={styles.menuItemOptionPrice}>{option.price}</Text>
+			</Pressable>
+		  );
+		});
+	  };
+	  
   
 	return (
 	  <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
@@ -477,6 +477,17 @@ const styles = StyleSheet.create({
 		height: 50, // Adjust height as needed
 		justifyContent: 'center', // Center the picker content
 	},
+
+	checkbox: {
+		width: 20,
+		height: 20,
+		marginRight: 10,
+		borderWidth: 1,
+		borderColor: '#000',
+		justifyContent: 'center',
+		alignItems: 'center',
+	  },
+
 	selectt: {
 		//width: 200,
 		height: 65,
@@ -544,6 +555,7 @@ const styles = StyleSheet.create({
 
 	menuItemOption: {
 		flexDirection: "row",
+		alignItems: "center", // Align items in the center vertically
 		justifyContent: "space-between",
 		marginTop: 5, // Add some space between each option
 		paddingVertical: 5, // Add padding inside the option container
