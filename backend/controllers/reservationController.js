@@ -11,20 +11,21 @@ const router = express.Router();
 router.get("/", async (req, res) => {
 	const userRole = req.headers["role"];
 
-	let reservations;
-	// Employee sees upcoming reservations
-	// Manager sees all reservations
-	if (userRole === "manager") {
-		reservations = await Reservation.find();
-	} else if (userRole === "employee") {
-		const currentDate = new Date();
-		reservations = await Reservation.find({
-			dateTime: { $gte: currentDate },
-		});
-	} else {
-		return res.status(403).json({ error: "Invalid role" });
-	}
+	// let reservations;
+	// // Employee sees upcoming reservations
+	// // Manager sees all reservations
+	// if (userRole === "manager") {
+	// 	reservations = await Reservation.find();
+	// } else if (userRole === "employee") {
+	// 	const currentDate = new Date();
+	// 	reservations = await Reservation.find({
+	// 		dateTime: { $gte: currentDate },
+	// 	});
+	// } else {
+	// 	return res.status(403).json({ error: "Invalid role" });
+	// }
 
+	const reservations = await Reservation.find();
 	res.status(200).json(reservations);
 });
 
