@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Platform, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  TouchableOpacity,
+  Platform
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import axios from 'axios';
 
 const AddReservation = ({ navigation }) => {
   const [name, setName] = useState('');
   const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState('');
   const [numGuests, setNumGuests] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -15,16 +26,44 @@ const AddReservation = ({ navigation }) => {
     setDate(currentDate);
   };
 
+  const onChangeTime = (event, selectedTime) => {
+    const currentTime = selectedTime || date;
+    setShowTimePicker(Platform.OS === 'ios');
+    setDate(currentTime);
+  };
+
   const showDatepicker = () => {
     setShowDatePicker(true);
   };
 
-  const handleSubmit = () => {
-    // Implement reservation submission logic here
-    // For example, send the reservation data to a backend server
+  const showTimepicker = () => {
+    setShowTimePicker(true);
+  };
 
-    // After submission, you can navigate back to the previous screen or show a success message
-    // navigation.goBack();
+  const handleSubmit = async () => {
+    if (!name || !numGuests) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    try {
+      const response = await axios.post('https://your-api-endpoint.com/reservations', {
+        name,
+        date: date.toISOString(),
+        numGuests: parseInt(numGuests, 10),
+        // Include any other fields that your API expects
+      });
+
+      if (response.status === 201 || response.status === 200) {
+        Alert.alert('Success', 'Reservation added successfully');
+        navigation.goBack(); // Or navigate to another screen if necessary
+      } else {
+        Alert.alert('Error', 'Failed to add reservation');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Could not submit the reservation');
+      console.error(error);
+    }
   };
 
   return (
@@ -46,7 +85,7 @@ const AddReservation = ({ navigation }) => {
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
-            testID="dateTimePicker"
+            testID="datePicker"
             value={date}
             mode="date"
             display="default"
@@ -57,12 +96,19 @@ const AddReservation = ({ navigation }) => {
 
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Time:</Text>
-        <TextInput
-          style={styles.input}
-          value={time}
-          onChangeText={setTime}
-          placeholder="HH:MM"
-        />
+        <TouchableOpacity onPress={showTimepicker} style={styles.dateInput}>
+          <Text style={styles.dateText}>{date.toLocaleTimeString()}</Text>
+        </TouchableOpacity>
+        {showTimePicker && (
+          <DateTimePicker
+            testID="timePicker"
+            value={date}
+            mode="time"
+            display="spinner" // This will show the scroll wheel on Android
+            is24Hour={true} // Use 24-hour format, set to false for AM/PM
+            onChange={onChangeTime}
+          />
+        )}
       </View>
 
       <View style={styles.inputContainer}>
@@ -112,5 +158,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
 export default AddReservation;
