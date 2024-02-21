@@ -15,6 +15,14 @@ router.get("/", async (req, res) => {
 	res.status(200).json(products);
 });
 
+// Get stockable products
+router.get("/stock", async (req, res) => {
+	const userRole = req.headers["role"];
+
+	const products = await Product.find({ stockable: true });
+	res.status(200).json(products);
+});
+
 // GET products by category
 router.get("/categories/:category", async (req, res) => {
 	const userRole = req.headers["role"];
