@@ -8,17 +8,19 @@ import {
   ScrollView,
   Alert,
   TouchableOpacity,
-  Platform
+  Platform,
+  KeyboardAvoidingView
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 
 const AddReservation = ({ navigation }) => {
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState(''); // State for phone number
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState('');
   const [numGuests, setNumGuests] = useState('');
-  const [notes, setNotes] = useState(''); // State for notes
+  const [notes, setNotes] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
 
@@ -58,6 +60,7 @@ const AddReservation = ({ navigation }) => {
       const response = await axios.post('https://nl-app.onrender.com/reservations', {
         name,
         dateTime,
+        phone,
         numGuests: parseInt(numGuests, 10),
         notes, // Include the notes in the POST request
       });
@@ -108,7 +111,16 @@ const AddReservation = ({ navigation }) => {
           numberOfLines={4}
         />
       </View>
-
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Phone Number:</Text>
+        <TextInput
+          style={styles.input}
+          value={phone}
+          onChangeText={setPhone}
+          placeholder="Enter phone number"
+          keyboardType="phone-pad"
+        />
+      </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Date:</Text>
         <TouchableOpacity onPress={showDatepicker} style={styles.dateInput}>
@@ -124,7 +136,6 @@ const AddReservation = ({ navigation }) => {
           />
         )}
       </View>
-
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Time:</Text>
         <TouchableOpacity onPress={showTimepicker} style={styles.input}>
@@ -141,43 +152,41 @@ const AddReservation = ({ navigation }) => {
           />
         )}
       </View>
-
       <Button title="Submit Reservation" onPress={handleSubmit} />
     </ScrollView>
   );
 };
-    const styles = StyleSheet.create({
-      container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#fff',
-      },
-      inputContainer: {
-        marginBottom: 20,
-      },
-      label: {
-        fontSize: 16,
-        marginBottom: 5,
-      },
-      input: {
-        borderWidth: 1,
-        borderColor: '#ddd',
-        padding: 10,
-        fontSize: 16,
-        borderRadius: 6,
-      },
-      dateInput: {
-        borderWidth: 1,
-        borderColor: '#ddd',
-        padding: 10,
-        borderRadius: 6,
-        justifyContent: 'center',
-      },
-      dateText: {
-        fontSize: 16,
-      },
-      // Add any additional styles you may need here
-    });
-    
-    export default AddReservation;
-    
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 10,
+    fontSize: 16,
+    borderRadius: 6,
+  },
+  dateInput: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 10,
+    borderRadius: 6,
+    justifyContent: 'center',
+  },
+  dateText: {
+    fontSize: 16,
+  },
+  // Add any additional styles you may need here
+});
+
+export default AddReservation;

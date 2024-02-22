@@ -24,6 +24,10 @@ const ReservationItem = ({ item, onEdit, onDelete }) => {
         <Text style={styles.reservationText}>
           {item.name} - {formatDateTime(item.dateTime)} - {item.numGuests} guests
         </Text>
+        {/* Display phone number if it exists */}
+        {item.phone ? (
+          <Text style={styles.reservationPhone}>{item.phone}</Text>
+        ) : null}
         {/* Display notes if they exist */}
         {item.notes ? (
           <Text style={styles.reservationNotes}>{item.notes}</Text>
@@ -40,6 +44,7 @@ const ReservationItem = ({ item, onEdit, onDelete }) => {
     </View>
   );
 };
+
 
 const NieuweReservering = () => {
   const [reservations, setReservations] = useState([]);
@@ -144,6 +149,11 @@ const styles = StyleSheet.create({
   deleteButton: {
     color: '#dc3545',
     fontWeight: '500',
+  },
+  reservationPhone: {
+    fontSize: 16,
+    color: '#333',
+    marginTop: 4,
   },
   fab: {
     position: 'absolute',
