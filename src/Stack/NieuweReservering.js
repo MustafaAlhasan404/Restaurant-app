@@ -51,9 +51,7 @@ const NieuweReservering = () => {
   const navigation = useNavigation();
 
   const handleEdit = (item) => {
-    // Implement the edit functionality or navigation to the edit screen
-    // For example:
-    // navigation.navigate('EditReservation', { reservationId: item._id });
+      navigation.navigate('EditReservation', { reservation: item });
   };
 
   const handleDelete = async (id) => {
