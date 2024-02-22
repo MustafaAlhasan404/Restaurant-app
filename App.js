@@ -13,6 +13,7 @@ import NieuweBestelling from "./src/Stack/NieuweBestelling";
 import NieuweReservering from "./src/Stack/NieuweReservering";
 import Voorraad from "./src/BottomTab/Voorraad";
 import AddReservation from './src/Components/AddReservation';
+import EditReservation from './src/Components/EditReservation';
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -141,6 +142,18 @@ function StackNavigator() {
       <Stack.Screen
         name="AddReservation"
         component={AddReservation}
+        options={{
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#311213",
+          },
+          headerTintColor: "#e27b00",
+        }}
+      />
+
+<Stack.Screen
+        name="EditReservation"
+        component={EditReservation}
         options={{
           headerShown: true,
           headerStyle: {
