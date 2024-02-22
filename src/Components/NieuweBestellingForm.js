@@ -52,20 +52,22 @@ const renderTabBar = (props) => (
 	const [selectedOptions, setSelectedOptions] = useState({});
   
 	useEffect(() => {
-	  const fetchData = async () => {
-		try {
-		  const response = await fetch(
-			"https://nl-app.onrender.com/products/categories/food"
-		  );
-		  const data = await response.json();
-		  setMenuItems(data);
-		} catch (error) {
-		  console.error("Error fetching data:", error);
-		}
-	  };
-  
-	  fetchData();
-	}, []);
+		const fetchData = async () => {
+		  try {
+			const response = await fetch(
+			  "https://nl-app.onrender.com/products/categories/food"
+			);
+			const data = await response.json();
+			// Filter out items with qty 0 or less
+			const filteredData = data.filter(item => item.qty > 0);
+			setMenuItems(filteredData);
+		  } catch (error) {
+			console.error("Error fetching data:", error);
+		  }
+		};
+	
+		fetchData();
+	  }, []);
   
 	const handleSelectOption = (menuItemIndex, optionIndex, optionPrice) => {
 		setSelectedOptions((prevSelectedOptions) => {
@@ -146,22 +148,24 @@ const renderTabBar = (props) => (
 const SecondRoute = () => {
 	const [menuItems, setMenuItems] = useState([]);
 	const [selectedOptions, setSelectedOptions] = useState({});
-  
+
 	useEffect(() => {
-	  const fetchData = async () => {
-		try {
-		  const response = await fetch(
-			"https://nl-app.onrender.com/products/categories/food"
-		  );
-		  const data = await response.json();
-		  setMenuItems(data);
-		} catch (error) {
-		  console.error("Error fetching data:", error);
-		}
-	  };
-  
-	  fetchData();
-	}, []);
+		const fetchData = async () => {
+		  try {
+			const response = await fetch(
+			  "https://nl-app.onrender.com/products/categories/drink"
+			);
+			const data = await response.json();
+			// Filter out items with qty 0 or less
+			const filteredData = data.filter(item => item.qty > 0);
+			setMenuItems(filteredData);
+		  } catch (error) {
+			console.error("Error fetching data:", error);
+		  }
+		};
+	
+		fetchData();
+	  }, []);
   
 	const handleSelectOption = (menuItemIndex, optionIndex, optionPrice) => {
 	  setSelectedOptions((prevSelectedOptions) => {
@@ -233,20 +237,22 @@ const ThirdRoute  = () => {
 	const [selectedOptions, setSelectedOptions] = useState({});
   
 	useEffect(() => {
-	  const fetchData = async () => {
-		try {
-		  const response = await fetch(
-			"https://nl-app.onrender.com/products/categories/food"
-		  );
-		  const data = await response.json();
-		  setMenuItems(data);
-		} catch (error) {
-		  console.error("Error fetching data:", error);
-		}
-	  };
-  
-	  fetchData();
-	}, []);
+		const fetchData = async () => {
+		  try {
+			const response = await fetch(
+			  "https://nl-app.onrender.com/products/categories/snack"
+			);
+			const data = await response.json();
+			// Filter out items with qty 0 or less
+			const filteredData = data.filter(item => item.qty > 0);
+			setMenuItems(filteredData);
+		  } catch (error) {
+			console.error("Error fetching data:", error);
+		  }
+		};
+	
+		fetchData();
+	  }, []);
   
 	const handleSelectOption = (menuItemIndex, optionIndex, optionPrice) => {
 	  setSelectedOptions((prevSelectedOptions) => {

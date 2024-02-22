@@ -132,15 +132,28 @@ const menuItems = [
     stockable: true,
     qty: 15,
   },
-  // {
-  //   name: "French Fries",
-  //   price: 3.49,
-  //   ingredients: "Crispy potato fries",
-  //   category: "snack",
-  //   options: ["Mayo"],
-  //   stockable: true,
-  //   qty: 30,
-  // },
+  {
+    name: "AppleTrial",
+    price: 3.99,
+    ingredients: "100% pure apple juice",
+    category: "drink",
+    options: [
+      { name: "Ice", price: 0.50 },
+    ],
+    stockable: true,
+    qty: 1,
+  },
+  {
+    name: "Apple",
+    price: 3.99,
+    ingredients: "100% pure apple juice",
+    category: "snack",
+    options: [
+      { name: "Ice", price: 0.50 },
+    ],
+    stockable: true,
+    qty: 15,
+  },
   // {
   //   name: "Caesar Salad",
   //   price: 5.99,
