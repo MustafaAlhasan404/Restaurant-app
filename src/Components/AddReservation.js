@@ -18,7 +18,7 @@ const AddReservation = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState('');
   const [numGuests, setNumGuests] = useState('');
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useState(''); // State for notes
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
 
@@ -59,7 +59,7 @@ const AddReservation = ({ navigation }) => {
         name,
         dateTime,
         numGuests: parseInt(numGuests, 10),
-        notes, // Include the notes in the API request
+        notes, // Include the notes in the POST request
       });
 
       if (response.status === 201 || response.status === 200) {
@@ -98,6 +98,18 @@ const AddReservation = ({ navigation }) => {
       </View>
 
       <View style={styles.inputContainer}>
+        <Text style={styles.label}>Notes:</Text>
+        <TextInput
+          style={styles.input}
+          value={notes}
+          onChangeText={setNotes}
+          placeholder="Enter any notes"
+          multiline
+          numberOfLines={4}
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
         <Text style={styles.label}>Date:</Text>
         <TouchableOpacity onPress={showDatepicker} style={styles.dateInput}>
           <Text style={styles.dateText}>{date.toLocaleDateString()}</Text>
@@ -130,23 +142,10 @@ const AddReservation = ({ navigation }) => {
         )}
       </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Notes:</Text>
-        <TextInput
-          style={styles.input}
-          value={notes}
-          onChangeText={setNotes}
-          placeholder="Enter any notes"
-          multiline
-          numberOfLines={4} // Adjust the number of lines as needed
-        />
-      </View>
-
       <Button title="Submit Reservation" onPress={handleSubmit} />
     </ScrollView>
-      );
-    };
-    
+  );
+};
     const styles = StyleSheet.create({
       container: {
         flex: 1,

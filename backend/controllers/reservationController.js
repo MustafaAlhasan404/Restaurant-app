@@ -38,7 +38,7 @@ router.get("/:id", async (req, res) => {
 
 // CREATE reservation
 router.post("/", async (req, res) => {
-	const { name, phone, dateTime, numGuests } = req.body;
+	const { name, phone, dateTime, numGuests,notes } = req.body;
 
 	try {
 		const newReservation = await Reservation.create({
@@ -46,6 +46,7 @@ router.post("/", async (req, res) => {
 			phone,
 			dateTime,
 			numGuests,
+			notes,
 		});
 		res.status(201).json(newReservation);
 	} catch (error) {

@@ -6,7 +6,8 @@ Content-Type: application/json
   "name": "Nour",
   "phone": "565-0000",
   "dateTime": "2024-03-15T17:00:00.000Z", 
-  "numGuests": 4
+  "numGuests": 4,
+  "notes": "No notes"
 }
 
 ### Get all reservations
