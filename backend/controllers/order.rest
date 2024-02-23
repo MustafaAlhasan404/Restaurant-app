@@ -1,0 +1,21 @@
+### Get all orders
+GET http://localhost:3000/orders
+role: employee
+
+### Get unpaid orders
+GET http://localhost:3000/orders/unpaid
+role: employee
+
+### Get order by ID 
+GET http://localhost:3000/orders/65d4720710a0f7f51bc7a179
+
+### Update product
+PATCH http://localhost:3000/orders/65d7d82714056c7ab1b24582
+Content-Type: application/json
+
+{
+  "qty": 1000
+}
+
+### Delete order
+DELETE http://localhost:3000/orders/65d4720710a0f7f51bc7a179

@@ -20,12 +20,12 @@ GET http://localhost:3000/products/categories/food
 ### Get reservation by ID 
 GET http://localhost:3000/products/65d4720710a0f7f51bc7a179
 
-### Update reservation
-PATCH http://localhost:3000/products/65d4720710a0f7f51bc7a179
+### Update product
+PATCH http://localhost:3000/products/65d7d82714056c7ab1b24582
 Content-Type: application/json
 
 {
-  "category": "snack"
+  "qty": 1000
 }
 
 ### Delete reservation

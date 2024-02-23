@@ -1,19 +1,35 @@
-const mongoose = require('mongoose');
-
-const orderItemSchema = new mongoose.Schema({ 
-    productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-    name: String,
-    price: Number,
-    options: [{ name: String, price: Number }]
-});
+const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
-    items: [orderItemSchema],
-    tableNumber: Number,
-    orderStatus: { type: String, enum: ['unprocessed', 'processed', 'paid'], default: 'unprocessed' },
-    notes: String
+	products: [
+		{
+			product: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Product",
+				required: true,
+			},
+			selectedOptions: [{ name: String, price: Number }],
+		},
+	],
+	table: {
+		type: Number,
+		required: true,
+	},
+	orderDate: {
+		type: Date,
+		default: Date.now,
+	},
+	totalPrice: {
+		type: Number,
+		required: true,
+	},
+	status: {
+		type: String,
+		enum: ["unprocessed", "processed", "paid"],
+		default: "unprocessed",
+	},
 });
 
-const Order = mongoose.model('Order', orderSchema);
+const Order = mongoose.model("Order", orderSchema);
 
 module.exports = Order;

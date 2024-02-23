@@ -1,16 +1,8 @@
-// Imports
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-// Import models
-const User = require("./models/user");
-const Reservation = require("./models/reservation");
-const Product = require("./models/product");
-const Stock = require("./models/stock");
-const Order = require("./models/order");
 
-// Create Express app
 const app = express();
 
 // Middleware
@@ -20,8 +12,11 @@ app.use(express.json());
 // Import & use reservations router
 const reservationsRouter = require("./controllers/reservationController");
 const productRouter = require("./controllers/productController");
+const ordersRouter = require("./controllers/orderController");
+
 app.use("/reservations", reservationsRouter);
 app.use("/products", productRouter);
+app.use("/orders", ordersRouter);
 
 // MongoDB Connection
 const uri =
