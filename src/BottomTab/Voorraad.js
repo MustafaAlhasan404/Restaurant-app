@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, TextInput, Alert } from 'react-native';
 import Header from '../Components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -7,7 +7,14 @@ const Voorraad = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editProductId, setEditProductId] = useState(null);
+  const [newQuantity, setNewQuantity] = useState('');
 
+  const closePrompt = () => {
+    setEditProductId(null);
+    setNewQuantity('');
+  };
+  
   useEffect(() => {
     const fetchStockableProducts = async () => {
       try {
@@ -23,6 +30,32 @@ const Voorraad = () => {
 
     fetchStockableProducts();
   }, []);
+
+  const handleEditPress = (productId) => {
+    setEditProductId(productId);
+    // Find the current quantity of the product to prefill the prompt
+    const product = products.find(p => p._id === productId);
+    setNewQuantity(product.qty.toString());
+  };
+
+  const handleUpdateQuantity = async () => {
+    try {
+      const response = await fetch(`https://nl-app.onrender.com/products/stock/${editProductId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          // Include other headers as required, e.g., authorization headers
+        },
+        body: JSON.stringify({ qty: newQuantity }),
+      });
+      const updatedProduct = await response.json();
+      // Update the local state to reflect the new quantity
+      setProducts(products.map(p => p._id === updatedProduct._id ? updatedProduct : p));
+      setEditProductId(null); // Close the prompt
+    } catch (error) {
+      Alert.alert('Error', 'Failed to update quantity');
+    }
+  };
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -41,11 +74,38 @@ const Voorraad = () => {
       <ScrollView style={styles.menuItems}>
         {products.map((product, index) => (
           <View key={index} style={styles.menuItem}>
-            <Text style={styles.menuItemTitle}>{product.name}</Text>
-            <Text style={styles.menuItemPrice}>Quantity: {product.qty}</Text>
+            <View style={styles.productDetails}>
+              <Text style={styles.menuItemTitle}>{product.name}</Text>
+              <Text style={styles.menuItemPrice}>Quantity: {product.qty}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => handleEditPress(product._id)}
+            >
+              <Text style={styles.editButtonText}>Edit</Text>
+            </TouchableOpacity>
           </View>
         ))}
       </ScrollView>
+
+      {editProductId && (
+  <View style={styles.prompt}>
+    <TextInput
+      style={styles.input}
+      value={newQuantity}
+      onChangeText={setNewQuantity}
+      keyboardType="numeric"
+    />
+    <View style={styles.promptButtons}>
+      <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={closePrompt}>
+        <Text style={styles.buttonText}>Cancel</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.button, styles.updateButton]} onPress={handleUpdateQuantity}>
+        <Text style={styles.buttonText}>Update</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+)}
     </View>
   );
 };
@@ -55,28 +115,112 @@ export default Voorraad;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#f0f0f0",
   },
   menuItems: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
   menuItem: {
-    flexDirection: "column",
-    paddingVertical: 17,
-    borderBottomWidth: 1,
-    borderBottomColor: "#bababa",
-    backgroundColor: "#f9f9f9",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    marginVertical: 5,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  productDetails: {
+    flex: 1,
   },
   menuItemTitle: {
-    fontWeight: "bold",
-    fontSize: 16,
+    fontWeight: "600",
+    fontSize: 18,
     color: "#333",
   },
   menuItemPrice: {
-    color: "#e27b00",
-    marginTop: 5,
-    fontWeight: "bold",
-    fontSize: 16,
+    color: "#666",
+    marginTop: 4,
+    fontSize: 14,
   },
-  // Add other styles from Menukaart.js as needed
+  editButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: '#007bff',
+    borderRadius: 5,
+  },
+  editButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  prompt: {
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: [{ translateX: -150 }, { translateY: -100 }],
+    width: 300,
+    height: 200,
+    backgroundColor: '#ffffff',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ced4da',
+    padding: 10,
+    borderRadius: 5,
+    width: '100%',
+    marginBottom: 20,
+    backgroundColor: '#f8f9fa',
+  },
+  promptButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+  },
+  cancelButton: {
+    backgroundColor: '#6c757d',
+  },
+  updateButton: {
+    backgroundColor: '#28a745',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  backdrop: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
 });
+
