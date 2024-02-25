@@ -10,8 +10,9 @@ import {
 import { FAB } from 'react-native-paper';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import { useUser } from '../contexts/UserContext'; // Import useUser hook
 
-const ReservationItem = ({ item, onEdit, onDelete }) => {
+const ReservationItem = ({ item, onEdit, onDelete, canEdit }) => {
   // Function to format the date and time
   const formatDateTime = (dateTimeString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -33,25 +34,27 @@ const ReservationItem = ({ item, onEdit, onDelete }) => {
           <Text style={styles.reservationNotes}>{item.notes}</Text>
         ) : null}
       </View>
-      <View style={styles.buttonGroup}>
-        <TouchableOpacity onPress={() => onEdit(item)}>
-          <Text style={styles.editButton}>Edit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => onDelete(item._id)}>
-          <Text style={styles.deleteButton}>Delete</Text>
-        </TouchableOpacity>
-      </View>
+      {canEdit && (
+        <View style={styles.buttonGroup}>
+          <TouchableOpacity onPress={() => onEdit(item)}>
+            <Text style={styles.editButton}>Edit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => onDelete(item._id)}>
+            <Text style={styles.deleteButton}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
 
-
 const NieuweReservering = () => {
   const [reservations, setReservations] = useState([]);
   const navigation = useNavigation();
+  const { user } = useUser(); // Use the useUser hook to access the user object
 
   const handleEdit = (item) => {
-      navigation.navigate('EditReservation', { reservation: item });
+    navigation.navigate('EditReservation', { reservation: item });
   };
 
   const handleDelete = async (id) => {
@@ -77,6 +80,9 @@ const NieuweReservering = () => {
     fetchReservations();
   }, []);
 
+  // Determine if the user can edit or delete reservations
+  const canEdit = user && user.role === 'manager';
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -86,16 +92,19 @@ const NieuweReservering = () => {
             item={item}
             onEdit={() => handleEdit(item)}
             onDelete={() => handleDelete(item._id)}
+            canEdit={canEdit}
           />
         )}
         keyExtractor={(item) => item._id.toString()}
       />
 
-      <FAB
-        style={styles.fab}
-        icon="plus"
-        onPress={() => navigation.navigate('AddReservation')}
-      />
+      {canEdit && (
+        <FAB
+          style={styles.fab}
+          icon="plus"
+          onPress={() => navigation.navigate('AddReservation')}
+        />
+      )}
     </View>
   );
 };

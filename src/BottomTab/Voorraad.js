@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, TextInput, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+} from 'react-native';
 import Header from '../Components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useUser } from '../contexts/UserContext'; // Import useUser hook
 
 const Voorraad = () => {
   const [products, setProducts] = useState([]);
@@ -10,11 +20,13 @@ const Voorraad = () => {
   const [editProductId, setEditProductId] = useState(null);
   const [newQuantity, setNewQuantity] = useState('');
 
+  const { user } = useUser(); // Use the useUser hook to access the user object
+
   const closePrompt = () => {
     setEditProductId(null);
     setNewQuantity('');
   };
-  
+
   useEffect(() => {
     const fetchStockableProducts = async () => {
       try {
@@ -51,7 +63,7 @@ const Voorraad = () => {
       const updatedProduct = await response.json();
       // Update the local state to reflect the new quantity
       setProducts(products.map(p => p._id === updatedProduct._id ? updatedProduct : p));
-      setEditProductId(null); // Close the prompt
+      closePrompt(); // Close the prompt
     } catch (error) {
       Alert.alert('Error', 'Failed to update quantity');
     }
@@ -78,34 +90,38 @@ const Voorraad = () => {
               <Text style={styles.menuItemTitle}>{product.name}</Text>
               <Text style={styles.menuItemPrice}>Quantity: {product.qty}</Text>
             </View>
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() => handleEditPress(product._id)}
-            >
-              <Text style={styles.editButtonText}>Edit</Text>
-            </TouchableOpacity>
+            {/* Render the edit button only if the user is a manager */}
+            {user && user.role === 'manager' && (
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() => handleEditPress(product._id)}
+              >
+                <Text style={styles.editButtonText}>Edit</Text>
+              </TouchableOpacity>
+            )}
           </View>
         ))}
       </ScrollView>
 
-      {editProductId && (
-  <View style={styles.prompt}>
-    <TextInput
-      style={styles.input}
-      value={newQuantity}
-      onChangeText={setNewQuantity}
-      keyboardType="numeric"
-    />
-    <View style={styles.promptButtons}>
-      <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={closePrompt}>
-        <Text style={styles.buttonText}>Cancel</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.button, styles.updateButton]} onPress={handleUpdateQuantity}>
-        <Text style={styles.buttonText}>Update</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-)}
+      {/* Render the prompt only if the user is a manager */}
+      {user && user.role === 'manager' && editProductId && (
+        <View style={styles.prompt}>
+          <TextInput
+            style={styles.input}
+            value={newQuantity}
+            onChangeText={setNewQuantity}
+            keyboardType="numeric"
+          />
+          <View style={styles.promptButtons}>
+            <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={closePrompt}>
+              <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, styles.updateButton]} onPress={handleUpdateQuantity}>
+              <Text style={styles.buttonText}>Update</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -116,6 +132,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f0f0f0",
+  },
+  menuItems: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
   menuItems: {
     paddingHorizontal: 20,
@@ -152,7 +172,7 @@ const styles = StyleSheet.create({
   editButton: {
     paddingVertical: 8,
     paddingHorizontal: 12,
-    backgroundColor: '#007bff',
+    backgroundColor: '#e27b00',
     borderRadius: 5,
   },
   editButtonText: {
