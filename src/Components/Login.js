@@ -1,6 +1,6 @@
 // src/Components/Login.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, Alert, StyleSheet,TouchableOpacity } from 'react-native';
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -53,9 +53,14 @@ const Login = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Login" onPress={handleLogin} />
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
       <Text style={styles.signupPrompt}>
-        Don't have an account? <Text style={styles.signupLink} onPress={() => navigation.navigate('Signup')}>Sign up</Text>
+        Don't have an account?{' '}
+        <Text style={styles.signupLink} onPress={() => navigation.navigate('Signup')}>
+          Sign up
+        </Text>
       </Text>
     </View>
   );
@@ -64,9 +69,10 @@ const Login = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+    backgroundColor: '#e0d5d6', // Background color similar to Home.js
+    paddingHorizontal: 20, // Horizontal padding similar to Home.js
+    justifyContent: 'center', // Center content vertically
+    alignItems: 'center', // Center content horizontally
   },
   input: {
     width: '100%',
@@ -75,16 +81,28 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
+    backgroundColor: 'white', // Input background color
+  },
+  button: {
+    backgroundColor: '#e27b00', // Button background color similar to Home.js
+    padding: 15,
+    width: '100%',
+    borderRadius: 5,
+    alignItems: 'center', // Center text horizontally
+    marginTop: 20, // Margin top for button
+  },
+  buttonText: {
+    color: 'white', // Button text color
+    fontWeight: '600', // Font weight for button text
   },
   signupPrompt: {
     marginTop: 20,
     fontSize: 16,
   },
   signupLink: {
-    color: '#0000FF',
+    color: '#e27b00',
     fontWeight: 'bold',
   },
-  // Add other styles if needed
 });
 
 export default Login;
