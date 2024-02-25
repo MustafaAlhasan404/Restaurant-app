@@ -73,5 +73,27 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+// POST login user
+router.post("/login", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const user = await User.findOne({ username: username });
+
+        if (!user) {
+            return res.status(401).json({ message: "Invalid username or password" });
+        }
+
+        // Since password hashing is not required, we compare the plain text passwords directly
+        if (user.password !== password) {
+            return res.status(401).json({ message: "Invalid username or password" });
+        }
+
+        // Assuming login is successful, you might want to return the user data
+        res.json({ user: user });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Export router
 module.exports = router;
