@@ -1,11 +1,12 @@
+// App.js
+import React, { useState } from 'react';
 import "react-native-gesture-handler";
-import { NavigationContainer, useRoute } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "react-native-paper";
-import FloatingButton from "./src/Components/FloatingButton";
-
+import Login from "./src/Components/Login";
 import Home from "./src/BottomTab/Home";
 import Menukaart from "./src/BottomTab/Menukaart";
 import Bestellingen from "./src/BottomTab/Bestellingen";
@@ -14,10 +15,11 @@ import NieuweReservering from "./src/Stack/NieuweReservering";
 import Voorraad from "./src/BottomTab/Voorraad";
 import AddReservation from "./src/Components/AddReservation";
 import EditReservation from "./src/Components/EditReservation";
-
+import UserContext from "./src/UserContext"; // Import UserContext
+import Signup from "./src/Components/Signup"
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
-
+const RootStack = createStackNavigator();
 function TabNavigator() {
 	return (
 		<Tab.Navigator
@@ -104,7 +106,24 @@ function TabNavigator() {
 		</Tab.Navigator>
 	);
 }
-
+function RootStackNavigator() {
+	return (
+		<RootStack.Navigator screenOptions={{ headerShown: false }}>
+			<RootStack.Screen
+				name="Login"
+				component={Login}
+			/>
+			<RootStack.Screen
+				name="Signup"
+				component={Signup}
+			/>
+			<RootStack.Screen
+				name="Main"
+				component={TabNavigator}
+			/>
+		</RootStack.Navigator>
+	);
+}
 function StackNavigator() {
 	return (
 		<Stack.Navigator>
@@ -165,15 +184,25 @@ function StackNavigator() {
 	);
 }
 
-import UserContext from "./UserContext";
 
 export default function App() {
-	<UserContext.Provider value={{ username: "", role: "" }}>
-		const theme = useTheme(); theme.colors.secondaryContainer =
-		"transparent"; return (
-		<NavigationContainer>
-			<TabNavigator />
-		</NavigationContainer>
-		);
-	</UserContext.Provider>;
+	// State to hold the user data
+	const [user, setUser] = useState({ username: '', role: '' });
+
+	// Function to update the user data
+	const handleSetUser = (username, role) => {
+		setUser({ username, role });
+	};
+
+	// Apply the theme colors as before
+	const theme = useTheme();
+	theme.colors.secondaryContainer = "transparent";
+
+	return (
+		<UserContext.Provider value={{ ...user, setUser: handleSetUser }}>
+			<NavigationContainer>
+				<RootStackNavigator />
+			</NavigationContainer>
+		</UserContext.Provider>
+	);
 }

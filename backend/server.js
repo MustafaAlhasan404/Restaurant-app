@@ -13,11 +13,12 @@ app.use(express.json());
 const reservationsRouter = require("./controllers/reservationController");
 const productRouter = require("./controllers/productController");
 const ordersRouter = require("./controllers/orderController");
+const usersRouter = require("./controllers/userController"); // Import the user controller
 
 app.use("/reservations", reservationsRouter);
 app.use("/products", productRouter);
 app.use("/orders", ordersRouter);
-
+app.use("/users", usersRouter); 
 // MongoDB Connection
 const uri =
 	"mongodb+srv://Mustafa:Mustafa00313@cluster0.9n4bpm2.mongodb.net/?retryWrites=true&w=majority";
