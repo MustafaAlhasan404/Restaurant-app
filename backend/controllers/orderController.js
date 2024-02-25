@@ -19,28 +19,46 @@ router.get("/", async (req, res) => {
 	}
 });
 
+// Get order by id
+router.get("/:id", async (req, res) => {
+	try {
+		const { id } = req.params;
+
+		const order = await Order.findById(id);
+
+		if (!order) {
+			return res.status(404).json({ error: "Order not found" });
+		}
+
+		res.json(order);
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: "Server error" });
+	}
+});
+
 // Get unpaid orders (unprocessed, then processed)
 router.get("/unpaid", async (req, res) => {
-  try {
-    const unpaidOrders = await Order.find({
-      status: { $in: ["unprocessed", "processed"] },
-    }).sort({ status: 1 });
+	try {
+		const unpaidOrders = await Order.find({
+			status: { $in: ["unprocessed", "processed"] },
+		}).sort({ status: 1 });
 
-    // Custom sorting logic
-    unpaidOrders.sort((a, b) => {
-      if (a.status === "unprocessed" && b.status === "processed") {
-        return -1;
-      } else if (a.status === "processed" && b.status === "unprocessed") {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+		// Custom sorting logic
+		unpaidOrders.sort((a, b) => {
+			if (a.status === "unprocessed" && b.status === "processed") {
+				return -1;
+			} else if (a.status === "processed" && b.status === "unprocessed") {
+				return 1;
+			} else {
+				return 0;
+			}
+		});
 
-    res.json(unpaidOrders);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+		res.json(unpaidOrders);
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
 });
 
 // Create a new order
@@ -48,41 +66,50 @@ router.post("/", async (req, res) => {
 	try {
 		const { products, table } = req.body;
 
-		// Calculate total price
-		let totalPrice = 0;
-		for (const productObj of products) {
-			const { product, selectedOptions } = productObj;
-
-			let productData = product;
-			if (product.stockable) {
-				productData = await Product.findByIdAndUpdate(
-					product._id,
-					{ $inc: { quantity: -1 } },
-					{ new: true }
-				);
-			}
-
-			let productPrice = productData.price;
-			for (const option of selectedOptions) {
-				productPrice += option.price;
-			}
-
-			totalPrice += productPrice;
+		if (!products || !table) {
+			return res.status(400).json({ error: "Required fields missing" });
 		}
 
-		// Create new order
+		let totalPrice = 0;
+
+		// Loop through order products
+		for (let product of products) {
+			const dbProduct = await Product.findById(product.product);
+
+			if (!dbProduct) {
+				return res.status(400).json({ error: "Invalid product" });
+			}
+
+			totalPrice += dbProduct.price;
+
+			if (product.selectedOptions) {
+				for (let option of product.selectedOptions) {
+					totalPrice += option.price;
+				}
+			}
+
+			if (dbProduct.stockable) {
+				dbProduct.qty--;
+				await dbProduct.save();
+			}
+		}
+
 		const newOrder = new Order({
 			products,
 			table,
 			totalPrice,
 		});
 
-		const createdOrder = await newOrder.save();
-		res.status(201).json(createdOrder);
-	} catch (error) {
-		res.status(400).json({ message: error.message });
+		await newOrder.save();
+
+		res.status(201).json(newOrder);
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: "Server error" });
 	}
 });
+
+module.exports = router;
 
 // Update order status to "processed"
 router.patch("/:orderId/processed", async (req, res) => {
