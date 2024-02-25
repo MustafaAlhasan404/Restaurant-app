@@ -1,17 +1,13 @@
 // src/Components/Login.js
-import React, { useContext, useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
-import UserContext from "../UserContext";
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
 
 const Login = ({ navigation }) => {
-  const { setUser } = useContext(UserContext);
-  const [inputUsername, setInputUsername] = useState('');
-  const [inputPassword, setInputPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  // Function to handle the login action
   const handleLogin = () => {
-    // Assuming there's a /login endpoint for authentication
-    const loginUrl = 'https://nl-app.onrender.com/users';
+    const loginUrl = 'https://nl-app.onrender.com/users/login';
 
     fetch(loginUrl, {
       method: 'POST',
@@ -19,8 +15,8 @@ const Login = ({ navigation }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username: inputUsername,
-        password: inputPassword,
+        username: username,
+        password: password,
       }),
     })
     .then(response => {
@@ -31,16 +27,14 @@ const Login = ({ navigation }) => {
     })
     .then(data => {
       // Assuming the response contains the user object on successful login
-      if (data.user) {
-        setUser(data.user);
-        navigation.navigate('Main');
-      } else {
-        Alert.alert("Login Failed", "Invalid username or password.");
-      }
+      // You might want to store the user data in context or state
+      console.log('Login successful:', data.user);
+      // Navigate to the main screen or dashboard after login
+      navigation.navigate('Main');
     })
     .catch(error => {
       console.error('Error:', error);
-      Alert.alert("Login Error", "An error occurred during login.");
+      Alert.alert("Login Error", "Invalid username or password.");
     });
   };
 
@@ -49,14 +43,14 @@ const Login = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Username"
-        value={inputUsername}
-        onChangeText={setInputUsername}
+        value={username}
+        onChangeText={setUsername}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
-        value={inputPassword}
-        onChangeText={setInputPassword}
+        value={password}
+        onChangeText={setPassword}
         secureTextEntry
       />
       <Button title="Login" onPress={handleLogin} />
@@ -90,6 +84,7 @@ const styles = StyleSheet.create({
     color: '#0000FF',
     fontWeight: 'bold',
   },
+  // Add other styles if needed
 });
 
 export default Login;

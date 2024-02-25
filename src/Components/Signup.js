@@ -1,20 +1,45 @@
 // src/Components/Signup.js
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, Alert, StyleSheet, Switch } from "react-native";
 
 const Signup = ({ navigation }) => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
+  const [isManager, setIsManager] = useState(false); // Toggle state
 
   // Function to handle the signup action
   const handleSignup = () => {
-    // Here you would typically send the data to your backend to create a new user
-    // For example, using fetch or axios to send a POST request to your server's API endpoint
+    const signupUrl = 'https://nl-app.onrender.com/users'; // Replace with your backend's actual URL
 
-    // After successful signup, you might want to navigate to the login page or directly log the user in
-    // navigation.navigate('Login');
+    fetch(signupUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        Name: name,
+        username: username,
+        password: password,
+        role: isManager ? 'manager' : 'employee', // Set role based on toggle
+      }),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Signup failed');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Assuming the response contains the created user object
+      console.log('Signup successful:', data);
+      // Navigate to the login page or directly log the user in
+      navigation.navigate('Login');
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      Alert.alert("Signup Error", "There was a problem creating your account.");
+    });
   };
 
   return (
@@ -38,12 +63,16 @@ const Signup = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Role (employee/manager)"
-        value={role}
-        onChangeText={setRole}
-      />
+      <View style={styles.toggleContainer}>
+        <Text style={styles.toggleLabel}>Employee</Text>
+        <Switch
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={isManager ? "#f5dd4b" : "#f4f3f4"}
+          onValueChange={() => setIsManager(previousState => !previousState)}
+          value={isManager}
+        />
+        <Text style={styles.toggleLabel}>Manager</Text>
+      </View>
       <Button title="Sign Up" onPress={handleSignup} />
     </View>
   );
@@ -63,6 +92,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  toggleLabel: {
+    fontSize: 16,
+    marginHorizontal: 10,
   },
 });
 
