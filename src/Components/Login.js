@@ -1,18 +1,47 @@
 // src/Components/Login.js
 import React, { useContext, useState } from "react";
-import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import UserContext from "../UserContext";
 
 const Login = ({ navigation }) => {
   const { setUser } = useContext(UserContext);
   const [inputUsername, setInputUsername] = useState('');
-  const [inputRole, setInputRole] = useState('');
+  const [inputPassword, setInputPassword] = useState('');
 
   // Function to handle the login action
   const handleLogin = () => {
-    setUser({ username: inputUsername, role: inputRole });
-    // Navigate to the Home screen after setting the user
-    navigation.navigate('Main');
+    // Assuming there's a /login endpoint for authentication
+    const loginUrl = 'https://nl-app.onrender.com/users';
+
+    fetch(loginUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: inputUsername,
+        password: inputPassword,
+      }),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Assuming the response contains the user object on successful login
+      if (data.user) {
+        setUser(data.user);
+        navigation.navigate('Main');
+      } else {
+        Alert.alert("Login Failed", "Invalid username or password.");
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      Alert.alert("Login Error", "An error occurred during login.");
+    });
   };
 
   return (
@@ -25,9 +54,10 @@ const Login = ({ navigation }) => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Role"
-        value={inputRole}
-        onChangeText={setInputRole}
+        placeholder="Password"
+        value={inputPassword}
+        onChangeText={setInputPassword}
+        secureTextEntry
       />
       <Button title="Login" onPress={handleLogin} />
       <Text style={styles.signupPrompt}>
