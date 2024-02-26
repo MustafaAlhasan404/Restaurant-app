@@ -94,9 +94,9 @@ const Bestellingen = () => {
 			</SafeAreaView>
 
 			<View style={styles.mainContent}>
-				<Text style={styles.welcomeText}>
+				{/* <Text style={styles.welcomeText}>
 					Welcome, {user ? user.Name : "Guest"}!
-				</Text>
+				</Text> */}
 
 				<FlatList
 					data={orders}
@@ -130,19 +130,24 @@ const Bestellingen = () => {
 									{item.status.toUpperCase()}
 								</Text>
 							</View>
-							{item.products.map((product, index) => (
-								<View key={index} style={styles.productItem}>
-									<Text style={styles.productDetail}>
-										Product ID: {product.product}
-									</Text>
-									<Text style={styles.productDetail}>
-										Selected Options:{" "}
-										{product.selectedOptions
-											.map((option) => option.name)
-											.join(", ")}
-									</Text>
-								</View>
-							))}
+							<View style={styles.productCards}>
+								{item.products.map((product, index) => (
+									<View
+										key={index}
+										style={styles.productItem}
+									>
+										<Text style={styles.productDetail}>
+											Product ID: {product.product}
+										</Text>
+										<Text style={styles.productDetail}>
+											Selected Options:{" "}
+											{product.selectedOptions
+												.map((option) => option.name)
+												.join(", ")}
+										</Text>
+									</View>
+								))}
+							</View>
 							<View style={styles.spaceBetweenRow}>
 								<TouchableOpacity
 									style={styles.statusButton}
@@ -199,7 +204,7 @@ const styles = StyleSheet.create({
 		elevation: 3,
 	},
 	orderId: {
-		fontSize: 16,
+		fontSize: 20,
 		fontWeight: "bold",
 		marginBottom: 5,
 	},
@@ -244,5 +249,8 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "center",
+	},
+	productCards: {
+		marginVertical: 10,
 	},
 });
