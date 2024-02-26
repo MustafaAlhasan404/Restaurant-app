@@ -111,6 +111,23 @@ router.post("/", async (req, res) => {
 
 module.exports = router;
 
+// Update order status to "unprocessed"
+router.patch("/:orderId/unprocessed", async (req, res) => {
+    try {
+        const { orderId } = req.params;
+
+        const updatedOrder = await Order.findByIdAndUpdate(
+            orderId,
+            { status: "unprocessed" },
+            { new: true }
+        );
+
+        res.status(200).json(updatedOrder);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 // Update order status to "processed"
 router.patch("/:orderId/processed", async (req, res) => {
 	try {
