@@ -241,10 +241,10 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	productItem: {
-		marginTop: 10,
-		padding: 10,
-		backgroundColor: "#f2f2f2",
-		borderRadius: 5,
+		// marginTop: 10,
+		// padding: 10,
+		// backgroundColor: "#f2f2f2",
+		// borderRadius: 5,
 	},
 	productDetail: {
 		fontSize: 13,
@@ -278,6 +278,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	productCards: {
-		marginVertical: 10,
+		marginTop: 10,
+		marginBottom: 20,
 	},
 });
