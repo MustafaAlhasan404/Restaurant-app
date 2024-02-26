@@ -23,9 +23,31 @@ const Bestellingen = () => {
 				const response = await axios.get(
 					"https://nl-app.onrender.com/orders"
 				);
-				setOrders(response.data);
+
+				// Map products to new array with details
+				const ordersWithDetails = await Promise.all(
+					response.data.map(async (order) => {
+						order.products = await Promise.all(
+							order.products.map(async (product) => {
+								const productDetails = await axios.get(
+									`https://nl-app.onrender.com/products/${product.product}`
+								);
+
+								return {
+									...product,
+									name: productDetails.data.name,
+									price: productDetails.data.price,
+								};
+							})
+						);
+
+						return order;
+					})
+				);
+
+				setOrders(ordersWithDetails);
 			} catch (error) {
-				console.error("Error fetching orders:", error);
+				console.error("Error fetching orders", error);
 			}
 		};
 
@@ -131,16 +153,21 @@ const Bestellingen = () => {
 								</Text>
 							</View>
 							<View style={styles.productCards}>
+								{console.log(item.products)}
 								{item.products.map((product, index) => (
 									<View
 										key={index}
 										style={styles.productItem}
 									>
+										<View style={styles.spaceBetweenRow}>
+											<Text style={styles.productDetail}>
+												{index + 1}.{" " + product.name}
+											</Text>
+											<Text style={styles.productDetail}>
+												${product.price}
+											</Text>
+										</View>
 										<Text style={styles.productDetail}>
-											Product ID: {product.product}
-										</Text>
-										<Text style={styles.productDetail}>
-											Selected Options:{" "}
 											{product.selectedOptions
 												.map((option) => option.name)
 												.join(", ")}
