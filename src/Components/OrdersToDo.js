@@ -35,7 +35,7 @@ const AccordionItem = ({ item, index, details }) => {
       <TouchableWithoutFeedback onPress={toggleAccordion} style={styles.acco}>
         <View style={styles.header}>
           <Text style={styles.title}>Tafel: {item.table}</Text>
-          <Text style={styles.orderdate}>Geplaatst: 13-2 om 13:30u</Text>
+          <Text style={styles.orderdate}>Geplaatst: {item.orderDate}</Text>
           <MaterialIcons
             color="gray"
             size={22}
@@ -48,28 +48,7 @@ const AccordionItem = ({ item, index, details }) => {
         style={[styles.content, { height: heightAnimationInterpolation }]}
       >
         <View style={{ flex: 1, flexDirection: "column" }}>
-          <Text style={styles.orderdetails}>
-            Tafel:
-            <Text style={styles.orderdetailstxt}> {item.table}</Text>
-          </Text>
-          <Text style={styles.orderdetails}>
-            Totaalbedrag:{" "}
-            <Text style={styles.orderdetailstxt}>€{item.total}</Text>
-          </Text>
-          <Text style={styles.orderdetails}>
-            Producten:{" "}
-            <Text style={styles.orderdetailstxt}>{item.products}</Text>
-          </Text>
-          <Text style={styles.orderdetails}>
-            Notitie: <Text style={styles.orderdetailstxt}>{item.notes}</Text>
-          </Text>
-          <Text style={styles.orderdetails}>
-            Betalen:{" "}
-            <Text style={styles.orderdetailstxt}>{item.paymentmethod}</Text>
-          </Text>
-          <Text style={styles.orderdetails}>
-            Betaald? <Text style={styles.orderdetailstxt}>{item.paid}</Text>
-          </Text>
+          {/* Details can be mapped here based on the item structure */}
         </View>
       </Animated.View>
     </View>
@@ -77,37 +56,39 @@ const AccordionItem = ({ item, index, details }) => {
 };
 
 const OrdersToDo = () => {
+  const [orders, setOrders] = useState([]);
+  const [badgeNumber, setBadgeNumber] = useState(0);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch('https://nl-app.onrender.com/orders');
+        const data = await response.json();
+        setOrders(data);
+        setBadgeNumber(data.length); // Assuming the data is an array of orders
+      } catch (error) {
+        console.error("Failed to fetch orders:", error);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
   return (
     <View style={styles.container}>
+      <View style={{ flexDirection: "row", gap: 5 }}>
+        <View style={styles.badgenumber}>
+          <Text style={styles.badgenumbertext}>{badgeNumber}</Text>
+        </View>
+        <Text style={styles.contentheader}>Open bestellingen:</Text>
+      </View>
+
       <FlatList
-        data={[
-          {
-            table: "1",
-            total: "99.22",
-            products:
-              "1x Loempia // 2x Cola // 1x Loempia // 1x Loempia // 1x Loempia // 1x Loempia",
-            paymentmethod: "Contant",
-            paid: "Nee",
-            notes: "extra peper",
-          },
-          {
-            table: "2",
-            total: "11.22",
-            products:
-              "9x Loempia // 2x Cola // 1x Loempia // 1x Nasi // 1x Loempia // 97x Bara met kip // 39x Ajam pangang",
-            paymentmethod: "Contant",
-            paid: "Nee",
-            notes: "extra peper",
-          },
-          { table: "3" },
-          { table: "4" },
-          { table: "5" },
-          { table: "6" },
-        ]}
+        data={orders}
         renderItem={({ item, index }) => (
           <AccordionItem item={item} index={index} />
         )}
-        keyExtractor={(item) => item.table}
+        keyExtractor={(item) => item._id} // Assuming each order has a unique _id
       />
     </View>
   );
@@ -131,13 +112,13 @@ const styles = StyleSheet.create({
     borderColor: "#e27b00",
   },
   header: {
-    backgroundColor: "white",
-    padding: 12,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    borderRadius: 3,
+    padding: 10,
+    backgroundColor: '#fff', // This is the background color of the item
+    marginTop: 5,
     borderWidth: 1,
-    borderColor: "#e27b00",
+    borderColor: '#e27b00',
+    borderRadius: 10,
+    overflow: 'hidden', // This is important for text to wrap
   },
 
   content: {
@@ -159,6 +140,25 @@ const styles = StyleSheet.create({
   },
   title: {
     marginRight: "auto",
+  },
+  badgenumber: {
+    backgroundColor: "#e27b00",
+    width: 23,
+    height: 23,
+    justifyContent: 'center', // Center the text vertically
+    borderRadius: 40,
+  },
+  badgenumbertext: {
+    color: "white",
+    fontSize: 13,
+    textAlign: "center",
+    fontWeight: "600",
+  },
+  contentheader: {
+    fontWeight: "bold",
+    color: "black",
+    fontSize: 14,
+    marginLeft: 5,
   },
 });
 
