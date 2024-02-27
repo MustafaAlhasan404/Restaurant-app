@@ -1,20 +1,15 @@
+### Create new reservation
 POST http://localhost:3000/products
 Content-Type: application/json
 
 {
-  "name": "Coffee",
-  "price": 1,
-  "ingredients": "coffee beans",
+  "name": "Orange Juice",
+  "price": "1",
+  "ingredients": "Orange juice, ice", 
   "category": "drink",
-  "options": [
-    {
-      "name": "cream",
-      "price": 0.50
-    }
-  ],
-  "stockable": true,
-  "qty": 100
+  "options": [{"name": "No ice", "price": 0}]
 }
+
 ### Get all products
 GET http://localhost:3000/products
 role: employee

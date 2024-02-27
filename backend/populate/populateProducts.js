@@ -154,18 +154,42 @@ const menuItems = [
     stockable: true,
     qty: 15,
   },
-  {
-    name: "Coffee",
-    price: 1,
-    ingredients: "coffee beans",
-    category: "drink",
-    options: [
-      {
-      }
-    ],
-    stockable: true,
-    qty: 100
-  }
+  // {
+  //   name: "Caesar Salad",
+  //   price: 5.99,
+  //   ingredients: "Romaine lettuce, croutons, Parmesan cheese, Caesar dressing",
+  //   category: "snack",
+  //   options: ["tosted bread"],
+  //   stockable: true,
+  //   qty: 15,
+  // },
+  // {
+  //   name: "Mozzarella Sticks",
+  //   price: 4.99,
+  //   ingredients: "Breaded mozzarella cheese sticks",
+  //   category: "snack",
+  //   options: ["1 + "],
+  //   stockable: true,
+  //   qty: 20,
+  // },
+  // {
+  //   name: "Onion Rings",
+  //   price: 3.99,
+  //   ingredients: "Battered and deep-fried onion rings",
+  //   category: "snack",
+  //   options: ["Honey mustard"],
+  //   stockable: true,
+  //   qty: 25,
+  // },
+  // {
+  //   name: "Chicken Soup",
+  //   price: 4.99,
+  //   ingredients: "Homemade chicken soup with vegetables",
+  //   category: "snack",
+  //   options: ["bread chips"],
+  //   stockable: true,
+  //   qty: 10,
+  // },
 ];
 
 // Function to populate the database with menu items
