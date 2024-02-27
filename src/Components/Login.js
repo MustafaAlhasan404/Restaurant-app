@@ -1,109 +1,121 @@
 // src/Components/Login.js
-import React, { useState } from 'react';
-import { View, Text, TextInput, Alert, StyleSheet, TouchableOpacity } from 'react-native';
-import { useUser } from '../contexts/UserContext'; // Import useUser hook
+import React, { useState } from "react";
+import {
+	View,
+	Text,
+	TextInput,
+	Alert,
+	StyleSheet,
+	TouchableOpacity,
+} from "react-native";
+import { useUser } from "../contexts/UserContext"; // Import useUser hook
 
 const Login = ({ navigation }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const { setUser } = useUser(); // Use the useUser hook to access setUser
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+	const { setUser } = useUser(); // Use the useUser hook to access setUser
 
-  const handleLogin = () => {
-    const loginUrl = 'https://nl-app.onrender.com/users/login';
+	const handleLogin = () => {
+		const loginUrl = "https://nl-app.onrender.com/users/login";
 
-    fetch(loginUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-      return response.json();
-    })
-    .then(data => {
-      // Assuming the response contains the user object on successful login
-      console.log('Login successful:', data.user);
-      setUser(data.user); // Set the user globally using the context
-      navigation.navigate('Main'); // Navigate to the main screen or dashboard after login
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      Alert.alert("Login Error", "Invalid username or password.");
-    });
-  };
+		fetch(loginUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				username: username,
+				password: password,
+			}),
+		})
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error("Login failed");
+				}
+				return response.json();
+			})
+			.then((data) => {
+				// Assuming the response contains the user object on successful login
+				console.log("Login successful:", data.user);
+				setUser(data.user); // Set the user globally using the context
+				navigation.navigate("Main"); // Navigate to the main screen or dashboard after login
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+				Alert.alert("Login Error", "Invalid username or password.");
+			});
+	};
 
-  return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <Text style={styles.signupPrompt}>
-        Don't have an account?{' '}
-        <Text style={styles.signupLink} onPress={() => navigation.navigate('Signup')}>
-          Sign up
-        </Text>
-      </Text>
-    </View>
-  );
+	return (
+		<View style={styles.container}>
+			<TextInput
+				style={styles.input}
+				placeholder="Username"
+				value={username}
+				onChangeText={setUsername}
+				autoCapitalize="none"
+			/>
+			<TextInput
+				style={styles.input}
+				placeholder="Password"
+				value={password}
+				onChangeText={setPassword}
+				autoCapitalize="none"
+				secureTextEntry
+			/>
+			<TouchableOpacity style={styles.button} onPress={handleLogin}>
+				<Text style={styles.buttonText}>Login</Text>
+			</TouchableOpacity>
+			<Text style={styles.signupPrompt}>
+				Don't have an account?{" "}
+				<Text
+					style={styles.signupLink}
+					onPress={() => navigation.navigate("Signup")}
+				>
+					Sign up
+				</Text>
+			</Text>
+		</View>
+	);
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#e0d5d6',
-    paddingHorizontal: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  input: {
-    width: '100%',
-    marginVertical: 10,
-    padding: 15,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
-    backgroundColor: 'white',
-  },
-  button: {
-    backgroundColor: '#e27b00',
-    padding: 15,
-    width: '100%',
-    borderRadius: 5,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: '600',
-  },
-  signupPrompt: {
-    marginTop: 20,
-    fontSize: 16,
-  },
-  signupLink: {
-    color: '#e27b00',
-    fontWeight: 'bold',
-  },
+	container: {
+		flex: 1,
+		backgroundColor: "#e0d5d6",
+		paddingHorizontal: 20,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	input: {
+		width: "100%",
+		marginVertical: 10,
+		padding: 15,
+		borderWidth: 1,
+		borderColor: "gray",
+		borderRadius: 5,
+		backgroundColor: "white",
+	},
+	button: {
+		backgroundColor: "#e27b00",
+		padding: 15,
+		width: "100%",
+		borderRadius: 5,
+		alignItems: "center",
+		marginTop: 20,
+	},
+	buttonText: {
+		color: "white",
+		fontWeight: "600",
+	},
+	signupPrompt: {
+		marginTop: 20,
+		fontSize: 16,
+	},
+	signupLink: {
+		color: "#e27b00",
+		fontWeight: "bold",
+	},
 });
 
 export default Login;
