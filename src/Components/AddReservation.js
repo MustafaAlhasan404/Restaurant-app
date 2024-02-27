@@ -9,14 +9,13 @@ import {
   Alert,
   TouchableOpacity,
   Platform,
-  KeyboardAvoidingView
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 
 const AddReservation = ({ navigation }) => {
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState(''); // State for phone number
+  const [phone, setPhone] = useState('');
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState('');
   const [numGuests, setNumGuests] = useState('');
@@ -26,13 +25,13 @@ const AddReservation = ({ navigation }) => {
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    setShowDatePicker(false); // Hide picker after selection
+    setShowDatePicker(Platform.OS === 'ios'); // Hide picker after selection for Android
     setDate(currentDate);
   };
 
   const onChangeTime = (event, selectedTime) => {
     const currentTime = selectedTime || new Date();
-    setShowTimePicker(false); // Hide picker after selection
+    setShowTimePicker(Platform.OS === 'ios'); // Hide picker after selection for Android
     setTime(currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }));
   };
 
@@ -50,7 +49,6 @@ const AddReservation = ({ navigation }) => {
       return;
     }
 
-    // Construct the dateTime from the date and time inputs
     const dateTime = new Date(date);
     const [hours, minutes] = time.split(':');
     dateTime.setHours(parseInt(hours, 10));
@@ -62,12 +60,12 @@ const AddReservation = ({ navigation }) => {
         dateTime,
         phone,
         numGuests: parseInt(numGuests, 10),
-        notes, // Include the notes in the POST request
+        notes,
       });
 
       if (response.status === 201 || response.status === 200) {
         Alert.alert('Success', 'Reservation added successfully');
-        navigation.goBack(); // Or navigate to another screen if necessary
+        navigation.goBack();
       } else {
         Alert.alert('Error', 'Failed to add reservation');
       }
@@ -111,6 +109,7 @@ const AddReservation = ({ navigation }) => {
           numberOfLines={4}
         />
       </View>
+
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Phone Number:</Text>
         <TextInput
@@ -121,6 +120,7 @@ const AddReservation = ({ navigation }) => {
           keyboardType="phone-pad"
         />
       </View>
+
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Date:</Text>
         <TouchableOpacity onPress={showDatepicker} style={styles.dateInput}>
@@ -136,10 +136,11 @@ const AddReservation = ({ navigation }) => {
           />
         )}
       </View>
+
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Time:</Text>
-        <TouchableOpacity onPress={showTimepicker} style={styles.input}>
-          <Text style={styles.input}>{time}</Text>
+        <TouchableOpacity onPress={showTimepicker} style={styles.dateInput}>
+          <Text style={styles.dateText}>{time}</Text>
         </TouchableOpacity>
         {showTimePicker && (
           <DateTimePicker
@@ -152,15 +153,19 @@ const AddReservation = ({ navigation }) => {
           />
         )}
       </View>
-      <Button title="Submit Reservation" onPress={handleSubmit} />
+
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Submit Reservation</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#e0d5d6",
   },
   inputContainer: {
     marginBottom: 20,
@@ -168,25 +173,45 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 5,
+    color: "#333",
   },
   input: {
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     padding: 10,
-    fontSize: 16,
-    borderRadius: 6,
+    marginBottom: 10,
+    borderRadius: 10,
+    fontSize: 14,
+    color: "#333",
   },
   dateInput: {
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     padding: 10,
-    borderRadius: 6,
+    borderRadius: 10,
     justifyContent: 'center',
+    marginBottom: 10,
   },
   dateText: {
     fontSize: 16,
+    color: "#333",
+  },
+  button: {
+    backgroundColor: "#e27b00",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
   },
   // Add any additional styles you may need here
 });
 
 export default AddReservation;
+

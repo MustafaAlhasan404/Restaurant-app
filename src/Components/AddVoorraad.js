@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, Alert, Switch } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Switch } from 'react-native';
 
 const AddVoorraad = () => {
   const [name, setName] = useState('');
@@ -34,7 +34,7 @@ const AddVoorraad = () => {
         },
         body: JSON.stringify(product),
       });
-      console.log("Type of stockable:", typeof stockable);
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error('Failed to add product: ' + (errorData.message || 'Unknown error'));
@@ -84,10 +84,13 @@ const AddVoorraad = () => {
         onChangeText={setCategory}
       />
       <View style={styles.switchContainer}>
-        <Text>Stockable:</Text>
+        <Text style={styles.switchLabel}>Stockable:</Text>
         <Switch
-          value={stockable}
+          trackColor={{ false: "#767577", true: "#767577" }}
+          thumbColor={stockable ? "#e27b00" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
           onValueChange={setStockable}
+          value={stockable}
         />
       </View>
       {stockable && (
@@ -99,7 +102,9 @@ const AddVoorraad = () => {
           keyboardType="numeric"
         />
       )}
-      <Button title="Add Product" onPress={handleSubmit} />
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Add Product</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -110,23 +115,52 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#e0d5d6",
   },
   text: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: "bold",
     marginBottom: 20,
+    color: "#333",
   },
   input: {
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     padding: 10,
     marginBottom: 10,
-    borderRadius: 6,
+    borderRadius: 10,
+    fontSize: 14,
+    color: "#333",
   },
   switchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+    padding: 15,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    justifyContent: 'space-between',
+  },
+  switchLabel: {
+    marginRight: 10,
+    fontSize: 18,
+  },
+  button: {
+    backgroundColor: "#e27b00",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
