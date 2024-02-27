@@ -1,13 +1,20 @@
-### Create new reservation
+### Create new product
 POST http://localhost:3000/products
 Content-Type: application/json
 
 {
-  "name": "Orange Juice",
-  "price": "1",
-  "ingredients": "Orange juice, ice", 
+  "name": "Mango Smoothie",
+  "price": 3.50,
+  "ingredients": "Mango, ice, mango nectar, sugar",
   "category": "drink",
-  "options": [{"name": "No ice", "price": 0}]
+  "options": [
+    {
+      "name": "Add protein",
+      "price": 1.00
+    }
+  ],
+  "stockable": true,
+  "qty": 30
 }
 
 ### Get all products

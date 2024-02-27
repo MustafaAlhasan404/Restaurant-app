@@ -13,7 +13,7 @@ const productSchema = new mongoose.Schema({
 	stockable: { type: Boolean, required: true },
 	qty: {
 		type: Number,
-		required: () => {
+		required: function() {
 			return this.stockable === true;
 		},
 	},
