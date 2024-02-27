@@ -36,12 +36,13 @@ const ReservationItem = ({ item, onEdit, onDelete, canEdit }) => {
       </View>
       {canEdit && (
         <View style={styles.buttonGroup}>
-          <TouchableOpacity onPress={() => onEdit(item)}>
-            <Text style={styles.editButton}>Edit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => onDelete(item._id)}>
-            <Text style={styles.deleteButton}>Delete</Text>
-          </TouchableOpacity>
+<TouchableOpacity onPress={() => onEdit(item)} style={styles.editButton}>
+  <Text style={styles.buttonText}>Edit</Text>
+</TouchableOpacity>
+<TouchableOpacity onPress={() => onDelete(item._id)} style={styles.deleteButton}>
+  <Text style={styles.buttonText}>Delete</Text>
+</TouchableOpacity>
+
         </View>
       )}
     </View>
@@ -112,32 +113,31 @@ const NieuweReservering = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: "#e0d5d6", // Changed to match Bestellingen.js
+    padding: 20, // Existing padding from NieuweReservering.js
   },
   reservationItem: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 20,
-    marginBottom: 15,
+    backgroundColor: "#fff",
+    borderRadius: 10, // Rounded corners like orderItem in Bestellingen.js
+    marginBottom: 10, // Spacing between items like orderItem in Bestellingen.js
+    padding: 15, // Padding like orderItem in Bestellingen.js
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000", // Shadow like orderItem in Bestellingen.js
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    elevation: 3, // Elevation like orderItem in Bestellingen.js
   },
   reservationInfo: {
     flex: 1,
-    marginRight: 10,
+    marginRight: 10, // Keep existing marginRight
   },
   reservationText: {
     fontSize: 18,
     color: '#333',
+    fontWeight: "bold", // Bold like orderId in Bestellingen.js
   },
   reservationNotes: {
     fontSize: 14,
@@ -149,12 +149,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   editButton: {
-    color: '#007bff',
+    padding: 10,
+    backgroundColor: "#e27b00",
+    borderRadius: 5, // Increased rounded corners
+    color: '#fff',
     fontWeight: '500',
     marginRight: 10,
   },
   deleteButton: {
-    color: '#dc3545',
+    padding: 10,
+    backgroundColor: "#dc3545",
+    borderRadius: 10, // Increased rounded corners
+    color: '#fff',
     fontWeight: '500',
   },
   reservationPhone: {
@@ -166,7 +172,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     margin: 16,
     right: 0,
-    bottom:0,
-    backgroundColor: '#e27b00', },});
+    bottom: 0,
+    backgroundColor: '#e27b00', // Keep existing FAB background color
+  },
+  buttonText: {
+    color: '#fff', // Set text color to white
+    fontWeight: '500',
+  },
+});
 
 export default NieuweReservering;

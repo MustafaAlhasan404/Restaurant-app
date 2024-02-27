@@ -12,6 +12,8 @@ import {
 import Header from '../Components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUser } from '../contexts/UserContext'; // Import useUser hook
+import { FAB } from 'react-native-paper'; // Import FAB from react-native-paper
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 
 const Voorraad = () => {
   const [products, setProducts] = useState([]);
@@ -21,6 +23,7 @@ const Voorraad = () => {
   const [newQuantity, setNewQuantity] = useState('');
 
   const { user } = useUser(); // Use the useUser hook to access the user object
+  const navigation = useNavigation(); // Use the useNavigation hook for navigation
 
   const closePrompt = () => {
     setEditProductId(null);
@@ -121,6 +124,15 @@ const Voorraad = () => {
             </TouchableOpacity>
           </View>
         </View>
+      )}
+
+      {/* FAB button */}
+      {user && user.role === 'manager' && (
+        <FAB
+          style={styles.fab}
+          icon="plus"
+          onPress={() => navigation.navigate('AddVoorraad')} // Replace 'AddProduct' with the actual route name you want to navigate to
+        />
       )}
     </View>
   );
@@ -242,5 +254,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom:0,
+    backgroundColor: '#e27b00', }
 });
 

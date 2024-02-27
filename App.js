@@ -6,7 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "react-native-paper";
-
+import	AddVoorraad from "./src/Components/AddVoorraad";
 // Import UserProvider from the context file
 import { UserProvider } from "./src/contexts/UserContext";
 
@@ -177,6 +177,17 @@ function StackNavigator() {
 			<Stack.Screen
 				name="EditReservation"
 				component={EditReservation}
+				options={{
+					headerShown: true,
+					headerStyle: {
+						backgroundColor: "#311213",
+					},
+					headerTintColor: "#e27b00",
+				}}
+			/>
+						<Stack.Screen
+				name="AddVoorraad"
+				component={AddVoorraad}
 				options={{
 					headerShown: true,
 					headerStyle: {
