@@ -13,9 +13,11 @@ import { useUser } from "../contexts/UserContext"; // Import useUser hook
 const Login = ({ navigation }) => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const [loading, setLoading] = useState(false);
 	const { setUser } = useUser(); // Use the useUser hook to access setUser
 
 	const handleLogin = () => {
+		setLoading(true);
 		const loginUrl = "https://nl-app.onrender.com/users/login";
 
 		fetch(loginUrl, {
@@ -31,18 +33,21 @@ const Login = ({ navigation }) => {
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error("Login failed");
+					setLoading(false);
 				}
 				return response.json();
 			})
 			.then((data) => {
 				// Assuming the response contains the user object on successful login
 				console.log("Login successful:", data.user);
+				setLoading(false);
 				setUser(data.user); // Set the user globally using the context
 				navigation.navigate("Main"); // Navigate to the main screen or dashboard after login
 			})
 			.catch((error) => {
 				console.error("Error:", error);
 				Alert.alert("Login Error", "Invalid username or password.");
+				setLoading(false);
 			});
 	};
 
@@ -63,8 +68,13 @@ const Login = ({ navigation }) => {
 				autoCapitalize="none"
 				secureTextEntry
 			/>
-			<TouchableOpacity style={styles.button} onPress={handleLogin}>
-				<Text style={styles.buttonText}>Login</Text>
+			<TouchableOpacity
+				disabled={loading}
+				style={styles.button}
+				onPress={handleLogin}
+			>
+				{!loading && <Text style={styles.buttonText}>Login</Text>}
+				{loading && <Text style={styles.buttonText}>Logging in</Text>}
 			</TouchableOpacity>
 			<Text style={styles.signupPrompt}>
 				Don't have an account?{" "}
