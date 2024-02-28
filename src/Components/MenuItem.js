@@ -7,56 +7,48 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 // import { styles } from "./styles";
 
 const MenuItem = ({ menuItem }) => {
-	const [selectedOptions, setSelectedOptions] = useState({});
+	const [selectedOptions, setSelectedOptions] = useState([]);
+	const [totalPrice, setTotalPrice] = useState(menuItem.price);
 
 	const handleSelectOption = (optionName, optionPrice) => {
 		setSelectedOptions((prevOptions) => {
-			const optionKey = Object.keys(prevOptions).find((key) =>
-				key.startsWith(optionName)
-			);
-
-			if (optionKey) {
-				const prevOption = prevOptions[optionKey];
-				return {
-					...prevOptions,
-					[optionKey]: {
-						...prevOption,
-						quantity: prevOption.quantity + 1,
-					},
-				};
+			if (
+				prevOptions.findIndex(
+					(option) => option.name === optionName
+				) !== -1
+			) {
+				// option already exists, remove it
+				setTotalPrice((currPrice) => currPrice - optionPrice);
+				return prevOptions.filter(
+					(option) => option.name !== optionName
+				);
 			} else {
-				return {
+				// option does not exist, add it
+				setTotalPrice((currPrice) => currPrice + optionPrice);
+				return [
 					...prevOptions,
-					[`${optionName}-0`]: {
-						name: optionName,
-						price: optionPrice,
-						quantity: 1,
-					},
-				};
+					{ name: optionName, price: optionPrice },
+				];
 			}
 		});
 	};
 
-	const totalPrice =
-		menuItem.price +
-		Object.keys(selectedOptions).reduce((acc, key) => {
-			acc += selectedOptions[key].price * selectedOptions[key].quantity;
-			return acc;
-		}, 0);
-
 	const renderOptions = () => {
 		return menuItem.options.map((option, index) => {
-			const isSelected = selectedOptions[`${option.name}-${index}`];
+			// const isSelected = selectedOptions[`${option.name}-${index}`];
+			const isSelected =
+				selectedOptions.findIndex(
+					(selectedOption) => selectedOption.name === option.name
+				) !== -1;
 
 			return (
 				<Pressable
 					key={index}
-					style={styles.menuItemOption}
 					onPress={() =>
 						handleSelectOption(option.name, option.price)
 					}
 				>
-					<View style={[styles.menuItemOption]}>
+					<View style={styles.menuItemOption}>
 						<View style={styles.menuItemOptionLabel}>
 							<View style={styles.checkbox}>
 								{isSelected && (
@@ -71,34 +63,12 @@ const MenuItem = ({ menuItem }) => {
 								{option.name}
 							</Text>
 						</View>
-						<Text>{option.price}</Text>
-
-						{isSelected && (
-							<View style={styles.menuItemOptionQuantity}>
-								<Text>
-									{
-										selectedOptions[
-											`${option.name}-${index}`
-										].quantity
-									}
-								</Text>
-							</View>
-						)}
+						<Text>${option.price.toFixed(2)}</Text>
 					</View>
 				</Pressable>
 			);
 		});
 	};
-
-	const totalItemPrice =
-		(menuItem.price || 0) +
-		Object.keys(selectedOptions).reduce((acc, key) => {
-			if (key.startsWith(`${index}-`)) {
-				acc +=
-					selectedOptions[key].price * selectedOptions[key].quantity;
-			}
-			return acc;
-		}, 0);
 
 	return (
 		<View style={styles.menuItem}>
@@ -109,14 +79,16 @@ const MenuItem = ({ menuItem }) => {
 						{menuItem.ingredients}
 					</Text>
 				</View>
-				<Text style={styles.menuItemPrice}>{menuItem.price}</Text>
+				<Text style={styles.menuItemPrice}>
+					${menuItem.price.toFixed(2)}
+				</Text>
 			</View>
 
 			<View style={styles.menuItemOptions}>{renderOptions()}</View>
 
 			<View style={styles.menuItemFooter}>
 				<Text style={styles.menuItemPrice}>
-					Total: ${totalItemPrice.toFixed(2)}
+					Total: ${totalPrice.toFixed(2)}
 				</Text>
 				<Pressable
 					style={styles.addButton}
@@ -236,6 +208,10 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 	},
 
+	menuItemOptions: {
+		paddingVertical: 10,
+	},
+
 	menuItemOption: {
 		flexDirection: "row",
 		alignItems: "center", // Align items in the center vertically
@@ -243,6 +219,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 5, // Add padding inside the option container
 		paddingHorizontal: 20, // Add padding inside the option container
 		borderRadius: 5, // Rounded corners for option items
+		width: "100%",
 	},
 
 	menuItemOptionLabel: {
@@ -329,9 +306,6 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
-	},
-	MenuItemOptions: {
-		paddingVertical: 10,
 	},
 	menuItemFooter: {
 		width: "100%",
