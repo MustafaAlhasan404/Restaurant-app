@@ -30,13 +30,15 @@ router.patch("/stock/:id", async (req, res) => {
   
 	const product = await Product.findOne({ _id: id, stockable: true });
   
-	if (!product) return res.status(404);
+	if (!product) return res.status(404).json({ message: "Product not found or not stockable" });
   
 	const updatedProduct = await Product.findByIdAndUpdate(
 	  id,
 	  { qty: req.body.qty }, // Set the new quantity directly
 	  { new: true }
 	);
+  
+	if (!updatedProduct) return res.status(404).json({ message: "Product not found" });
   
 	res.status(200).json(updatedProduct);
   });

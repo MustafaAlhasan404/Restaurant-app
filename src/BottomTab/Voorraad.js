@@ -53,27 +53,28 @@ const Voorraad = () => {
     setNewQuantity(product.qty.toString());
   };
 
-  const handleUpdateQuantity = async () => {
-    try {
-      const response = await fetch(`https://nl-app.onrender.com/products/stock/${editProductId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          // Include other headers as required, e.g., authorization headers
-        },
-        body: JSON.stringify({ qty: parseInt(newQuantity, 10) }), // Parse the newQuantity to ensure it's a number
-      });
-      if (!response.ok) {
-        throw new Error('Failed to update quantity');
-      }
-      const updatedProduct = await response.json();
-      // Update the local state to reflect the new quantity
-      setProducts(products.map(p => p._id === updatedProduct._id ? updatedProduct : p));
-      closePrompt(); // Close the prompt
-    } catch (error) {
-      Alert.alert('Error', error.message || 'Failed to update quantity');
+const handleUpdateQuantity = async () => {
+  try {
+    const response = await fetch(`https://nl-app.onrender.com/products/stock/${editProductId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        // Include other headers as required, e.g., authorization headers
+      },
+      body: JSON.stringify({ qty: parseInt(newQuantity, 10) }), // Parse the newQuantity to ensure it's a number
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update quantity');
     }
-  };
+    const updatedProduct = await response.json();
+    // Update the local state to reflect the new quantity
+    setProducts(products.map(p => p._id === updatedProduct._id ? updatedProduct : p));
+    closePrompt(); // Close the prompt
+  } catch (error) {
+    Alert.alert('Error', error.message || 'Failed to update quantity');
+  }
+};
+
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
