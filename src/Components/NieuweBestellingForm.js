@@ -197,8 +197,9 @@ export function TabViewExample() {
 const NieuweBestellingForm = () => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [selectedProducts, setSelectedProducts] = useState([]);
+	const [table, setTable] = useState("1");
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (table, products) => {
 		// const response = await fetch("https://nl-app.onrender.com/orders", {
 		// 	method: "POST",
 		// 	headers: {
@@ -206,112 +207,80 @@ const NieuweBestellingForm = () => {
 		// 	},
 		// 	body: JSON.stringify(order),
 		// });
-		const order = useSelector((state) => state.order);
+		// const order = useSelector((state) => state.order);
 		// setSelectedProducts(order);
+		// console.log(order);
 		console.log("Submit Pressed");
-		console.log(order);
+		console.log("Table:", table);
 	};
 
 	return (
 		<View>
-			<Formik
-				initialValues={{ selectValue: "" }}
-				onSubmit={(values) => {
-					console.log(values);
-				}}
-			>
-				{({ handleChange, handleSubmit, values }) => (
-					<View>
-						<Text style={styles.label}>Table:</Text>
-						<View style={styles.select}>
-							<Picker
-								selectedValue={values.selectValue}
-								onValueChange={handleChange("selectValue")}
-								style={styles.selectt}
-								itemStyle={{ width: 200, height: 64 }}
+			<View>
+				<Text style={styles.label}>Table:</Text>
+				<TextInput
+					style={styles.input}
+					placeholder="Table Number"
+					value={table}
+					onChangeText={setTable}
+					keyboardType="numeric"
+				/>
+
+				<View style={{ height: 600 }}>
+					<Text style={styles.label}>Kies product(en):</Text>
+
+					<TabViewExample />
+				</View>
+
+				<Text>{table}</Text>
+
+				<Pressable
+					style={styles.savebutton}
+					onPress={() => handleSubmit(table, [])}
+				>
+					<Text style={styles.buttontext}>Place order</Text>
+				</Pressable>
+				{/* 
+				<Modal
+					animationType="fade"
+					transparent={true}
+					visible={modalVisible}
+					onRequestClose={() => {
+						console.log("Modal has been closed.");
+						setModalVisible(!modalVisible);
+					}}
+				>
+					<View style={styles.centeredView}>
+						<View style={styles.modalView}>
+							<Pressable
+								style={styles.backbutton}
+								onPress={() => setModalVisible(!modalVisible)}
 							>
-								<Picker.Item label="1" value="1" />
-								<Picker.Item label="2" value="2" />
-								<Picker.Item label="3" value="3" />
-								<Picker.Item label="4" value="4" />
-								<Picker.Item label="5" value="5" />
-								<Picker.Item label="6" value="6" />
-								<Picker.Item label="7" value="7" />
-								<Picker.Item label="8" value="8" />
-								<Picker.Item label="9" value="9" />
-								<Picker.Item label="10" value="10" />
-							</Picker>
-						</View>
+								<MaterialCommunityIcons
+									color="black"
+									size={25}
+									name="arrow-left"
+									style={{ marginTop: 0 }}
+								/>
+								<Text style={styles.backbuttontext}>Back</Text>
+							</Pressable>
+							<Text style={styles.modalText}>
+								SHOW ORDER SUMMARY HERE. PRODUCTS + OPTIONS +
+								PRICE PER PRODUCT + TOTAL PRICE + PAYMENT METHOD
+							</Text>
 
-						<View style={{ height: 600 }}>
-							<View style={{ marginBottom: 20 }}>
-								<Text style={{ fontWeight: "600" }}>
-									Geselecteerd:
+							<Pressable
+								style={styles.submitbutton}
+								onPress={handleSubmit}
+							>
+								<Text style={styles.buttontext}>
+									Send order
 								</Text>
-							</View>
-							<Text style={styles.label}>Kies product(en):</Text>
-
-							<TabViewExample />
+							</Pressable>
 						</View>
-
-						{/* <Pressable style={styles.savebutton} onPress={handleSubmit}> */}
-						<Text>{selectedProducts}</Text>
-
-						<Pressable
-							style={styles.savebutton}
-							// onPress={() => setModalVisible(true)}
-							onPress={() => handleSubmit()}
-						>
-							<Text style={styles.buttontext}>Place order</Text>
-						</Pressable>
-
-						<Modal
-							animationType="fade"
-							transparent={true}
-							visible={modalVisible}
-							onRequestClose={() => {
-								console.log("Modal has been closed.");
-								setModalVisible(!modalVisible);
-							}}
-						>
-							<View style={styles.centeredView}>
-								<View style={styles.modalView}>
-									<Pressable
-										style={styles.backbutton}
-										onPress={() =>
-											setModalVisible(!modalVisible)
-										}
-									>
-										<MaterialCommunityIcons
-											color="black"
-											size={25}
-											name="arrow-left"
-											style={{ marginTop: 0 }}
-										/>
-										<Text style={styles.backbuttontext}>
-											Back
-										</Text>
-									</Pressable>
-									<Text style={styles.modalText}>
-										SHOW ORDER SUMMARY HERE. PRODUCTS +
-										OPTIONS + PRICE PER PRODUCT + TOTAL
-										PRICE + PAYMENT METHOD
-									</Text>
-
-									<Pressable
-										style={styles.submitbutton}
-										onPress={handleSubmit}
-									>
-										<Text style={styles.buttontext}>
-											Send order
-										</Text>
-									</Pressable>
-								</View>
-							</View>
-						</Modal>
 					</View>
-				)}
-			</Formik>
+				</Modal> */}
+			</View>
 		</View>
 	);
 };
@@ -534,5 +503,15 @@ const styles = StyleSheet.create({
 		backgroundColor: "#e27b00",
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	input: {
+		backgroundColor: "#fff",
+		borderWidth: 1,
+		borderColor: "#ddd",
+		padding: 10,
+		marginBottom: 10,
+		borderRadius: 10,
+		fontSize: 14,
+		color: "#333",
 	},
 });

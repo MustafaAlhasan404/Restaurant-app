@@ -16,11 +16,11 @@ const NieuweBestelling = () => {
       {/* <Header name="Detail" /> */}
       <ScrollView nestedScrollEnabled={true}>
         <View style={{ padding: 20 }}>
-          <Text style={styles.descriptiontext}>
+          {/* <Text style={styles.descriptiontext}>
             Voeg een nieuwe bestelling toe. Selecteer een tafel, kies de
             producten en voeg een notitie toe. Het totaalbedrag wordt onderaan
             getoond.
-          </Text>
+          </Text> */}
           <View style={styles.form}>
             <NieuweBestellingForm />
           </View>
