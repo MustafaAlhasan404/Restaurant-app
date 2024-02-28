@@ -80,15 +80,6 @@ const Login = ({ navigation }) => {
 				{!loading && <Text style={styles.buttonText}>Login</Text>}
 				{loading && <Text style={styles.buttonText}>Logging in</Text>}
 			</TouchableOpacity>
-			<Text style={styles.signupPrompt}>
-				Don't have an account?{" "}
-				<Text
-					style={styles.signupLink}
-					onPress={() => navigation.navigate("Signup")}
-				>
-					Sign up
-				</Text>
-			</Text>
 		</View>
 	);
 };
