@@ -10,6 +10,11 @@ const MenuItem = ({ menuItem }) => {
 	const [selectedOptions, setSelectedOptions] = useState([]);
 	const [totalPrice, setTotalPrice] = useState(menuItem.price);
 
+	const resetItem = () => {
+		setSelectedOptions([]);
+		setTotalPrice(menuItem.price);
+	};
+
 	const handleSelectOption = (optionName, optionPrice) => {
 		setSelectedOptions((prevOptions) => {
 			if (
@@ -31,6 +36,10 @@ const MenuItem = ({ menuItem }) => {
 				];
 			}
 		});
+	};
+
+	const handleSelectProduct = () => {
+		resetItem();
 	};
 
 	const renderOptions = () => {
@@ -92,10 +101,7 @@ const MenuItem = ({ menuItem }) => {
 				</Text>
 				<Pressable
 					style={styles.addButton}
-					// onPress={handleSelectProduct(
-					// 	menuItem.name,
-					// 	selectedOptions
-					// )}
+					// onPress={handleSelectProduct()}
 				>
 					<Text style={styles.buttontext}>Add</Text>
 				</Pressable>
@@ -197,6 +203,7 @@ const styles = StyleSheet.create({
 	},
 	menuItemName: {
 		fontSize: 18,
+		fontWeight: "bold",
 	},
 	menuItemIngredients: {
 		fontSize: 12,

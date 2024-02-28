@@ -48,7 +48,6 @@ const renderTabBar = (props) => (
 
 const FirstRoute = () => {
 	const [menuItems, setMenuItems] = useState([]);
-	const [selectedOptions, setSelectedOptions] = useState([]);
 	const [selectedProducts, setSelectedProducts] = useState([]);
 
 	useEffect(() => {
@@ -69,66 +68,12 @@ const FirstRoute = () => {
 		fetchData();
 	}, []);
 
-	const handleSelectOption = (optionName, optionPrice) => {
-		const optionExists = selectedOptions.find((o) => o.name === optionName);
-
-		if (optionExists) {
-			// If option already exists in array, remove it
-			setSelectedOptions((prevOptions) =>
-				prevOptions.filter((o) => o.name !== optionName)
-			);
-		} else {
-			// If new option, add it to the array
-			setSelectedOptions((prevOptions) => [
-				...prevOptions,
-				{ name: optionName, price: optionPrice },
-			]);
-		}
-	};
-
 	const handleSelectProduct = (productId, selectedOptions) => {
 		setSelectedProducts((prevProducts) => {
 			[
 				...prevProducts,
 				{ product: productId, selectedOptions: selectedOptions },
 			];
-		});
-	};
-
-	const renderMenuItemOptions = (menuItem, menuItemIndex) => {
-		return menuItem.options.map((option, optionIndex) => {
-			const optionKey = `${menuItemIndex}-${optionIndex}`;
-			const isSelected =
-				selectedOptions[optionKey] &&
-				selectedOptions[optionKey].quantity > 0;
-
-			return (
-				<Pressable
-					key={optionIndex}
-					onPress={() =>
-						handleSelectOption(option.name, option.price)
-					}
-					style={styles.menuItemOption}
-				>
-					<View style={styles.menuItemOptionLabel}>
-						<View style={styles.checkbox}>
-							{isSelected && (
-								<MaterialCommunityIcons
-									name="check"
-									size={20}
-									color="black"
-								/>
-							)}
-						</View>
-						<Text style={styles.menuItemOptionName}>
-							{option.name}
-						</Text>
-					</View>
-					<Text style={styles.menuItemOptionPrice}>
-						${option.price.toFixed(2)}
-					</Text>
-				</Pressable>
-			);
 		});
 	};
 
@@ -143,52 +88,7 @@ const FirstRoute = () => {
 		>
 			<ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
 				{menuItems.map((menuItem, index) => {
-					// const totalItemPrice =
-					// 	(menuItem.price || 0) +
-					// 	Object.keys(selectedOptions).reduce((acc, key) => {
-					// 		if (key.startsWith(`${index}-`)) {
-					// 			acc +=
-					// 				selectedOptions[key].price *
-					// 				selectedOptions[key].quantity;
-					// 		}
-					// 		return acc;
-					// 	}, 0);
-					return (
-						<MenuItem key={index} menuItem={menuItem} />
-						// <View key={index} style={styles.menuItem}>
-						// 	<View style={styles.menuItemHeader}>
-						// 		<View>
-						// 			<Text style={styles.menuItemName}>
-						// 				{menuItem.name}
-						// 			</Text>
-						// 			<Text style={styles.menuItemIngredients}>
-						// 				{menuItem.ingredients}
-						// 			</Text>
-						// 		</View>
-						// 		<Text style={styles.menuItemName}>
-						// 			${menuItem.price}
-						// 		</Text>
-						// 	</View>
-						// 	<View style={styles.MenuItemOptions}>
-						// 		{menuItem.options &&
-						// 			renderMenuItemOptions(menuItem, index)}
-						// 	</View>
-						// 	<View style={styles.menuItemFooter}>
-								// <Text style={styles.menuItemPrice}>
-								// 	Total: ${totalItemPrice.toFixed(2)}
-								// </Text>
-								// <Pressable
-								// 	style={styles.addButton}
-								// 	onPress={handleSelectProduct(
-								// 		menuItem.name,
-								// 		selectedOptions
-								// 	)}
-								// >
-								// 	<Text style={styles.buttontext}>Add</Text>
-								// </Pressable>
-						// 	</View>
-						// </View>
-					);
+					return <MenuItem key={index} menuItem={menuItem} />;
 				})}
 			</ScrollView>
 		</View>
@@ -217,47 +117,6 @@ const SecondRoute = () => {
 		fetchData();
 	}, []);
 
-	const handleSelectOption = (menuItemIndex, optionIndex, optionPrice) => {
-		setSelectedOptions((prevSelectedOptions) => {
-			const optionKey = `${menuItemIndex}-${optionIndex}`;
-			const currentOption = prevSelectedOptions[optionKey] || {
-				quantity: 0,
-				price: optionPrice,
-			};
-			return {
-				...prevSelectedOptions,
-				[optionKey]: {
-					...currentOption,
-					quantity: currentOption.quantity + 1,
-				},
-			};
-		});
-	};
-
-	const renderMenuItemOptions = (menuItem, menuItemIndex) => {
-		return menuItem.options.map((option, optionIndex) => (
-			<Pressable
-				key={optionIndex}
-				onPress={() =>
-					handleSelectOption(menuItemIndex, optionIndex, option.price)
-				}
-			>
-				<View style={styles.menuItemOption}>
-					<Text style={styles.menuItemOptionName}>{option.name}</Text>
-					<Text style={styles.menuItemOptionPrice}>
-						{option.price}
-					</Text>
-					<Text style={styles.menuItemOptionQuantity}>
-						{selectedOptions[`${menuItemIndex}-${optionIndex}`]
-							? selectedOptions[`${menuItemIndex}-${optionIndex}`]
-									.quantity
-							: 0}
-					</Text>
-				</View>
-			</Pressable>
-		));
-	};
-
 	return (
 		<View
 			style={{
@@ -269,59 +128,7 @@ const SecondRoute = () => {
 		>
 			<ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
 				{menuItems.map((menuItem, index) => {
-					// const totalItemPrice =
-					// 	(menuItem.price || 0) +
-					// 	Object.keys(selectedOptions).reduce((acc, key) => {
-					// 		if (key.startsWith(`${index}-`)) {
-					// 			acc +=
-					// 				selectedOptions[key].price *
-					// 				selectedOptions[key].quantity;
-					// 		}
-					// 		return acc;
-					// 	}, 0);
-					return (
-						<MenuItem key={index} menuItem={menuItem} />
-						// <View key={index} style={styles.menuItem}>
-						// 	{/* <View style={styles.menuItemGroup}>
-						// 		<Text style={styles.menuItemTitle}>
-						// 			{menuItem.title}
-						// 		</Text>
-						// 		<TouchableNativeFeedback>
-						// 			<View style={styles.buybutton}>
-						// 				<MaterialCommunityIcons
-						// 					color="white"
-						// 					size={25}
-						// 					name="plus"
-						// 					style={{ marginTop: 0 }}
-						// 				/>
-						// 			</View>
-						// 		</TouchableNativeFeedback>
-						// 	</View> */}
-						// 	<View style={styles.menuItemHeader}>
-						// 		<View>
-						// 			<Text style={styles.menuItemName}>
-						// 				{menuItem.name}
-						// 			</Text>
-						// 			<Text style={styles.menuItemIngredients}>
-						// 				{menuItem.ingredients}
-						// 			</Text>
-						// 		</View>
-						// 		<Text style={styles.menuItemName}>
-						// 			${menuItem.price}
-						// 		</Text>
-						// 	</View>
-						// 	<View style={styles.MenuItemOptions}>
-						// 		{menuItem.options &&
-						// 			renderMenuItemOptions(menuItem, index)}
-						// 	</View>
-						// 	<View style={styles.spaceBetweenRow}>
-						// 		<Text style={styles.menuItemPrice}>Total:</Text>
-						// 		<Text style={styles.menuItemPrice}>
-						// 			${totalItemPrice.toFixed(2)}
-						// 		</Text>
-						// 	</View>
-						// </View>
-					);
+					return <MenuItem key={index} menuItem={menuItem} />;
 				})}
 			</ScrollView>
 		</View>
@@ -350,47 +157,6 @@ const ThirdRoute = () => {
 		fetchData();
 	}, []);
 
-	const handleSelectOption = (menuItemIndex, optionIndex, optionPrice) => {
-		setSelectedOptions((prevSelectedOptions) => {
-			const optionKey = `${menuItemIndex}-${optionIndex}`;
-			const currentOption = prevSelectedOptions[optionKey] || {
-				quantity: 0,
-				price: optionPrice,
-			};
-			return {
-				...prevSelectedOptions,
-				[optionKey]: {
-					...currentOption,
-					quantity: currentOption.quantity + 1,
-				},
-			};
-		});
-	};
-
-	const renderMenuItemOptions = (menuItem, menuItemIndex) => {
-		return menuItem.options.map((option, optionIndex) => (
-			<Pressable
-				key={optionIndex}
-				onPress={() =>
-					handleSelectOption(menuItemIndex, optionIndex, option.price)
-				}
-			>
-				<View style={styles.menuItemOption}>
-					<Text style={styles.menuItemOptionName}>{option.name}</Text>
-					<Text style={styles.menuItemOptionPrice}>
-						{option.price}
-					</Text>
-					<Text style={styles.menuItemOptionQuantity}>
-						{selectedOptions[`${menuItemIndex}-${optionIndex}`]
-							? selectedOptions[`${menuItemIndex}-${optionIndex}`]
-									.quantity
-							: 0}
-					</Text>
-				</View>
-			</Pressable>
-		));
-	};
-
 	return (
 		<View
 			style={{
@@ -402,59 +168,7 @@ const ThirdRoute = () => {
 		>
 			<ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
 				{menuItems.map((menuItem, index) => {
-					// const totalItemPrice =
-					// 	(menuItem.price || 0) +
-					// 	Object.keys(selectedOptions).reduce((acc, key) => {
-					// 		if (key.startsWith(`${index}-`)) {
-					// 			acc +=
-					// 				selectedOptions[key].price *
-					// 				selectedOptions[key].quantity;
-					// 		}
-					// 		return acc;
-					// 	}, 0);
-					return (
-						<MenuItem key={index} menuItem={menuItem} />
-						// <View key={index} style={styles.menuItem}>
-						// 	{/* <View style={styles.menuItemGroup}>
-						// 		<Text style={styles.menuItemTitle}>
-						// 			{menuItem.title}
-						// 		</Text>
-						// 		<TouchableNativeFeedback>
-						// 			<View style={styles.buybutton}>
-						// 				<MaterialCommunityIcons
-						// 					color="white"
-						// 					size={25}
-						// 					name="plus"
-						// 					style={{ marginTop: 0 }}
-						// 				/>
-						// 			</View>
-						// 		</TouchableNativeFeedback>
-						// 	</View> */}
-						// 	<View style={styles.menuItemHeader}>
-						// 		<View>
-						// 			<Text style={styles.menuItemName}>
-						// 				{menuItem.name}
-						// 			</Text>
-						// 			<Text style={styles.menuItemIngredients}>
-						// 				{menuItem.ingredients}
-						// 			</Text>
-						// 		</View>
-						// 		<Text style={styles.menuItemName}>
-						// 			${menuItem.price}
-						// 		</Text>
-						// 	</View>
-						// 	<View style={styles.MenuItemOptions}>
-						// 		{menuItem.options &&
-						// 			renderMenuItemOptions(menuItem, index)}
-						// 	</View>
-						// 	<View style={styles.spaceBetweenRow}>
-						// 		<Text style={styles.menuItemPrice}>Total:</Text>
-						// 		<Text style={styles.menuItemPrice}>
-						// 			${totalItemPrice.toFixed(2)}
-						// 		</Text>
-						// 	</View>
-						// </View>
-					);
+					return <MenuItem key={index} menuItem={menuItem} />;
 				})}
 			</ScrollView>
 		</View>
