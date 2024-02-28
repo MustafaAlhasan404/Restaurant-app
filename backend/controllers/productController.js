@@ -27,19 +27,19 @@ router.get("/stock", async (req, res) => {
 router.patch("/stock/:id", async (req, res) => {
 	const userRole = req.headers["role"];
 	const id = req.params.id;
-
+  
 	const product = await Product.findOne({ _id: id, stockable: true });
-
+  
 	if (!product) return res.status(404);
-
+  
 	const updatedProduct = await Product.findByIdAndUpdate(
-		id,
-		{ $inc: { qty: req.body.qty } }, // Increment product quantity
-		{ new: true }
+	  id,
+	  { qty: req.body.qty }, // Set the new quantity directly
+	  { new: true }
 	);
-
+  
 	res.status(200).json(updatedProduct);
-});
+  });
 
 // GET products by category
 router.get("/categories/:category", async (req, res) => {

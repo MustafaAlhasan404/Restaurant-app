@@ -106,7 +106,7 @@ const SecondRoute = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://nl-app.onrender.com/products/categories/food"
+          "https://nl-app.onrender.com/products/categories/drink"
         );
         const data = await response.json();
         setMenuItems(data);
@@ -163,7 +163,7 @@ const ThirdRoute = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://nl-app.onrender.com/products/categories/food"
+          "https://nl-app.onrender.com/products/categories/snack"
         );
         const data = await response.json();
         setMenuItems(data);

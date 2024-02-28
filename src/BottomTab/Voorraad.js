@@ -61,14 +61,17 @@ const Voorraad = () => {
           'Content-Type': 'application/json',
           // Include other headers as required, e.g., authorization headers
         },
-        body: JSON.stringify({ qty: newQuantity }),
+        body: JSON.stringify({ qty: parseInt(newQuantity, 10) }), // Parse the newQuantity to ensure it's a number
       });
+      if (!response.ok) {
+        throw new Error('Failed to update quantity');
+      }
       const updatedProduct = await response.json();
       // Update the local state to reflect the new quantity
       setProducts(products.map(p => p._id === updatedProduct._id ? updatedProduct : p));
       closePrompt(); // Close the prompt
     } catch (error) {
-      Alert.alert('Error', 'Failed to update quantity');
+      Alert.alert('Error', error.message || 'Failed to update quantity');
     }
   };
 
@@ -238,7 +241,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#6c757d',
   },
   updateButton: {
-    backgroundColor: '#28a745',
+    backgroundColor: '#e27b00',
   },
   buttonText: {
     color: 'white',

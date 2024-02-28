@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Switch } from 'react-native';
+import { Picker } from '@react-native-picker/picker'; // Import the Picker component
 
 const AddVoorraad = () => {
   const [name, setName] = useState('');
@@ -77,12 +78,16 @@ const AddVoorraad = () => {
         value={ingredients}
         onChangeText={setIngredients}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Category"
-        value={category}
-        onChangeText={setCategory}
-      />
+      <Picker
+        selectedValue={category}
+        onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
+        style={styles.picker}
+        mode="dropdown" // Android only
+      >
+        <Picker.Item label="Food" value="food" />
+        <Picker.Item label="Drink" value="drink" />
+        <Picker.Item label="Snack" value="snack" />
+      </Picker>
       <View style={styles.switchContainer}>
         <Text style={styles.switchLabel}>Stockable:</Text>
         <Switch
@@ -133,6 +138,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#333",
   },
+  // ... existing styles for input ...
+  picker: {
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 10,
+    fontSize: 14,
+    color: "#333",
+  },
   switchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -164,3 +180,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
