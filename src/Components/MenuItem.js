@@ -1,10 +1,10 @@
-// MenuItem.js
-
 import React, { useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-// import { styles } from "./styles";
+// State
+import { useSelector, useDispatch } from "react-redux";
+import { addItem, removeItem } from "../State/orderSlice";
 
 const MenuItem = ({ menuItem }) => {
 	const [selectedOptions, setSelectedOptions] = useState([]);
@@ -38,7 +38,15 @@ const MenuItem = ({ menuItem }) => {
 		});
 	};
 
+	const dispatch = useDispatch();
+
 	const handleSelectProduct = () => {
+		dispatch(
+			addItem({
+				product: menuItem._id,
+				selectedOptions: selectedOptions,
+			})
+		);
 		resetItem();
 	};
 
@@ -101,7 +109,7 @@ const MenuItem = ({ menuItem }) => {
 				</Text>
 				<Pressable
 					style={styles.addButton}
-					// onPress={handleSelectProduct()}
+					onPress={() => handleSelectProduct()}
 				>
 					<Text style={styles.buttontext}>Add</Text>
 				</Pressable>

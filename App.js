@@ -1,12 +1,11 @@
-// App.js
-import React from 'react';
+import React from "react";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "react-native-paper";
-import	AddVoorraad from "./src/Components/AddVoorraad";
+import AddVoorraad from "./src/Components/AddVoorraad";
 // Import UserProvider from the context file
 import { UserProvider } from "./src/contexts/UserContext";
 
@@ -21,6 +20,10 @@ import Voorraad from "./src/BottomTab/Voorraad";
 import AddReservation from "./src/Components/AddReservation";
 import EditReservation from "./src/Components/EditReservation";
 import Signup from "./src/Components/Signup";
+
+// State management
+import store from "./store";
+import { Provider } from "react-redux";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -114,18 +117,9 @@ function TabNavigator() {
 function RootStackNavigator() {
 	return (
 		<RootStack.Navigator screenOptions={{ headerShown: false }}>
-			<RootStack.Screen
-				name="Login"
-				component={Login}
-			/>
-			<RootStack.Screen
-				name="Signup"
-				component={Signup}
-			/>
-			<RootStack.Screen
-				name="Main"
-				component={TabNavigator}
-			/>
+			<RootStack.Screen name="Login" component={Login} />
+			<RootStack.Screen name="Signup" component={Signup} />
+			<RootStack.Screen name="Main" component={TabNavigator} />
 		</RootStack.Navigator>
 	);
 }
@@ -185,7 +179,7 @@ function StackNavigator() {
 					headerTintColor: "#e27b00",
 				}}
 			/>
-						<Stack.Screen
+			<Stack.Screen
 				name="AddVoorraad"
 				component={AddVoorraad}
 				options={{
@@ -204,13 +198,15 @@ export default function App() {
 	// Apply the theme colors as before
 	const theme = useTheme();
 	theme.colors.secondaryContainer = "transparent";
-  
+
 	return (
-	  // Wrap the entire application with UserProvider
-	  <UserProvider>
-		<NavigationContainer>
-		  <RootStackNavigator />
-		</NavigationContainer>
-	  </UserProvider>
+		// Wrap the entire application with UserProvider
+		<Provider store={store}>
+			<UserProvider>
+				<NavigationContainer>
+					<RootStackNavigator />
+				</NavigationContainer>
+			</UserProvider>
+		</Provider>
 	);
-  }
+}

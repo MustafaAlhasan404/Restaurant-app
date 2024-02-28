@@ -18,6 +18,7 @@ import * as yup from "yup";
 import { Picker } from "@react-native-picker/picker";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MenuItem from "./MenuItem";
+import { useSelector } from "react-redux";
 
 const renderTabBar = (props) => (
 	<TabBar
@@ -48,7 +49,6 @@ const renderTabBar = (props) => (
 
 const FirstRoute = () => {
 	const [menuItems, setMenuItems] = useState([]);
-	const [selectedProducts, setSelectedProducts] = useState([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -67,15 +67,6 @@ const FirstRoute = () => {
 
 		fetchData();
 	}, []);
-
-	const handleSelectProduct = (productId, selectedOptions) => {
-		setSelectedProducts((prevProducts) => {
-			[
-				...prevProducts,
-				{ product: productId, selectedOptions: selectedOptions },
-			];
-		});
-	};
 
 	return (
 		<View
@@ -97,7 +88,6 @@ const FirstRoute = () => {
 
 const SecondRoute = () => {
 	const [menuItems, setMenuItems] = useState([]);
-	const [selectedOptions, setSelectedOptions] = useState({});
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -137,7 +127,6 @@ const SecondRoute = () => {
 
 const ThirdRoute = () => {
 	const [menuItems, setMenuItems] = useState([]);
-	const [selectedOptions, setSelectedOptions] = useState({});
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -207,6 +196,21 @@ export function TabViewExample() {
 
 const NieuweBestellingForm = () => {
 	const [modalVisible, setModalVisible] = useState(false);
+	const [selectedProducts, setSelectedProducts] = useState([]);
+
+	const handleSubmit = async () => {
+		// const response = await fetch("https://nl-app.onrender.com/orders", {
+		// 	method: "POST",
+		// 	headers: {
+		// 		"Content-Type": "application/json",
+		// 	},
+		// 	body: JSON.stringify(order),
+		// });
+		const order = useSelector((state) => state.order);
+		// setSelectedProducts(order);
+		console.log("Submit Pressed");
+		console.log(order);
+	};
 
 	return (
 		<View>
@@ -236,7 +240,6 @@ const NieuweBestellingForm = () => {
 								<Picker.Item label="8" value="8" />
 								<Picker.Item label="9" value="9" />
 								<Picker.Item label="10" value="10" />
-								<Picker.Item label="11" value="11" />
 							</Picker>
 						</View>
 
@@ -252,9 +255,12 @@ const NieuweBestellingForm = () => {
 						</View>
 
 						{/* <Pressable style={styles.savebutton} onPress={handleSubmit}> */}
+						<Text>{selectedProducts}</Text>
+
 						<Pressable
 							style={styles.savebutton}
-							onPress={() => setModalVisible(true)}
+							// onPress={() => setModalVisible(true)}
+							onPress={() => handleSubmit()}
 						>
 							<Text style={styles.buttontext}>Place order</Text>
 						</Pressable>
