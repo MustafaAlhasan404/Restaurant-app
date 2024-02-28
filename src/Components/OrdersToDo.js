@@ -5,11 +5,19 @@ import {
   Text,
   View,
   Animated,
+  TouchableOpacity,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const AccordionItem = ({ item }) => {
   const [isOpened, setIsOpened] = useState(false);
+  const navigation = useNavigation();
   const animation = useState(new Animated.Value(0))[0];
+  const orderTime = new Date(item.orderDate).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 
   const toggleAccordion = () => {
     setIsOpened(!isOpened);
@@ -19,6 +27,10 @@ const AccordionItem = ({ item }) => {
     inputRange: [0, 1],
     outputRange: [0, 270], // Adjust this value to fit the content
   });
+
+  const handleInfoPress = () => {
+    navigation.navigate('Bestellingen', { table: item.table });
+  };
 
   useEffect(() => {
     Animated.timing(animation, {
@@ -30,11 +42,16 @@ const AccordionItem = ({ item }) => {
 
   return (
     <View style={styles.accordionContainer}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Tafel: {item.table}</Text>
-          <Text style={styles.orderdate}>Geplaatst: {new Date(item.orderDate).toLocaleString()}</Text>
-          <Text style={styles.status}>Status: {item.status}</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Tafel : {item.table}</Text>
+        <View style={styles.dateContainer}>
+          <Text style={styles.orderdate}>Geplaatst: {orderTime}</Text>
         </View>
+        <Text style={styles.status}>{item.status}</Text>
+        <TouchableOpacity onPress={handleInfoPress} style={styles.infoIcon}>
+          <Icon name="info-circle" size={20} color="#000" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -43,19 +60,27 @@ const OrdersToDo = () => {
   const [orders, setOrders] = useState([]);
   const [badgeNumber, setBadgeNumber] = useState(0);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await fetch('https://nl-app.onrender.com/orders');
-        const data = await response.json();
-        setOrders(data);
-        setBadgeNumber(data.length); // Assuming the data is an array of orders
-      } catch (error) {
-        console.error('Failed to fetch orders:', error);
-      }
-    };
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch('https://nl-app.onrender.com/orders');
+      const data = await response.json();
+      const todaysOrders = data.filter(order => {
+        const orderDate = new Date(order.orderDate);
+        orderDate.setHours(0, 0, 0, 0);
+        return orderDate.getTime() === new Date().setHours(0, 0, 0, 0);
+      });
+      setOrders(todaysOrders);
+      setBadgeNumber(todaysOrders.length);
+    } catch (error) {
+      console.error('Failed to fetch orders:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchOrders();
+    const intervalId = setInterval(fetchOrders, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on unmount
   }, []);
 
   return (
@@ -70,9 +95,9 @@ const OrdersToDo = () => {
       <FlatList
         data={orders}
         renderItem={({ item }) => <AccordionItem item={item} />}
-        keyExtractor={(item) => item._id} // Assuming each order has a unique _id
-        horizontal={true} // Enable horizontal scrolling
-        showsHorizontalScrollIndicator={false} // Optionally hide the horizontal scroll indicator
+        keyExtractor={(item) => item._id}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   );
@@ -84,6 +109,8 @@ const styles = StyleSheet.create({
   },
   acco: {},
   header: {
+    width: 250, // Set a fixed width for each item
+    height: 150, // Set a fixed height for each item (optional, depending on your design)
     marginLeft: 10,
     marginTop: 30,
     backgroundColor: "#fff",
@@ -115,6 +142,39 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 5,
   },
+  infoIcon: {
+    // Style for the touchable info icon
+    padding: 10,
+    position: 'absolute',
+    right: 10,
+    top: 10,
+  },
+  title: {
+    fontSize:42,
+    fontWeight: "bold",
+    textAlign: "center",
+    flex: 1, // Take up all available space
+  },
+  orderdate: {
+    // ... existing styles for orderdate ...
+    textAlign: 'center',
+    fontSize:16 // Center the text within the Text component
+  },
+  dateContainer: {
+    // This container will ensure the date is centered
+    flex: 1, // Take up all available space
+    justifyContent: 'center', // Center content horizontally in the container
+    alignItems: 'center', // Center content vertically in the container
+  },
+  status: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#e27b00', // Set the text color
+    alignSelf: 'center', // Center the status horizontally
+    textAlign: 'center', // Center the text within the Text component
+    textTransform: 'uppercase', // Set the text to uppercase
+  },
+
   // Add additional styles for the horizontal layout if necessary
 });
 

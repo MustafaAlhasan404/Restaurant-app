@@ -1,34 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import Header from "../Components/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OrdersToDo from "../Components/OrdersToDo";
 import FloatingButton from "../Components/FloatingButton";
-import axios from "axios"; // Make sure to install axios if not already installed
+import axios from "axios";
 
 const Home = () => {
   const navigation = useNavigation();
+  const isFocused = useIsFocused(); // Hook to check if the screen is focused
   const [reservations, setReservations] = useState([]);
   const [selectedReservationId, setSelectedReservationId] = useState(null);
 
-  useEffect(() => {
-    const fetchReservations = async () => {
-      try {
-        const response = await axios.get('https://nl-app.onrender.com/reservations');
-        const today = new Date();
-        const todaysReservations = response.data.filter(reservation => {
-          const reservationDate = new Date(reservation.dateTime);
-          return reservationDate.toDateString() === today.toDateString();
-        });
-        setReservations(todaysReservations);
-      } catch (error) {
-        console.error("Error fetching reservations:", error);
-      }
-    };
-
-    fetchReservations();
+  const fetchReservations = useCallback(async () => {
+    try {
+      const response = await axios.get('https://nl-app.onrender.com/reservations');
+      const today = new Date();
+      const todaysReservations = response.data.filter(reservation => {
+        const reservationDate = new Date(reservation.dateTime);
+        return reservationDate.toDateString() === today.toDateString();
+      });
+      setReservations(todaysReservations);
+    } catch (error) {
+      console.error("Error fetching reservations:", error);
+    }
   }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchReservations();
+    }
+  }, [isFocused, fetchReservations]);
 
   const toggleDropdown = (reservationId) => {
     setSelectedReservationId(selectedReservationId === reservationId ? null : reservationId);
@@ -102,20 +105,26 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   reservationItem: {
+    width: 300, // Set a fixed width
+    height: 40, // Set a fixed height
+    justifyContent: 'center', // Center content vertically
+    alignItems: 'center', // Center content horizontally
     padding: 10,
-    backgroundColor: '#fff', // This is the background color of the item
+    backgroundColor: '#fff',
     marginTop: 5,
-    borderWidth: 1,
-    borderColor: '#e27b00',
+    overflow: 'hidden',
     borderRadius: 10,
-    overflow: 'hidden', // This is important for text to wrap
+    textAlign: 'center',
+    alignSelf: 'center',
   },
   dropdown: {
+    width: 300,
     marginTop: 10,
+    alignSelf: 'center',
     backgroundColor: '#f9f9f9',
     padding: 10,
-    borderWidth: 1,
-    borderColor: '#e27b00', // Set border color
+    textAlign: 'center',
+    alignItems: 'center',
     borderRadius: 5, // Optional: if you want rounded corners
   },
   // ... other styles you may have

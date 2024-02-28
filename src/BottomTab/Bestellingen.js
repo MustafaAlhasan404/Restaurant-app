@@ -11,6 +11,7 @@ import Header from "../Components/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome5"; // Changed to FontAwesome5 for the arrow icon
+import FloatingButton from "../Components/FloatingButton";
 
 const Bestellingen = () => {
   const [orders, setOrders] = useState([]);
@@ -159,6 +160,7 @@ const Bestellingen = () => {
           )}
         />
       </View>
+	  <FloatingButton />
     </View>
   );
 };

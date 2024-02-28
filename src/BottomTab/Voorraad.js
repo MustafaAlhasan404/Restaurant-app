@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,9 @@ import {
 } from 'react-native';
 import Header from '../Components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useUser } from '../contexts/UserContext'; // Import useUser hook
-import { FAB } from 'react-native-paper'; // Import FAB from react-native-paper
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+import { useUser } from '../contexts/UserContext';
+import FloatingButton from "../Components/FloatingButton";
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const Voorraad = () => {
   const [products, setProducts] = useState([]);
@@ -23,58 +23,78 @@ const Voorraad = () => {
   const [newQuantity, setNewQuantity] = useState('');
 
   const { user } = useUser(); // Use the useUser hook to access the user object
-  const navigation = useNavigation(); // Use the useNavigation hook for navigation
 
   const closePrompt = () => {
     setEditProductId(null);
     setNewQuantity('');
   };
 
-  useEffect(() => {
-    const fetchStockableProducts = async () => {
-      try {
-        const response = await fetch('https://nl-app.onrender.com/products/stock');
-        const data = await response.json();
-        setProducts(data.filter(product => product.stockable)); // Assuming 'stockable' is a property
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchStockableProducts();
-  }, []);
+  const fetchStockableProducts = async () => {
+    try {
+      const response = await fetch('https://nl-app.onrender.com/products/stock');
+      const data = await response.json();
+      setProducts(data.filter(product => product.stockable));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Use useFocusEffect to trigger a refresh whenever the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchStockableProducts();
+    }, [])
+  );
 
   const handleEditPress = (productId) => {
     setEditProductId(productId);
-    // Find the current quantity of the product to prefill the prompt
     const product = products.find(p => p._id === productId);
     setNewQuantity(product.qty.toString());
   };
 
-const handleUpdateQuantity = async () => {
-  try {
-    const response = await fetch(`https://nl-app.onrender.com/products/stock/${editProductId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        // Include other headers as required, e.g., authorization headers
-      },
-      body: JSON.stringify({ qty: parseInt(newQuantity, 10) }), // Parse the newQuantity to ensure it's a number
-    });
-    if (!response.ok) {
-      throw new Error('Failed to update quantity');
+  const handleUpdateQuantity = async () => {
+    try {
+      const response = await fetch(`https://nl-app.onrender.com/products/stock/${editProductId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          // Include other headers as required, e.g., authorization headers
+        },
+        body: JSON.stringify({ qty: parseInt(newQuantity, 10) }), // Parse the newQuantity to ensure it's a number
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update quantity');
+      }
+      const updatedProduct = await response.json();
+      // Update the local state to reflect the new quantity
+      setProducts(products.map(p => p._id === updatedProduct._id ? updatedProduct : p));
+      closePrompt(); // Close the prompt
+    } catch (error) {
+      Alert.alert('Error', error.message || 'Failed to update quantity');
     }
-    const updatedProduct = await response.json();
-    // Update the local state to reflect the new quantity
-    setProducts(products.map(p => p._id === updatedProduct._id ? updatedProduct : p));
-    closePrompt(); // Close the prompt
-  } catch (error) {
-    Alert.alert('Error', error.message || 'Failed to update quantity');
-  }
-};
+  };
 
+  const handleDelete = async (productId) => {
+    try {
+      const response = await fetch(`https://nl-app.onrender.com/products/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          // Include other headers as required, e.g., authorization headers
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete product');
+      }
+      // Update the local state to remove the deleted product
+      setProducts(products.filter(p => p._id !== productId));
+      Alert.alert('Success', 'Product deleted successfully');
+    } catch (error) {
+      Alert.alert('Error', error.message || 'Failed to delete product');
+    }
+  };
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -97,20 +117,26 @@ const handleUpdateQuantity = async () => {
               <Text style={styles.menuItemTitle}>{product.name}</Text>
               <Text style={styles.menuItemPrice}>Quantity: {product.qty}</Text>
             </View>
-            {/* Render the edit button only if the user is a manager */}
             {user && user.role === 'manager' && (
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => handleEditPress(product._id)}
-              >
-                <Text style={styles.editButtonText}>Edit</Text>
-              </TouchableOpacity>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => handleEditPress(product._id)}
+                >
+                  <Text style={styles.editButtonText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => handleDelete(product._id)}
+                >
+                  <Text style={styles.deleteButtonText}>Delete</Text>
+                </TouchableOpacity>
+              </View>
             )}
           </View>
         ))}
       </ScrollView>
 
-      {/* Render the prompt only if the user is a manager */}
       {user && user.role === 'manager' && editProductId && (
         <View style={styles.prompt}>
           <TextInput
@@ -129,15 +155,7 @@ const handleUpdateQuantity = async () => {
           </View>
         </View>
       )}
-
-      {/* FAB button */}
-      {user && user.role === 'manager' && (
-        <FAB
-          style={styles.fab}
-          icon="plus"
-          onPress={() => navigation.navigate('AddVoorraad')} // Replace 'AddProduct' with the actual route name you want to navigate to
-        />
-      )}
+      <FloatingButton />
     </View>
   );
 };
@@ -148,10 +166,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f0f0f0",
-  },
-  menuItems: {
-    paddingHorizontal: 20,
-    paddingTop: 10,
   },
   menuItems: {
     paddingHorizontal: 20,
@@ -185,6 +199,11 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: 14,
   },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   editButton: {
     paddingVertical: 8,
     paddingHorizontal: 12,
@@ -192,6 +211,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   editButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  deleteButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: '#d9534f',
+    borderRadius: 5,
+    marginLeft: 10, // Add some space between the edit and delete buttons
+  },
+  deleteButtonText: {
     color: 'white',
     fontSize: 14,
     fontWeight: '500',
@@ -250,19 +281,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
   },
-  backdrop: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  fab: {
-    position: 'absolute',
-    margin: 16,
-    right: 0,
-    bottom:0,
-    backgroundColor: '#e27b00', }
+  // Additional styles can be added here if needed
 });
-

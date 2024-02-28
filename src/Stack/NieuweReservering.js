@@ -36,13 +36,12 @@ const ReservationItem = ({ item, onEdit, onDelete, canEdit }) => {
       </View>
       {canEdit && (
         <View style={styles.buttonGroup}>
-<TouchableOpacity onPress={() => onEdit(item)} style={styles.editButton}>
-  <Text style={styles.buttonText}>Edit</Text>
-</TouchableOpacity>
-<TouchableOpacity onPress={() => onDelete(item._id)} style={styles.deleteButton}>
-  <Text style={styles.buttonText}>Delete</Text>
-</TouchableOpacity>
-
+          <TouchableOpacity onPress={() => onEdit(item)} style={styles.editButton}>
+            <Text style={styles.buttonText}>Edit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => onDelete(item._id)} style={styles.deleteButton}>
+            <Text style={styles.buttonText}>Delete</Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>
@@ -68,18 +67,24 @@ const NieuweReservering = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchReservations = async () => {
-      try {
-        const response = await axios.get('http://nl-app.onrender.com/reservations');
-        setReservations(response.data);
-      } catch (error) {
-        Alert.alert('Error', 'Could not fetch reservations');
-      }
-    };
+  const fetchReservations = async () => {
+    try {
+      const response = await axios.get('http://nl-app.onrender.com/reservations');
+      setReservations(response.data);
+    } catch (error) {
+      Alert.alert('Error', 'Could not fetch reservations');
+    }
+  };
 
+  useEffect(() => {
     fetchReservations();
-  }, []);
+
+    // Add a focus listener
+    const unsubscribe = navigation.addListener('focus', fetchReservations);
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
 
   // Determine if the user can edit or delete reservations
   const canEdit = user && user.role === 'manager';
@@ -109,7 +114,6 @@ const NieuweReservering = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

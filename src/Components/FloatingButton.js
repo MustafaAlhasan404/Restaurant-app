@@ -9,10 +9,13 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FAB } from 'react-native-paper';
+import { useUser } from '../contexts/UserContext'; // Import useUser hook
 
 const FloatingButton = () => {
   const [open, setOpen] = useState(false);
   const animation = useRef(new Animated.Value(0)).current; // Use useRef to persist the animated value
+  const { user } = useUser(); // Use the useUser hook to access the user object
+  const navigation = useNavigation();
 
   const toggleMenu = () => {
     const toValue = open ? 0 : 1;
@@ -26,7 +29,6 @@ const FloatingButton = () => {
     setOpen(!open);
   };
 
-  const navigation = useNavigation();
   const NweBestellingStyle = {
     transform: [
       { scale: animation },
@@ -74,8 +76,74 @@ const FloatingButton = () => {
     ],
   };
 
+  const NieuweEmployeeStyle = {
+    transform: [
+      { scale: animation },
+      {
+        translateX: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -80], // Adjust the horizontal position
+        }),
+      },
+      {
+        translateY: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -200],
+        }),
+      },
+    ],
+  };
+
+  const NieuweProductStyle = {
+    transform: [
+      { scale: animation },
+      {
+        translateX: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -80], // Adjust the horizontal position
+        }),
+      },
+      {
+        translateY: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -260],
+        }),
+      },
+    ],
+  };
+
   return (
     <View style={[styles.container]}>
+      {user && user.role === 'manager' && (
+        <TouchableWithoutFeedback>
+          <Animated.View style={[styles.button, styles.secondary, NieuweProductStyle]}>
+            <Pressable
+              onPress={() => {
+                toggleMenu(); // Close the menu when an option is selected
+                navigation.navigate("AddVoorraad"); // Navigate to AddVoorraad
+              }}
+            >
+              <Text style={styles.text}>Nieuwe Product</Text>
+            </Pressable>
+          </Animated.View>
+        </TouchableWithoutFeedback>
+      )}
+
+      {user && user.role === 'manager' && (
+        <TouchableWithoutFeedback>
+          <Animated.View style={[styles.button, styles.secondary, NieuweEmployeeStyle]}>
+            <Pressable
+              onPress={() => {
+                toggleMenu(); // Close the menu when an option is selected
+                navigation.navigate("Signup"); // Navigate to Signup
+              }}
+            >
+              <Text style={styles.text}>Nieuwe Employee</Text>
+            </Pressable>
+          </Animated.View>
+        </TouchableWithoutFeedback>
+      )}
+
       <TouchableWithoutFeedback>
         <Animated.View style={[styles.button, styles.secondary, NweReserveringStyle]}>
           <Pressable
@@ -101,7 +169,7 @@ const FloatingButton = () => {
         </Animated.View>
       </TouchableWithoutFeedback>
 
-      <FAB 
+      <FAB
         style={[styles.fab, rotation]}
         icon="plus"
         onPress={toggleMenu} // Make sure this is correctly bound

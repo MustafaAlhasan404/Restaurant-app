@@ -12,6 +12,7 @@ import {
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Components/Header";
+import FloatingButton from "../Components/FloatingButton"; // Import the FloatingButton component
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const renderTabBar = (props) => (
@@ -241,6 +242,7 @@ export default function TabViewExample() {
         initialLayout={{ width: layout.width }}
         style={styles.tabs}
       />
+            <FloatingButton />
     </View>
   );
 }
