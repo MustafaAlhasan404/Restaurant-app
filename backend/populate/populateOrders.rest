@@ -71,3 +71,21 @@ Content-Type: application/json
   ],
   "table": 4
 }
+###
+
+POST http://localhost:3000/orders
+Content-Type: application/json  
+
+{
+  "products": [
+    {
+      "product": "65ddd5995bacc608d6363cd0",
+      "selectedOptions": []
+    },
+    {
+      "product": "65ddd5995bacc608d6363cd4",
+      "selectedOptions": []
+    }
+  ],
+  "table": 51
+}

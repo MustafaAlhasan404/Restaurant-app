@@ -246,10 +246,12 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	editButton: {
-		paddingVertical: 8,
-		paddingHorizontal: 12,
+		padding: 10,
 		backgroundColor: "#e27b00",
-		borderRadius: 5,
+		borderRadius: 5, // Increased rounded corners
+		color: '#fff',
+		fontWeight: '500',
+		marginRight: 10,
 	},
 	editButtonText: {
 		color: "white",
@@ -257,11 +259,11 @@ const styles = StyleSheet.create({
 		fontWeight: "500",
 	},
 	deleteButton: {
-		paddingVertical: 8,
-		paddingHorizontal: 12,
-		backgroundColor: "#d9534f",
-		borderRadius: 5,
-		marginLeft: 10, // Add some space between the edit and delete buttons
+		padding: 10,
+		backgroundColor: "#dc3545",
+		borderRadius: 10, // Increased rounded corners
+		color: '#fff',
+		fontWeight: '500',
 	},
 	deleteButtonText: {
 		color: "white",

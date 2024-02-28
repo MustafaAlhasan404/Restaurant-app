@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -10,48 +10,59 @@ import {
 import Header from "../Components/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
-import Icon from "react-native-vector-icons/FontAwesome5"; // Changed to FontAwesome5 for the arrow icon
+import Icon from "react-native-vector-icons/FontAwesome5";
 import FloatingButton from "../Components/FloatingButton";
 
-const Bestellingen = () => {
+const Bestellingen = ({ route }) => {
   const [orders, setOrders] = useState([]);
+  const flatListRef = useRef();
+  const initialLoad = useRef(true);
+
+  // Function to fetch orders from the server
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get("https://nl-app.onrender.com/orders");
+      // Map products to new array with details
+      const ordersWithDetails = await Promise.all(
+        response.data.map(async (order) => {
+          order.products = await Promise.all(
+            order.products.map(async (product) => {
+              const productDetails = await axios.get(
+                `https://nl-app.onrender.com/products/${product.product}`
+              );
+              return {
+                ...product,
+                name: productDetails.data.name,
+                price: productDetails.data.price,
+              };
+            })
+          );
+          return order;
+        })
+      );
+      setOrders(ordersWithDetails);
+    } catch (error) {
+      console.error("Error fetching orders", error);
+    }
+  };
+
+  // Polling mechanism to fetch new orders at regular intervals
+  useEffect(() => {
+    fetchOrders(); // Fetch orders on component mount
+    const interval = setInterval(fetchOrders, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(interval); // Clear interval on component unmount
+  }, []);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await axios.get(
-          "https://nl-app.onrender.com/orders"
-        );
-        
-				// Map products to new array with details
-				const ordersWithDetails = await Promise.all(
-					response.data.map(async (order) => {
-						order.products = await Promise.all(
-							order.products.map(async (product) => {
-								const productDetails = await axios.get(
-									`https://nl-app.onrender.com/products/${product.product}`
-								);
-
-								return {
-									...product,
-									name: productDetails.data.name,
-									price: productDetails.data.price,
-								};
-							})
-						);
-
-						return order;
-					})
-				);
-
-				setOrders(ordersWithDetails);
-      } catch (error) {
-        console.error("Error fetching orders", error);
+    if (initialLoad.current && route.params?.orderId) {
+      const index = orders.findIndex((order) => order._id === route.params.orderId);
+      if (index !== -1) {
+        flatListRef.current?.scrollToIndex({ animated: true, index: index });
+        initialLoad.current = false;
       }
-    };
-
-    fetchOrders();
-  }, []);
+    }
+  }, [route.params?.orderId, orders]);
 
   const changeOrderStatus = async (orderId, newStatus) => {
     try {
@@ -59,9 +70,7 @@ const Bestellingen = () => {
       await axios.patch(patchUrl);
       setOrders(
         orders.map((order) =>
-          order._id === orderId
-            ? { ...order, status: newStatus }
-            : order
+          order._id === orderId ? { ...order, status: newStatus } : order
         )
       );
     } catch (error) {
@@ -93,6 +102,7 @@ const Bestellingen = () => {
 
       <View style={styles.mainContent}>
         <FlatList
+          ref={flatListRef} // Assign the ref to the FlatList
           data={orders}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
@@ -105,65 +115,66 @@ const Bestellingen = () => {
               <View style={styles.spaceBetweenRow}>
                 <Text style={styles.orderDetail}>
                   {new Date(item.orderDate).toDateString() ===
-									new Date().toDateString()
-										? new Date(
-												item.orderDate
-										  ).toLocaleTimeString([], {
-												hour: "2-digit",
-												minute: "2-digit",
-										  })
-										: new Date(
-												item.orderDate
-										  ).toLocaleDateString("en-US", {
-												year: "numeric",
-												month: "2-digit",
-												day: "2-digit",
-										  })}
+                  new Date().toDateString()
+                    ? new Date(
+                        item.orderDate
+                      ).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : new Date(
+                        item.orderDate
+                      ).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })}
                 </Text>
                 <Text style={styles.orderDetail}>
                   {item.status.toUpperCase()}
                 </Text>
               </View>
               <View style={styles.productCards}>
-                {item.products.map((product, index) => (
-                  <View key={index} style={styles.productItem}>
-                    <View style={styles.spaceBetweenRow}>
-                      <Text style={styles.productDetail}>
-                        {index + 1}. {product.name}
-                      </Text>
-                      <Text style={styles.productDetail}>
-                        ${product.price}
-                      </Text>
-                    </View>
-                    <Text style={styles.productDetail}>
-                      {product.selectedOptions.map((option) => option.name).join(", ")}
+                    {item.products.map((product, index) => (
+                      <View key={index} style={styles.productItem}>
+                        <View style={styles.spaceBetweenRow}>
+                          <Text style={styles.productDetail}>
+                            {index + 1}. {product.name}
+                          </Text>
+                          <Text style={styles.productDetail}>
+                            ${product.price}
+                          </Text>
+                        </View>
+                        <Text style={styles.productDetail}>
+                          {product.selectedOptions.map((option) => option.name).join(", ")}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
+                  <View style={styles.spaceBetweenRow}>
+                    <TouchableOpacity
+                      style={styles.statusButton}
+                      onPress={() => showStatusOptions(item._id, item.status)}
+                    >
+                      <Icon
+                        name="arrow-right"
+                        size={20}
+                        color="#000"
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.price}>
+                      ${item.totalPrice.toFixed(2)}
                     </Text>
                   </View>
-                ))}
-              </View>
-              <View style={styles.spaceBetweenRow}>
-                <TouchableOpacity
-                  style={styles.statusButton}
-                  onPress={() => showStatusOptions(item._id, item.status)}
-                >
-                  <Icon
-                    name="arrow-right"
-                    size={20}
-                    color="#000"
-                  />
-                </TouchableOpacity>
-                <Text style={styles.price}>
-                  ${item.totalPrice.toFixed(2)}
-                </Text>
-              </View>
-            </View>
-          )}
-        />
-      </View>
-	  <FloatingButton />
-    </View>
-  );
-};
+                </View>
+              )}
+            />
+          </View>
+          <FloatingButton />
+        </View>
+      );
+    };
+
 
 export default Bestellingen;
 const styles = StyleSheet.create({

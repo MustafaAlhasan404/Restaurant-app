@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 const AccordionItem = ({ item }) => {
   const [isOpened, setIsOpened] = useState(false);
@@ -28,8 +27,8 @@ const AccordionItem = ({ item }) => {
     outputRange: [0, 270], // Adjust this value to fit the content
   });
 
-  const handleInfoPress = () => {
-    navigation.navigate('Bestellingen', { table: item.table });
+  const handlePress = () => {
+    navigation.navigate('Bestellingen', { orderId: item._id });
   };
 
   useEffect(() => {
@@ -41,18 +40,12 @@ const AccordionItem = ({ item }) => {
   }, [isOpened]);
 
   return (
-    <View style={styles.accordionContainer}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Tafel : {item.table}</Text>
-        <View style={styles.dateContainer}>
-          <Text style={styles.orderdate}>Geplaatst: {orderTime}</Text>
-        </View>
-        <Text style={styles.status}>{item.status}</Text>
-        <TouchableOpacity onPress={handleInfoPress} style={styles.infoIcon}>
-          <Icon name="info-circle" size={20} color="#000" />
-        </TouchableOpacity>
+    <TouchableOpacity onPress={handlePress} style={styles.header}>
+      <Text style={styles.title}>Tafel : {item.table}</Text>
+      <View style={styles.dateContainer}>
+        <Text style={styles.orderdate}>Geplaatst: {orderTime}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -67,7 +60,9 @@ const OrdersToDo = () => {
       const todaysOrders = data.filter(order => {
         const orderDate = new Date(order.orderDate);
         orderDate.setHours(0, 0, 0, 0);
-        return orderDate.getTime() === new Date().setHours(0, 0, 0, 0);
+        const isToday = orderDate.getTime() === new Date().setHours(0, 0, 0, 0);
+        const isUnprocessed = order.status === 'unprocessed';
+        return isToday && isUnprocessed;
       });
       setOrders(todaysOrders);
       setBadgeNumber(todaysOrders.length);
@@ -102,15 +97,15 @@ const OrdersToDo = () => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 0,
     paddingTop: 22,
   },
-  acco: {},
   header: {
-    width: 250, // Set a fixed width for each item
-    height: 150, // Set a fixed height for each item (optional, depending on your design)
+    width: 250,
+    height: 150,
     marginLeft: 10,
     marginTop: 30,
     backgroundColor: "#fff",
@@ -127,7 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e27b00",
     width: 23,
     height: 23,
-    justifyContent: 'center', // Center the text vertically
+    justifyContent: 'center',
     borderRadius: 40,
   },
   badgenumbertext: {
@@ -142,17 +137,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 5,
   },
-  infoIcon: {
-    // Style for the touchable info icon
-    padding: 10,
-    position: 'absolute',
-    right: 10,
-    top: 10,
-  },
   title: {
-    fontSize:42,
+    fontSize: 42,
     fontWeight: "bold",
     textAlign: "center",
+
     flex: 1, // Take up all available space
   },
   orderdate: {
@@ -165,14 +154,6 @@ const styles = StyleSheet.create({
     flex: 1, // Take up all available space
     justifyContent: 'center', // Center content horizontally in the container
     alignItems: 'center', // Center content vertically in the container
-  },
-  status: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#e27b00', // Set the text color
-    alignSelf: 'center', // Center the status horizontally
-    textAlign: 'center', // Center the text within the Text component
-    textTransform: 'uppercase', // Set the text to uppercase
   },
 
   // Add additional styles for the horizontal layout if necessary

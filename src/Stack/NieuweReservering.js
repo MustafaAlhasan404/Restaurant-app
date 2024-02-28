@@ -11,7 +11,7 @@ import { FAB } from 'react-native-paper';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../contexts/UserContext'; // Import useUser hook
-
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 const ReservationItem = ({ item, onEdit, onDelete, canEdit }) => {
   // Function to format the date and time
   const formatDateTime = (dateTimeString) => {
@@ -37,10 +37,10 @@ const ReservationItem = ({ item, onEdit, onDelete, canEdit }) => {
       {canEdit && (
         <View style={styles.buttonGroup}>
           <TouchableOpacity onPress={() => onEdit(item)} style={styles.editButton}>
-            <Text style={styles.buttonText}>Edit</Text>
+            <MaterialCommunityIcons name="pencil" size={20} color="white" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => onDelete(item._id)} style={styles.deleteButton}>
-            <Text style={styles.buttonText}>Delete</Text>
+            <MaterialCommunityIcons name="delete" size={20} color="white" />
           </TouchableOpacity>
         </View>
       )}
