@@ -70,7 +70,11 @@ const Login = ({ navigation }) => {
 			/>
 			<TouchableOpacity
 				disabled={loading}
-				style={styles.button}
+				// style={styles.button}
+				style={[
+					styles.button,
+					loading && styles.buttonLoading,
+				]}
 				onPress={handleLogin}
 			>
 				{!loading && <Text style={styles.buttonText}>Login</Text>}
@@ -113,6 +117,9 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		alignItems: "center",
 		marginTop: 20,
+	},
+	buttonLoading: {
+		backgroundColor: "#826848",
 	},
 	buttonText: {
 		color: "white",
