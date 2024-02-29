@@ -59,29 +59,54 @@ const FirstRoute = () => {
 
   const handleDelete = async (itemId) => {
     try {
-      const response = await fetch(`https://nl-app.onrender.com/products/${itemId}`, {
+      // First, we need to check if the product is part of any open (unpaid) orders.
+      // We make a GET request to the backend endpoint that will perform this check.
+      // Replace `http://localhost:3000` with your actual backend server's URL.
+      const checkUrl = `https://nl-app.onrender.com/orders/check-product/${itemId}`;
+      const checkResponse = await fetch(checkUrl);
+  
+      // Parse the JSON response from the server.
+      const checkData = await checkResponse.json();
+  
+      // If the server response indicates that the product is in open orders, we stop the deletion process.
+      if (checkData.isInOpenOrder) {
+        // You can replace this alert with a more sophisticated error handling mechanism if needed.
+        alert('Cannot delete product as it is part of an open order.');
+        return; // Exit the function early as we do not want to proceed with deletion.
+      }
+  
+      // If the product is not in any open orders, we proceed with the deletion.
+      // We make a DELETE request to the backend endpoint that will delete the product.
+      const deleteUrl = `https://nl-app.onrender.com/products/${itemId}`;
+      const response = await fetch(deleteUrl, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          // Include any other headers your API requires, such as authorization tokens
+          // Include any other headers your API requires, such as authorization tokens.
         },
       });
   
+      // Check if the DELETE operation was successful by examining the HTTP response status code.
       if (response.ok) {
-        // If the delete was successful, remove the item from the state
+        // If the delete was successful, we update the state to remove the item from the list.
         setMenuItems(prevItems => prevItems.filter(item => item._id !== itemId));
         console.log("Deleted item with id:", itemId);
       } else {
-        // If the server responded with an error, handle it here
+        // If the server responded with an error, we handle it here.
+        // We parse the error message from the server's response.
         const errorData = await response.json();
         console.error("Failed to delete item:", errorData.message);
+        // Again, you can replace this alert with a more sophisticated error handling mechanism.
+        alert(`Failed to delete item: ${errorData.message}`);
       }
     } catch (error) {
-      // If there was an error sending the request, handle it here
+      // If there was an error sending the request or receiving the response, we handle it here.
       console.error("Error deleting item:", error);
+      // Display an error message to the user.
+      alert(`Error deleting item: ${error.message}`);
     }
   };
-
+  
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
       <View key={optionIndex}>
@@ -550,3 +575,7 @@ const styles = StyleSheet.create({
   },
   // ... other styles
 });
+
+
+
+// this is a test
