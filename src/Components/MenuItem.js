@@ -53,7 +53,6 @@ const MenuItem = ({ menuItem }) => {
 
 	const renderOptions = () => {
 		return menuItem.options.map((option, index) => {
-			// const isSelected = selectedOptions[`${option.name}-${index}`];
 			const isSelected =
 				selectedOptions.findIndex(
 					(selectedOption) => selectedOption.name === option.name
@@ -81,7 +80,7 @@ const MenuItem = ({ menuItem }) => {
 								{option.name}
 							</Text>
 						</View>
-						<Text>${option.price.toFixed(2)}</Text>
+						<Text>€{option.price.toFixed(2)}</Text>
 					</View>
 				</Pressable>
 			);
@@ -98,7 +97,7 @@ const MenuItem = ({ menuItem }) => {
 					</Text>
 				</View>
 				<Text style={styles.menuItemPrice}>
-					${menuItem.price.toFixed(2)}
+					€{menuItem.price.toFixed(2)}
 				</Text>
 			</View>
 
@@ -106,7 +105,7 @@ const MenuItem = ({ menuItem }) => {
 
 			<View style={styles.menuItemFooter}>
 				<Text style={styles.menuItemPrice}>
-					Total: ${totalPrice.toFixed(2)}
+					Total: €{totalPrice.toFixed(2)}
 				</Text>
 				<Pressable
 					style={styles.addButton}

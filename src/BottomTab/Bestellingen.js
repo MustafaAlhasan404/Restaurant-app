@@ -165,7 +165,7 @@ const Bestellingen = ({ route }) => {
                         {index + 1}. {product.name}
                       </Text>
                       <Text style={styles.productDetail}>
-                        ${product.price}
+                        €{product.price}
                       </Text>
                     </View>
                     <Text style={styles.productDetail}>
@@ -184,7 +184,7 @@ const Bestellingen = ({ route }) => {
                     <Icon
                       name="arrow-right"
                       size={20}
-                      color="#000"
+                      color="white"
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -195,7 +195,7 @@ const Bestellingen = ({ route }) => {
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.price}>
-                  ${item.totalPrice.toFixed(2)}
+                  €{item.totalPrice.toFixed(2)}
                 </Text>
               </View>
             </View>

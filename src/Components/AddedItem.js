@@ -48,7 +48,7 @@ const AddedItem = ({ productID, selectedOptions }) => {
 			<View style={styles.menuItemHeader}>
 				<View style={styles.spaceBetweenRow}>
 					<Text style={styles.menuItemName}>{menuItem.name}</Text>
-					<Text style={styles.menuItemPrice}>${menuItem.price}</Text>
+					<Text style={styles.menuItemPrice}>€{menuItem.price}</Text>
 				</View>
 			</View>
 
@@ -60,7 +60,7 @@ const AddedItem = ({ productID, selectedOptions }) => {
 								{option.name}
 							</Text>
 							<Text style={styles.menuItemOptionPrice}>
-								${option.price.toFixed(2)}
+								€{option.price.toFixed(2)}
 							</Text>
 						</View>
 					);
@@ -69,7 +69,7 @@ const AddedItem = ({ productID, selectedOptions }) => {
 
 			<View style={styles.menuItemFooter}>
 				<Text style={styles.menuItemPrice}>
-					Total: ${totalPrice.toFixed(2)}
+					Total: €{totalPrice.toFixed(2)}
 				</Text>
 				<Pressable
 					style={styles.addButton}

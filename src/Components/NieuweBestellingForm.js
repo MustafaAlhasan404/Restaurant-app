@@ -233,8 +233,8 @@ const NieuweBestellingForm = () => {
 		if (response.status === 200) {
 			console.log("Order created successfully!");
 			dispatch(emptyOrder());
+			navigation.navigate("Home");
 		}
-		navigation.navigate("Home");
 	};
 
 	return (
@@ -277,7 +277,7 @@ const NieuweBestellingForm = () => {
 						<View style={styles.spaceBetweenRow}>
 							<Text style={styles.menuItemName}>Total</Text>
 							<Text style={styles.menuItemPrice}>
-								${totalPrice.toFixed(2)}
+								€{totalPrice.toFixed(2)}
 							</Text>
 						</View>
 					</View>
