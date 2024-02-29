@@ -11,6 +11,7 @@ import {
 	ScrollView,
 	Modal,
 	FlatList,
+	Alert,
 } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { Formik } from "formik";
@@ -233,8 +234,9 @@ const NieuweBestellingForm = () => {
 		if (response.status === 201) {
 			console.log("Order created successfully!");
 			dispatch(emptyOrder());
-			navigation.navigate("Home");
+			Alert.alert("Success", "Order created successfully");
 		}
+		navigation.navigate("Home");
 	};
 
 	return (
