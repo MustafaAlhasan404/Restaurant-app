@@ -112,7 +112,11 @@ const Voorraad = () => {
 	};
 
 	if (loading) {
-		return <ActivityIndicator size="large" color="#0000ff" />;
+		return (
+			<View style={styles.centerScreen}>
+				<ActivityIndicator size="large" color="#0000ff" />
+			</View>
+		);
 	}
 
 	if (error) {
@@ -249,8 +253,8 @@ const styles = StyleSheet.create({
 		padding: 10,
 		backgroundColor: "#e27b00",
 		borderRadius: 5, // Increased rounded corners
-		color: '#fff',
-		fontWeight: '500',
+		color: "#fff",
+		fontWeight: "500",
 		marginRight: 10,
 	},
 	editButtonText: {
@@ -262,8 +266,8 @@ const styles = StyleSheet.create({
 		padding: 10,
 		backgroundColor: "#dc3545",
 		borderRadius: 10, // Increased rounded corners
-		color: '#fff',
-		fontWeight: '500',
+		color: "#fff",
+		fontWeight: "500",
 	},
 	deleteButtonText: {
 		color: "white",
@@ -331,6 +335,14 @@ const styles = StyleSheet.create({
 	},
 	promptTitle: {
 		fontSize: 12,
+	},
+	centerScreen: {
+		width: "100%",
+		height: "100%",
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center",
 	},
 	// Additional styles can be added here if needed
 });

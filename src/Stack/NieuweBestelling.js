@@ -46,6 +46,6 @@ const styles = StyleSheet.create({
   },
   form: {
     flexDirection: "column",
-    height: 1000,
+    // height: 1000,
   },
 });

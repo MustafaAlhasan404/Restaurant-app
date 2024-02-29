@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -6,102 +6,66 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useSelector, useDispatch } from "react-redux";
 import { addItem, removeItem } from "../State/orderSlice";
 
-const MenuItem = ({ menuItem }) => {
-	const [selectedOptions, setSelectedOptions] = useState([]);
-	const [totalPrice, setTotalPrice] = useState(menuItem.price);
+const AddedItem = ({ productID, selectedOptions }) => {
+	const [menuItem, setMenuItem] = useState({});
+	const [totalPrice, setTotalPrice] = useState(0);
 
-	const resetItem = () => {
-		setSelectedOptions([]);
-		setTotalPrice(menuItem.price);
-	};
-
-	const handleSelectOption = (optionName, optionPrice) => {
-		setSelectedOptions((prevOptions) => {
-			if (
-				prevOptions.findIndex(
-					(option) => option.name === optionName
-				) !== -1
-			) {
-				// option already exists, remove it
-				setTotalPrice((currPrice) => currPrice - optionPrice);
-				return prevOptions.filter(
-					(option) => option.name !== optionName
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				console.log(productID);
+				const response = await fetch(
+					`https://nl-app.onrender.com/products/${productID}`
 				);
-			} else {
-				// option does not exist, add it
-				setTotalPrice((currPrice) => currPrice + optionPrice);
-				return [
-					...prevOptions,
-					{ name: optionName, price: optionPrice },
-				];
+				const data = await response.json();
+				setMenuItem(data);
+				let price = data.price;
+				for (let i = 0; i < selectedOptions.length; i++) {
+					price += selectedOptions[i].price;
+				}
+				setTotalPrice(price);
+			} catch (error) {
+				console.error("Error fetching data:", error);
 			}
-		});
-	};
+		};
+		fetchData();
+	}, []);
 
 	const dispatch = useDispatch();
 
-	const handleSelectProduct = () => {
-		dispatch(
-			addItem({
-				product: menuItem._id,
-				selectedOptions: selectedOptions,
-			})
-		);
-		resetItem();
-	};
-
-	const renderOptions = () => {
-		return menuItem.options.map((option, index) => {
-			// const isSelected = selectedOptions[`${option.name}-${index}`];
-			const isSelected =
-				selectedOptions.findIndex(
-					(selectedOption) => selectedOption.name === option.name
-				) !== -1;
-
-			return (
-				<Pressable
-					key={index}
-					onPress={() =>
-						handleSelectOption(option.name, option.price)
-					}
-				>
-					<View style={styles.menuItemOption}>
-						<View style={styles.menuItemOptionLabel}>
-							<View style={styles.checkbox}>
-								{isSelected && (
-									<MaterialCommunityIcons
-										name="check"
-										size={20}
-										color="black"
-									/>
-								)}
-							</View>
-							<Text style={styles.menuItemOptionName}>
-								{option.name}
-							</Text>
-						</View>
-						<Text>${option.price.toFixed(2)}</Text>
-					</View>
-				</Pressable>
-			);
-		});
+	const handleDeleteProduct = () => {
+		// dispatch(
+		// 	removeItem({
+		// 		product: menuItem._id,
+		// 		selectedOptions: selectedOptions,
+		// 	})
+		// );
+		console.log("Removing Item");
 	};
 
 	return (
 		<View style={styles.menuItem}>
 			<View style={styles.menuItemHeader}>
-				<View>
+				<View style={styles.spaceBetweenRow}>
 					<Text style={styles.menuItemName}>{menuItem.name}</Text>
-					<Text style={styles.menuItemIngredients}>
-						{menuItem.ingredients}
-					</Text>
+					<Text style={styles.menuItemPrice}>${menuItem.price}</Text>
 				</View>
-				<Text style={styles.menuItemPrice}>
-					${menuItem.price.toFixed(2)}
-				</Text>
 			</View>
 
-			<View style={styles.menuItemOptions}>{renderOptions()}</View>
+			<View style={styles.menuItemOptions}>
+				{selectedOptions.map((option, index) => {
+					return (
+						<View key={index} style={styles.menuItemOption}>
+							<Text style={styles.menuItemOptionName}>
+								{option.name}
+							</Text>
+							<Text style={styles.menuItemOptionPrice}>
+								${option.price.toFixed(2)}
+							</Text>
+						</View>
+					);
+				})}
+			</View>
 
 			<View style={styles.menuItemFooter}>
 				<Text style={styles.menuItemPrice}>
@@ -109,14 +73,13 @@ const MenuItem = ({ menuItem }) => {
 				</Text>
 				<Pressable
 					style={styles.addButton}
-					onPress={() => handleSelectProduct()}
+					onPress={() => handleDeleteProduct()}
 				>
 					<MaterialCommunityIcons
-						name="plus"
+						name="delete"
 						size={20}
 						color="white"
 					/>
-					{/* <Text style={styles.buttontext}>Add</Text> */}
 				</Pressable>
 			</View>
 		</View>
@@ -197,11 +160,12 @@ const styles = StyleSheet.create({
 	},
 	menuItems: {},
 	menuItem: {
+		marginVertical: 5,
 		flexDirection: "column",
 		paddingHorizontal: 15,
 		paddingVertical: 17,
-		borderBottomWidth: 1,
-		borderBottomColor: "#bababa",
+		borderWidth: 1,
+		borderColor: "#bababa",
 		backgroundColor: "#f9f9f9", // Example background color for menu items
 	},
 	menuItemGroup: {
@@ -345,4 +309,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default MenuItem;
+export default AddedItem;

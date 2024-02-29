@@ -18,6 +18,7 @@ import * as yup from "yup";
 import { Picker } from "@react-native-picker/picker";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MenuItem from "./MenuItem";
+import AddedItem from "./AddedItem";
 import { useSelector } from "react-redux";
 
 const renderTabBar = (props) => (
@@ -196,8 +197,25 @@ export function TabViewExample() {
 
 const NieuweBestellingForm = () => {
 	const [modalVisible, setModalVisible] = useState(false);
-	const [selectedProducts, setSelectedProducts] = useState([]);
+	// const [selectedProducts, setSelectedProducts] = useState([]);
 	const [table, setTable] = useState("1");
+
+	// Get order data from Redux
+	const order = useSelector((state) => state.order) || [];
+	const [selectedProducts, setSelectedProducts] = useState(
+		order.items ? order.items : []
+	);
+	const [selectedProductsInfo, setselectedProductsInfo] = useState([]);
+
+	useEffect(() => {
+		// Sync local state with Redux on change
+		setSelectedProducts(order.items);
+		console.log("Updated selectedProducts, Order is: ", order);
+		console.log(
+			"Updated selectedProducts, selectedProducts is: ",
+			selectedProducts
+		);
+	}, [order]);
 
 	const handleSubmit = async (table, products) => {
 		// const response = await fetch("https://nl-app.onrender.com/orders", {
@@ -212,11 +230,12 @@ const NieuweBestellingForm = () => {
 		// console.log(order);
 		console.log("Submit Pressed");
 		console.log("Table:", table);
+		console.log("Selected products:", selectedProducts);
 	};
 
 	return (
 		<View>
-			<View>
+			<View style={styles.page}>
 				<Text style={styles.label}>Table:</Text>
 				<TextInput
 					style={styles.input}
@@ -228,58 +247,37 @@ const NieuweBestellingForm = () => {
 
 				<View style={{ height: 600 }}>
 					<Text style={styles.label}>Kies product(en):</Text>
-
 					<TabViewExample />
 				</View>
 
-				<Text>{table}</Text>
-
-				<Pressable
-					style={styles.savebutton}
-					onPress={() => handleSubmit(table, [])}
-				>
-					<Text style={styles.buttontext}>Place order</Text>
-				</Pressable>
-				{/* 
-				<Modal
-					animationType="fade"
-					transparent={true}
-					visible={modalVisible}
-					onRequestClose={() => {
-						console.log("Modal has been closed.");
-						setModalVisible(!modalVisible);
-					}}
-				>
-					<View style={styles.centeredView}>
-						<View style={styles.modalView}>
-							<Pressable
-								style={styles.backbutton}
-								onPress={() => setModalVisible(!modalVisible)}
-							>
-								<MaterialCommunityIcons
-									color="black"
-									size={25}
-									name="arrow-left"
-									style={{ marginTop: 0 }}
-								/>
-								<Text style={styles.backbuttontext}>Back</Text>
-							</Pressable>
-							<Text style={styles.modalText}>
-								SHOW ORDER SUMMARY HERE. PRODUCTS + OPTIONS +
-								PRICE PER PRODUCT + TOTAL PRICE + PAYMENT METHOD
+				<View style={styles.orderSummary}>
+					<View>
+						<View style={styles.spaceBetweenRow}>
+							<Text style={styles.menuItemName}>
+								Order Summary
 							</Text>
-
-							<Pressable
-								style={styles.submitbutton}
-								onPress={handleSubmit}
-							>
-								<Text style={styles.buttontext}>
-									Send order
-								</Text>
-							</Pressable>
+							<Text style={styles.menuItemPrice}>
+								{selectedProducts.length} Items
+							</Text>
 						</View>
+
+						{selectedProducts.map((item, index) => (
+							<View key={index}>
+								<AddedItem
+									productID={item.product}
+									selectedOptions={item.selectedOptions}
+								/>
+							</View>
+						))}
 					</View>
-				</Modal> */}
+
+					<Pressable
+						style={styles.savebutton}
+						onPress={() => handleSubmit(table, [])}
+					>
+						<Text style={styles.buttontext}>Place order</Text>
+					</Pressable>
+				</View>
 			</View>
 		</View>
 	);
@@ -380,6 +378,7 @@ const styles = StyleSheet.create({
 	},
 	menuItemName: {
 		fontSize: 18,
+		fontWeight: "bold",
 	},
 	menuItemIngredients: {
 		fontSize: 12,
@@ -513,5 +512,19 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		fontSize: 14,
 		color: "#333",
+	},
+	orderSummary: {
+		backgroundColor: "white",
+		padding: 15,
+	},
+	page: {
+		height: "auto",
+	},
+	spaceBetweenRow: {
+		width: "100%",
+		display: "flex",
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
 	},
 });
