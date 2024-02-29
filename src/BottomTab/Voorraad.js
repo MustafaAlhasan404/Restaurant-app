@@ -114,7 +114,7 @@ const Voorraad = () => {
 	if (loading) {
 		return (
 			<View style={styles.centerScreen}>
-				<ActivityIndicator size="large" color="#0000ff" />
+				<ActivityIndicator size="large" color="#e27b00" />
 			</View>
 		);
 	}

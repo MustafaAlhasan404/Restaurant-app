@@ -55,11 +55,19 @@ const Bestellingen = ({ route }) => {
   }, []);
 
   useEffect(() => {
-    if (initialLoad.current && route.params?.orderId) {
+    // Reset initialLoad when navigating away
+    return () => {
+      initialLoad.current = true;
+    };
+  }, []);
+
+  
+  useEffect(() => {
+    if (route.params?.orderId) {
       const index = orders.findIndex((order) => order._id === route.params.orderId);
+      console.log(`Scrolling to order ID: ${route.params.orderId} at index: ${index}`);
       if (index !== -1) {
         flatListRef.current?.scrollToIndex({ animated: true, index: index });
-        initialLoad.current = false;
       }
     }
   }, [route.params?.orderId, orders]);

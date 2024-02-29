@@ -7,6 +7,7 @@ import {
   Pressable,
   Button,
   ScrollView,
+  TouchableOpacity,
   TouchableNativeFeedback,
 } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
@@ -37,6 +38,11 @@ const renderTabBar = (props) => (
   />
 );
 
+const handleEditPress = (itemId) => {
+  // Implement your edit logic here
+  console.log("Edit item with id:", itemId);
+};
+
 const FirstRoute = () => {
   const [menuItems, setMenuItems] = useState([]);
 
@@ -56,6 +62,31 @@ const FirstRoute = () => {
     fetchData();
   }, []);
 
+  const handleDelete = async (itemId) => {
+    try {
+      const response = await fetch(`https://nl-app.onrender.com/products/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          // Include any other headers your API requires, such as authorization tokens
+        },
+      });
+  
+      if (response.ok) {
+        // If the delete was successful, remove the item from the state
+        setMenuItems(prevItems => prevItems.filter(item => item._id !== itemId));
+        console.log("Deleted item with id:", itemId);
+      } else {
+        // If the server responded with an error, handle it here
+        const errorData = await response.json();
+        console.error("Failed to delete item:", errorData.message);
+      }
+    } catch (error) {
+      // If there was an error sending the request, handle it here
+      console.error("Error deleting item:", error);
+    }
+  };
+
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
       <View key={optionIndex}>
@@ -68,7 +99,8 @@ const FirstRoute = () => {
         )}
       </View>
     ));
-  };  
+  };
+
 
   return (
     <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
@@ -91,7 +123,31 @@ const FirstRoute = () => {
             <Text style={styles.menuItemName}>{menuItem.name}</Text>
             <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
             {menuItem.options && renderMenuItemOptions(menuItem)}
-            <Text style={styles.menuItemPrice}>€{menuItem.price.toFixed(2)}</Text>
+            <View style={styles.menuItemDetails}>
+              <Text style={styles.menuItemPrice}>€{menuItem.price.toFixed(2)}</Text>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => handleEditPress(menuItem._id)}
+                >
+                  <MaterialCommunityIcons
+                    name="pencil"
+                    size={20}
+                    color="white"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => handleDelete(menuItem._id)}
+                >
+                  <MaterialCommunityIcons
+                    name="delete"
+                    size={20}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -119,14 +175,45 @@ const SecondRoute = () => {
     fetchData();
   }, []);
 
+  const handleDelete = async (itemId) => {
+    try {
+      const response = await fetch(`https://nl-app.onrender.com/products/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          // Include any other headers your API requires, such as authorization tokens
+        },
+      });
+  
+      if (response.ok) {
+        // If the delete was successful, remove the item from the state
+        setMenuItems(prevItems => prevItems.filter(item => item._id !== itemId));
+        console.log("Deleted item with id:", itemId);
+      } else {
+        // If the server responded with an error, handle it here
+        const errorData = await response.json();
+        console.error("Failed to delete item:", errorData.message);
+      }
+    } catch (error) {
+      // If there was an error sending the request, handle it here
+      console.error("Error deleting item:", error);
+    }
+  };
+
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
-      <View key={optionIndex} style={styles.menuItemOption}>
-        <Text style={styles.menuItemOptionName}>{option.name}</Text>
-        <Text style={styles.menuItemOptionPrice}>{option.price}</Text>
+      <View key={optionIndex}>
+        <View style={styles.menuItemOption}>
+          <Text style={styles.menuItemOptionName}>{option.name}</Text>
+          <Text style={styles.menuItemOptionPrice}>€{option.price}</Text>
+        </View>
+        {optionIndex < menuItem.options.length - 1 && (
+          <View style={styles.menuItemOptionDivider} />
+        )}
       </View>
     ));
   };
+
 
   return (
     <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
@@ -149,7 +236,31 @@ const SecondRoute = () => {
             <Text style={styles.menuItemName}>{menuItem.name}</Text>
             <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
             {menuItem.options && renderMenuItemOptions(menuItem)}
-            <Text style={styles.menuItemPrice}>{menuItem.price.toFixed(2)}</Text>
+            <View style={styles.menuItemDetails}>
+              <Text style={styles.menuItemPrice}>€{menuItem.price.toFixed(2)}</Text>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => handleEditPress(menuItem._id)}
+                >
+                  <MaterialCommunityIcons
+                    name="pencil"
+                    size={20}
+                    color="white"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => handleDelete(menuItem._id)}
+                >
+                  <MaterialCommunityIcons
+                    name="delete"
+                    size={20}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -176,14 +287,45 @@ const ThirdRoute = () => {
     fetchData();
   }, []);
 
+  const handleDelete = async (itemId) => {
+    try {
+      const response = await fetch(`https://nl-app.onrender.com/products/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          // Include any other headers your API requires, such as authorization tokens
+        },
+      });
+  
+      if (response.ok) {
+        // If the delete was successful, remove the item from the state
+        setMenuItems(prevItems => prevItems.filter(item => item._id !== itemId));
+        console.log("Deleted item with id:", itemId);
+      } else {
+        // If the server responded with an error, handle it here
+        const errorData = await response.json();
+        console.error("Failed to delete item:", errorData.message);
+      }
+    } catch (error) {
+      // If there was an error sending the request, handle it here
+      console.error("Error deleting item:", error);
+    }
+  };
+
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
-      <View key={optionIndex} style={styles.menuItemOption}>
-        <Text style={styles.menuItemOptionName}>{option.name}</Text>
-        <Text style={styles.menuItemOptionPrice}>{option.price}</Text>
+      <View key={optionIndex}>
+        <View style={styles.menuItemOption}>
+          <Text style={styles.menuItemOptionName}>{option.name}</Text>
+          <Text style={styles.menuItemOptionPrice}>€{option.price}</Text>
+        </View>
+        {optionIndex < menuItem.options.length - 1 && (
+          <View style={styles.menuItemOptionDivider} />
+        )}
       </View>
     ));
   };
+
 
   return (
     <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
@@ -206,7 +348,31 @@ const ThirdRoute = () => {
             <Text style={styles.menuItemName}>{menuItem.name}</Text>
             <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
             {menuItem.options && renderMenuItemOptions(menuItem)}
-            <Text style={styles.menuItemPrice}>{menuItem.price.toFixed(2)}</Text>
+            <View style={styles.menuItemDetails}>
+              <Text style={styles.menuItemPrice}>€{menuItem.price.toFixed(2)}</Text>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => handleEditPress(menuItem._id)}
+                >
+                  <MaterialCommunityIcons
+                    name="pencil"
+                    size={20}
+                    color="white"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => handleDelete(menuItem._id)}
+                >
+                  <MaterialCommunityIcons
+                    name="delete"
+                    size={20}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -242,7 +408,7 @@ export default function TabViewExample() {
         initialLayout={{ width: layout.width }}
         style={styles.tabs}
       />
-            <FloatingButton />
+      <FloatingButton />
     </View>
   );
 }
@@ -339,23 +505,23 @@ const styles = StyleSheet.create({
     fontWeight: "bold", // Make the price bold
     fontSize: 20, // Increase font size for the price
   },
-menuItemOption: {
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  paddingVertical: 5,
-  paddingHorizontal: 10,
-  backgroundColor: "#f8f8f8",
-  borderRadius: 5,
-  marginVertical: 2,
-},
+  menuItemOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: "#f8f8f8",
+    borderRadius: 5,
+    marginVertical: 2,
+  },
 
-menuItemOptionDivider: {
-  height: 1, // Height of the divider line
-  backgroundColor: "#ddd", // Color of the divider line
-  marginHorizontal: 40, // Horizontal margin to make the line narrower
-  // You can adjust marginHorizontal to increase or decrease the line length
-},
+  menuItemOptionDivider: {
+    height: 1, // Height of the divider line
+    backgroundColor: "#ddd", // Color of the divider line
+    marginHorizontal: 40, // Horizontal margin to make the line narrower
+    // You can adjust marginHorizontal to increase or decrease the line length
+  },
   menuItemOptionName: {
     fontSize: 14,
     color: "#333", // Dark color for the option name
@@ -366,5 +532,26 @@ menuItemOptionDivider: {
     color: "#333", // Dark color for the option price
   },
 
+  buttonContainer: {
+    flexDirection: "row",
+  },
+  editButton: {
+    padding: 5,
+    backgroundColor: "#e27b00",
+    borderRadius: 5,
+    marginLeft: 10,
+  },
+  deleteButton: {
+    padding: 5,
+    backgroundColor: "#dc3545",
+    borderRadius: 5,
+    marginLeft: 10,
+  },
+  menuItemDetails: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 5, // Adjust as needed for spacing
+  },
   // ... other styles
 });
