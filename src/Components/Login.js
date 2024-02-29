@@ -7,6 +7,7 @@ import {
 	Alert,
 	StyleSheet,
 	TouchableOpacity,
+	ActivityIndicator,
 } from "react-native";
 import { useUser } from "../contexts/UserContext"; // Import useUser hook
 
@@ -71,14 +72,12 @@ const Login = ({ navigation }) => {
 			<TouchableOpacity
 				disabled={loading}
 				// style={styles.button}
-				style={[
-					styles.button,
-					loading && styles.buttonLoading,
-				]}
+				style={[styles.button, loading && styles.buttonLoading]}
 				onPress={handleLogin}
 			>
 				{!loading && <Text style={styles.buttonText}>Login</Text>}
-				{loading && <Text style={styles.buttonText}>Logging in</Text>}
+				{/* {loading && <Text style={styles.buttonText}>Logging in</Text>} */}
+				{loading && <ActivityIndicator size="small" color="#0000ff" />}
 			</TouchableOpacity>
 		</View>
 	);
