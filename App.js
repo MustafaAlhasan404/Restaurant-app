@@ -8,7 +8,6 @@ import { useTheme } from "react-native-paper";
 import AddVoorraad from "./src/Components/AddVoorraad";
 // Import UserProvider from the context file
 import { UserProvider } from "./src/contexts/UserContext";
-
 // Import screens and components
 import Login from "./src/Components/Login";
 import Home from "./src/BottomTab/Home";
@@ -20,7 +19,8 @@ import Voorraad from "./src/BottomTab/Voorraad";
 import AddReservation from "./src/Components/AddReservation";
 import EditReservation from "./src/Components/EditReservation";
 import Signup from "./src/Components/Signup";
-
+import EditBestelling from "./src/Components/EditBestelling";
+import EditMenuKaart from "./src/Components/EditMenuKaart";
 // State management
 import store from "./store";
 import { Provider } from "react-redux";
@@ -190,7 +190,30 @@ function StackNavigator() {
 					headerTintColor: "#e27b00",
 				}}
 			/>
+			<Stack.Screen
+				name="EditBestelling"
+				component={EditBestelling}
+				options={{
+					headerShown: true,
+					headerStyle: {
+						backgroundColor: "#311213",
+					},
+					headerTintColor: "#e27b00",
+				}}
+			/>
+						<Stack.Screen
+				name="EditMenuKaart"
+				component={EditMenuKaart}
+				options={{
+					headerShown: true,
+					headerStyle: {
+						backgroundColor: "#311213",
+					},
+					headerTintColor: "#e27b00",
+				}}
+			/>
 		</Stack.Navigator>
+		
 	);
 }
 

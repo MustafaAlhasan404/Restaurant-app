@@ -12,12 +12,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import FloatingButton from "../Components/FloatingButton";
+import { useRoute } from '@react-navigation/native';
 
-
-const Bestellingen = ({ route }) => {
+const Bestellingen = ({ navigation }) => {
   const [orders, setOrders] = useState([]);
-  const flatListRef = useRef();
-  const initialLoad = useRef(true);
+  const flatListRef = useRef(null);
+  const route = useRoute();
+
+const handleEditOrder = (order) => {
+  // Navigate to the EditBestelling screen and pass the entire order object
+  navigation.navigate('EditBestelling', { order: order });
+};
+
   const handleDeleteOrder = async (orderId) => {
     try {
       const response = await axios.delete(`https://nl-app.onrender.com/orders/${orderId}`);
@@ -33,59 +39,56 @@ const Bestellingen = ({ route }) => {
     }
   };
 
-  // Function to fetch orders from the server
-  const fetchOrders = async () => {
-    try {
-      const response = await axios.get("https://nl-app.onrender.com/orders");
-      // Map products to new array with details
-      const ordersWithDetails = await Promise.all(
-        response.data.map(async (order) => {
-          order.products = await Promise.all(
-            order.products.map(async (product) => {
-              const productDetails = await axios.get(
-                `https://nl-app.onrender.com/products/${product.product}`
-              );
-              return {
-                ...product,
-                name: productDetails.data.name,
-                price: productDetails.data.price,
-              };
-            })
-          );
-          return order;
-        })
-      );
-      setOrders(ordersWithDetails);
-    } catch (error) {
-      console.error("Error fetching orders", error);
-    }
-  };
-
-  // Polling mechanism to fetch new orders at regular intervals
   useEffect(() => {
-    fetchOrders(); // Fetch orders on component mount
-    const interval = setInterval(fetchOrders, 5000); // Poll every 5 seconds
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get(
+          "https://nl-app.onrender.com/orders"
+        );
 
-    return () => clearInterval(interval); // Clear interval on component unmount
-  }, []);
+        // Map products to new array with details
+        const ordersWithDetails = await Promise.all(
+          response.data.map(async (order) => {
+            order.products = await Promise.all(
+              order.products.map(async (product) => {
+                const productDetails = await axios.get(
+                  `https://nl-app.onrender.com/products/${product.product}`
+                );
 
-  useEffect(() => {
-    // Reset initialLoad when navigating away
-    return () => {
-      initialLoad.current = true;
-    };
-  }, []);
+                return {
+                  ...product,
+                  name: productDetails.data.name,
+                  price: productDetails.data.price,
+                };
+              })
+            );
 
+            return order;
+          })
+        );
 
-  useEffect(() => {
-    if (route.params?.orderId) {
-      const index = orders.findIndex((order) => order._id === route.params.orderId);
-      console.log(`Scrolling to order ID: ${route.params.orderId} at index: ${index}`);
-      if (index !== -1) {
-        flatListRef.current?.scrollToIndex({ animated: true, index: index });
+        setOrders(ordersWithDetails);
+      } catch (error) {
+        console.error("Error fetching orders", error);
       }
-    }
-  }, [route.params?.orderId, orders]);
+    };
+
+    fetchOrders();
+  }, []);
+
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (route.params?.orderId) {
+        const index = orders.findIndex(order => order._id === route.params.orderId);
+        if (index !== -1 && flatListRef.current) {
+          flatListRef.current.scrollToIndex({ animated: true, index: index });
+        }
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, orders, route.params?.orderId]);
 
   const changeOrderStatus = async (orderId, newStatus) => {
     try {
@@ -93,7 +96,9 @@ const Bestellingen = ({ route }) => {
       await axios.patch(patchUrl);
       setOrders(
         orders.map((order) =>
-          order._id === orderId ? { ...order, status: newStatus } : order
+          order._id === orderId
+            ? { ...order, status: newStatus }
+            : order
         )
       );
     } catch (error) {
@@ -119,64 +124,81 @@ const Bestellingen = ({ route }) => {
 
   return (
     <View style={styles.container}>
+      {/* SafeAreaView ensures that the content is displayed within the safe area boundaries of the device */}
       <SafeAreaView style={styles.safeArea}>
+        {/* Header component is used to display the screen title */}
         <Header name="Bestellingen" />
       </SafeAreaView>
-  
+
+      {/* The main content area where the list of orders will be displayed */}
       <View style={styles.mainContent}>
+        {/* FlatList is used to efficiently render a list of orders */}
         <FlatList
-          ref={flatListRef} // Assign the ref to the FlatList
-          data={orders}
-          keyExtractor={(item) => item._id}
+          ref={flatListRef} // Assign the ref created earlier to the FlatList for scrolling functionality
+          data={orders} // The array of orders to be rendered
+          keyExtractor={(item) => item._id} // Function to extract a unique key for each item
           renderItem={({ item }) => (
+            // This function defines how each order item is rendered
             <View style={styles.orderItem}>
+              {/* Container for the table number */}
               <View style={styles.centerSingleItem}>
                 <Text style={styles.orderId}>
                   Table {item.table}
                 </Text>
               </View>
+              {/* Container for order date and status */}
               <View style={styles.spaceBetweenRow}>
                 <Text style={styles.orderDetail}>
+                  {/* Display the order date or time based on whether it's today's date */}
                   {new Date(item.orderDate).toDateString() ===
                     new Date().toDateString()
-                    ? new Date(
-                      item.orderDate
-                    ).toLocaleTimeString([], {
+                    ? new Date(item.orderDate).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
                     })
-                    : new Date(
-                      item.orderDate
-                    ).toLocaleDateString("en-US", {
+                    : new Date(item.orderDate).toLocaleDateString("en-US", {
                       year: "numeric",
                       month: "2-digit",
                       day: "2-digit",
                     })}
                 </Text>
                 <Text style={styles.orderDetail}>
+                  {/* Display the order status in uppercase */}
                   {item.status.toUpperCase()}
                 </Text>
               </View>
+              {/* Container for the list of products in the order */}
               <View style={styles.productCards}>
                 {item.products.map((product, index) => (
                   <View key={index} style={styles.productItem}>
                     <View style={styles.spaceBetweenRow}>
                       <Text style={styles.productDetail}>
+                        {/* Display the product name and index */}
                         {index + 1}. {product.name}
                       </Text>
                       <Text style={styles.productDetail}>
-                        €{product.price}
+                        {/* Display the product price */}
+                        ${product.price}
                       </Text>
                     </View>
                     <Text style={styles.productDetail}>
+                      {/* Display the selected options for the product */}
                       {product.selectedOptions.map((option) => option.name).join(", ")}
                     </Text>
                   </View>
                 ))}
               </View>
+              {/* Container for the order management buttons and total price */}
               <View style={styles.spaceBetweenRow}>
-                {/* Button group for status and delete buttons */}
+                {/* Button group for status change and delete buttons */}
                 <View style={styles.buttonGroup}>
+                  {/* Status change button */}
+                  <TouchableOpacity
+                    style={styles.editButton}
+                    onPress={() => handleEditOrder(item._id)}
+                  >
+                    <Icon name="edit" size={20} color="white" />
+                  </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.statusButton}
                     onPress={() => showStatusOptions(item._id, item.status)}
@@ -184,9 +206,10 @@ const Bestellingen = ({ route }) => {
                     <Icon
                       name="arrow-right"
                       size={20}
-                      color="white"
+                      color="#000"
                     />
                   </TouchableOpacity>
+                  {/* Delete button */}
                   <TouchableOpacity
                     style={styles.deleteButton}
                     onPress={() => handleDeleteOrder(item._id)}
@@ -194,19 +217,24 @@ const Bestellingen = ({ route }) => {
                     <Icon name="trash" size={20} color="white" />
                   </TouchableOpacity>
                 </View>
+                {/* Display the total price of the order */}
                 <Text style={styles.price}>
-                  €{item.totalPrice.toFixed(2)}
+                  ${item.totalPrice.toFixed(2)}
                 </Text>
               </View>
             </View>
           )}
+          // Prop to hide the vertical scroll indicator
+          showsVerticalScrollIndicator={false}
         />
       </View>
+
+      {/* FloatingButton component is used for an action button that floats above the content */}
       <FloatingButton />
     </View>
-  );  
-};
+  );
 
+};
 
 export default Bestellingen;
 const styles = StyleSheet.create({
@@ -259,13 +287,13 @@ const styles = StyleSheet.create({
   },
   statusButton: {
     padding: 10,
-    marginRight: 10,
     backgroundColor: "#e27b00",
     borderRadius: 5,
-    alignSelf: "flex-start",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    marginRight: 10,
+    alignSelf: "flex-start", // Align button to the start of the flex container
+    flexDirection: "row", // Align icon and text in a row
+    alignItems: "center", // Center items vertically
+    justifyContent: "center", // Center items horizontally
   },
   spaceBetweenRow: {
     width: "100%",
@@ -301,5 +329,15 @@ const styles = StyleSheet.create({
   buttonGroup: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  editButton: {
+    padding: 9.5,
+    backgroundColor: "#007bff", // You can choose a different color
+    borderRadius: 5,
+    marginRight: 10,
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

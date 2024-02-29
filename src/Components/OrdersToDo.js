@@ -18,6 +18,11 @@ const AccordionItem = ({ item }) => {
     minute: '2-digit',
   });
 
+  const navigateToBestellingen = () => {
+    // Navigate to the Bestellingen screen with the orderId as a parameter
+    navigation.navigate('Bestellingen', { orderId: item._id });
+  };
+
   const toggleAccordion = () => {
     setIsOpened(!isOpened);
   };
@@ -27,9 +32,6 @@ const AccordionItem = ({ item }) => {
     outputRange: [0, 270], // Adjust this value to fit the content
   });
 
-  const handlePress = () => {
-    navigation.navigate('Bestellingen', { orderId: item._id });
-  };
 
   useEffect(() => {
     Animated.timing(animation, {
@@ -38,12 +40,15 @@ const AccordionItem = ({ item }) => {
       useNativeDriver: false,
     }).start();
   }, [isOpened]);
-
   return (
-    <TouchableOpacity onPress={handlePress} style={styles.header}>
-      <Text style={styles.title}>Tafel : {item.table}</Text>
-      <View style={styles.dateContainer}>
-        <Text style={styles.orderdate}>Geplaatst: {orderTime}</Text>
+    <TouchableOpacity onPress={navigateToBestellingen}>
+      <View style={styles.accordionContainer}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Tafel {item.table}</Text>
+          <View style={styles.dateContainer}>
+            <Text style={styles.orderdate}>Geplaatst: {orderTime}</Text>
+          </View>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -60,9 +65,7 @@ const OrdersToDo = () => {
       const todaysOrders = data.filter(order => {
         const orderDate = new Date(order.orderDate);
         orderDate.setHours(0, 0, 0, 0);
-        const isToday = orderDate.getTime() === new Date().setHours(0, 0, 0, 0);
-        const isUnprocessed = order.status === 'unprocessed';
-        return isToday && isUnprocessed;
+        return orderDate.getTime() === new Date().setHours(0, 0, 0, 0);
       });
       setOrders(todaysOrders);
       setBadgeNumber(todaysOrders.length);
@@ -77,42 +80,55 @@ const OrdersToDo = () => {
 
     return () => clearInterval(intervalId); // Cleanup interval on unmount
   }, []);
-
   return (
+    // The main container for the OrdersToDo component, styled with styles.container.
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row', gap: 5 }}>
+    
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    
         <View style={styles.badgenumber}>
           <Text style={styles.badgenumbertext}>{badgeNumber}</Text>
         </View>
+      
         <Text style={styles.contentheader}>Open bestellingen:</Text>
       </View>
-
-      <FlatList
-        data={orders}
-        renderItem={({ item }) => <AccordionItem item={item} />}
-        keyExtractor={(item) => item._id}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-      />
+      <View style={styles.fixedSizeContainer}>
+        <FlatList
+          // Array of orders to be rendered.
+          data={orders}
+          // Function to render each item using the AccordionItem component.
+          renderItem={({ item }) => <AccordionItem item={item} />}
+          // Function to extract a unique key for each item.
+          keyExtractor={(item) => item._id}
+          // Prop to hide the vertical scroll indicator.
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 0,
-    paddingTop: 22,
+  fixedSizeContainer: {
+    height: 300, // Set a fixed height for the FlatList container
+    width: '100%', // Set the width to take up 100% of the parent container
   },
+  container: {
+    container: {
+      flex: 1, // The container will fill the entire screen.
+      justifyContent: 'center', // Centers content vertically in the container.
+      alignItems: 'center', // Centers content horizontally in the container.
+    },
+  },
+  acco: {},
   header: {
-    width: 250,
-    height: 150,
-    marginLeft: 10,
+    width: 250, // Set a fixed width for each item
+    height: 100, // Set a fixed height for each item (optional, depending on your design)
     marginTop: 30,
     backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
-    marginBottom: 10,
     shadowColor: "#000",
+    alignSelf: "center",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -122,7 +138,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e27b00",
     width: 23,
     height: 23,
-    justifyContent: 'center',
+    justifyContent: 'center', // Center the text vertically
     borderRadius: 40,
   },
   badgenumbertext: {
@@ -138,11 +154,10 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   title: {
-    fontSize: 42,
+    fontSize:32,
     fontWeight: "bold",
     textAlign: "center",
-
-    flex: 1, // Take up all available space
+    flex: 0, // Take up all available space
   },
   orderdate: {
     // ... existing styles for orderdate ...
@@ -151,7 +166,7 @@ const styles = StyleSheet.create({
   },
   dateContainer: {
     // This container will ensure the date is centered
-    flex: 1, // Take up all available space
+    flex: 0.5, // Take up all available space
     justifyContent: 'center', // Center content horizontally in the container
     alignItems: 'center', // Center content vertically in the container
   },
