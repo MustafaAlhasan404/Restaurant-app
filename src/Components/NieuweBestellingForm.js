@@ -230,7 +230,7 @@ const NieuweBestellingForm = () => {
 		});
 		const data = await response.json();
 		console.log(data);
-		if (response.status === 200) {
+		if (response.status === 201) {
 			console.log("Order created successfully!");
 			dispatch(emptyOrder());
 			navigation.navigate("Home");
