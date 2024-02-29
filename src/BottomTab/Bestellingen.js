@@ -13,6 +13,22 @@ import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import FloatingButton from "../Components/FloatingButton";
 
+const handleDeleteOrder = async (orderId) => {
+  try {
+    const response = await axios.delete(`https://nl-app.onrender.com/orders/${orderId}`);
+    if (response.status === 200) {
+      // Update the local state to remove the deleted order
+      setOrders(orders.filter((order) => order._id !== orderId));
+      Alert.alert("Success", "Order deleted successfully");
+    } else {
+      throw new Error("Failed to delete order");
+    }
+  } catch (error) {
+    Alert.alert("Error", error.message || "Failed to delete order");
+  }
+};
+
+
 const Bestellingen = ({ route }) => {
   const [orders, setOrders] = useState([]);
   const flatListRef = useRef();
@@ -61,7 +77,7 @@ const Bestellingen = ({ route }) => {
     };
   }, []);
 
-  
+
   useEffect(() => {
     if (route.params?.orderId) {
       const index = orders.findIndex((order) => order._id === route.params.orderId);
@@ -107,7 +123,7 @@ const Bestellingen = ({ route }) => {
       <SafeAreaView style={styles.safeArea}>
         <Header name="Bestellingen" />
       </SafeAreaView>
-
+  
       <View style={styles.mainContent}>
         <FlatList
           ref={flatListRef} // Assign the ref to the FlatList
@@ -123,146 +139,168 @@ const Bestellingen = ({ route }) => {
               <View style={styles.spaceBetweenRow}>
                 <Text style={styles.orderDetail}>
                   {new Date(item.orderDate).toDateString() ===
-                  new Date().toDateString()
+                    new Date().toDateString()
                     ? new Date(
-                        item.orderDate
-                      ).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })
+                      item.orderDate
+                    ).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
                     : new Date(
-                        item.orderDate
-                      ).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                      })}
+                      item.orderDate
+                    ).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })}
                 </Text>
                 <Text style={styles.orderDetail}>
                   {item.status.toUpperCase()}
                 </Text>
               </View>
               <View style={styles.productCards}>
-                    {item.products.map((product, index) => (
-                      <View key={index} style={styles.productItem}>
-                        <View style={styles.spaceBetweenRow}>
-                          <Text style={styles.productDetail}>
-                            {index + 1}. {product.name}
-                          </Text>
-                          <Text style={styles.productDetail}>
-                            ${product.price}
-                          </Text>
-                        </View>
-                        <Text style={styles.productDetail}>
-                          {product.selectedOptions.map((option) => option.name).join(", ")}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                  <View style={styles.spaceBetweenRow}>
-                    <TouchableOpacity
-                      style={styles.statusButton}
-                      onPress={() => showStatusOptions(item._id, item.status)}
-                    >
-                      <Icon
-                        name="arrow-right"
-                        size={20}
-                        color="#000"
-                      />
-                    </TouchableOpacity>
-                    <Text style={styles.price}>
-                      ${item.totalPrice.toFixed(2)}
+                {item.products.map((product, index) => (
+                  <View key={index} style={styles.productItem}>
+                    <View style={styles.spaceBetweenRow}>
+                      <Text style={styles.productDetail}>
+                        {index + 1}. {product.name}
+                      </Text>
+                      <Text style={styles.productDetail}>
+                        ${product.price}
+                      </Text>
+                    </View>
+                    <Text style={styles.productDetail}>
+                      {product.selectedOptions.map((option) => option.name).join(", ")}
                     </Text>
                   </View>
+                ))}
+              </View>
+              <View style={styles.spaceBetweenRow}>
+                {/* Button group for status and delete buttons */}
+                <View style={styles.buttonGroup}>
+                  <TouchableOpacity
+                    style={styles.statusButton}
+                    onPress={() => showStatusOptions(item._id, item.status)}
+                  >
+                    <Icon
+                      name="arrow-right"
+                      size={20}
+                      color="#000"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleDeleteOrder(item._id)}
+                  >
+                    <Icon name="trash" size={20} color="white" />
+                  </TouchableOpacity>
                 </View>
-              )}
-            />
-          </View>
-          <FloatingButton />
-        </View>
-      );
-    };
+                <Text style={styles.price}>
+                  ${item.totalPrice.toFixed(2)}
+                </Text>
+              </View>
+            </View>
+          )}
+        />
+      </View>
+      <FloatingButton />
+    </View>
+  );  
+};
 
 
 export default Bestellingen;
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#e0d5d6",
-	},
-	safeArea: {
-		backgroundColor: "#311213",
-	},
-	mainContent: {
-		flex: 1,
-		paddingHorizontal: 20,
-		paddingVertical: 20,
-	},
-	welcomeText: {
-		fontSize: 18,
-		fontWeight: "bold",
-		marginBottom: 20,
-	},
-	orderItem: {
-		backgroundColor: "#fff",
-		padding: 15,
-		borderRadius: 10,
-		marginBottom: 10,
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.1,
-		shadowRadius: 4,
-		elevation: 3,
-	},
-	orderId: {
-		fontSize: 20,
-		fontWeight: "bold",
-		marginBottom: 5,
-	},
-	orderDetail: {
-		fontSize: 14,
-		marginBottom: 5,
-		fontWeight: "bold",
-	},
-	productItem: {
-		// marginTop: 10,
-		// padding: 10,
-		// backgroundColor: "#f2f2f2",
-		// borderRadius: 5,
-	},
-	productDetail: {
-		fontSize: 13,
-	},
-	statusButton: {
-		padding: 10,
-		// marginTop: 10,
-		backgroundColor: "#e27b00",
-		borderRadius: 5,
-		alignSelf: "flex-start", // Align button to the start of the flex container
-		flexDirection: "row", // Align icon and text in a row
-		alignItems: "center", // Center items vertically
-		justifyContent: "center", // Center items horizontally
-	},
-	spaceBetweenRow: {
-		width: "100%",
-		display: "flex",
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-	},
-	price: {
-		fontSize: 24,
-		fontWeight: "bold",
-	},
-	centerSingleItem: {
-		width: "100%",
-		display: "flex",
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	productCards: {
-		marginTop: 10,
-		marginBottom: 20,
-	},
+  container: {
+    flex: 1,
+    backgroundColor: "#e0d5d6",
+  },
+  safeArea: {
+    backgroundColor: "#311213",
+  },
+  mainContent: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
+  welcomeText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  orderItem: {
+    backgroundColor: "#fff",
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  orderId: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  orderDetail: {
+    fontSize: 14,
+    marginBottom: 5,
+    fontWeight: "bold",
+  },
+  productItem: {
+    // marginTop: 10,
+    // padding: 10,
+    // backgroundColor: "#f2f2f2",
+    // borderRadius: 5,
+  },
+  productDetail: {
+    fontSize: 13,
+  },
+  statusButton: {
+    padding: 10,
+    marginRight: 10,
+    backgroundColor: "#e27b00",
+    borderRadius: 5,
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  spaceBetweenRow: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  price: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  centerSingleItem: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  productCards: {
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  deleteButton: {
+    padding: 10,
+    backgroundColor: "#dc3545",
+    borderRadius: 5,
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });

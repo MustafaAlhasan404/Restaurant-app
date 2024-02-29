@@ -4,7 +4,7 @@ Content-Type: application/json
 {
   "products": [
     {
-      "product": "65ddd5995bacc608d6363cc0",
+      "product": "65e07c58711954e375ec49d6",
       "selectedOptions": []
     }
   ],
@@ -19,11 +19,11 @@ Content-Type: application/json
 {
   "products": [
     {
-      "product": "65ddd5995bacc608d6363cc4",
+      "product": "65e07c58711954e375ec49d6",
       "selectedOptions": []
     },
     {
-      "product": "65ddd5995bacc608d6363cc8", 
+      "product": "65e07c58711954e375ec49d6", 
       "selectedOptions": []
     }
   ],
@@ -38,11 +38,11 @@ Content-Type: application/json
 {
   "products": [
     {
-      "product": "65ddd5995bacc608d6363ccc",
+      "product": "65e07c58711954e375ec49da",
       "selectedOptions": []
     },
     {
-      "product": "65ddd5995bacc608d6363cd0",
+      "product": "65e07c58711954e375ec49da",
       "selectedOptions": []
     }
   ],
@@ -52,20 +52,12 @@ Content-Type: application/json
 ###
 
 POST http://localhost:3000/orders
-Content-Type: application/json  
+Content-Type: application/json
 
 {
   "products": [
     {
-      "product": "65ddd5995bacc608d6363cd8",
-      "selectedOptions": []
-    },
-    {
-      "product": "65ddd5995bacc608d6363cd0",
-      "selectedOptions": []
-    },
-    {
-      "product": "65ddd5995bacc608d6363cd4",
+      "product": "65e07c58711954e375ec49da",
       "selectedOptions": []
     }
   ],
@@ -79,11 +71,11 @@ Content-Type: application/json
 {
   "products": [
     {
-      "product": "65ddd5995bacc608d6363cd0",
+      "product": "65e07c58711954e375ec49de",
       "selectedOptions": []
     },
     {
-      "product": "65ddd5995bacc608d6363cd4",
+      "product": "65e07c58711954e375ec49de",
       "selectedOptions": []
     }
   ],
