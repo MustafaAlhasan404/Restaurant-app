@@ -19,7 +19,9 @@ import { Picker } from "@react-native-picker/picker";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MenuItem from "./MenuItem";
 import AddedItem from "./AddedItem";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { emptyOrder } from "../State/orderSlice";
+import { useNavigation } from "@react-navigation/native";
 
 const renderTabBar = (props) => (
 	<TabBar
@@ -204,26 +206,35 @@ const NieuweBestellingForm = () => {
 	const order = useSelector((state) => state.order);
 	const [selectedProducts, setSelectedProducts] = useState(order.items);
 
+	const navigation = useNavigation();
+
 	useEffect(() => {
 		// Sync local state with Redux on change
 		setSelectedProducts(order.items);
 		setTotalPrice(price);
 	}, [order, price]);
 
+	const dispatch = useDispatch();
+
 	const handleSubmit = async (table, products) => {
-		// const response = await fetch("https://nl-app.onrender.com/orders", {
-		// 	method: "POST",
-		// 	headers: {
-		// 		"Content-Type": "application/json",
-		// 	},
-		// 	body: JSON.stringify(order),
-		// });
-		// const order = useSelector((state) => state.order);
-		// setSelectedProducts(order);
-		// console.log(order);
-		console.log("Submit Pressed");
-		console.log("Table:", table);
-		console.log("Selected products:", selectedProducts);
+		console.log("Submitting order...");
+		const response = await fetch("https://nl-app.onrender.com/orders", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				table: table,
+				products: products,
+			}),
+		});
+		const data = await response.json();
+		console.log(data);
+		if (response.status === 200) {
+			console.log("Order created successfully!");
+			dispatch(emptyOrder());
+		}
+		navigation.navigate("Home");
 	};
 
 	return (
@@ -266,14 +277,14 @@ const NieuweBestellingForm = () => {
 						<View style={styles.spaceBetweenRow}>
 							<Text style={styles.menuItemName}>Total</Text>
 							<Text style={styles.menuItemPrice}>
-								${totalPrice}
+								${totalPrice.toFixed(2)}
 							</Text>
 						</View>
 					</View>
 
 					<Pressable
 						style={styles.savebutton}
-						onPress={() => handleSubmit(table, [])}
+						onPress={() => handleSubmit(table, selectedProducts)}
 					>
 						<Text style={styles.buttontext}>Place order</Text>
 					</Pressable>

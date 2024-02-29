@@ -31,23 +31,12 @@ export const orderSlice = createSlice({
 				state.price -= action.payload.price;
 			}
 		},
+		emptyOrder: (state) => {
+			state.items = [];
+			state.price = 0;
+		},
 	},
 });
 
-// Add action creators
-export const addItemToOrder = (item) => {
-	return {
-		type: "order/addItem",
-		payload: item,
-	};
-};
-
-export const removeItemFromOrder = (itemId) => {
-	return {
-		type: "order/removeItem",
-		payload: itemId,
-	};
-};
-
-export const { addItem, removeItem } = orderSlice.actions;
+export const { addItem, removeItem, emptyOrder } = orderSlice.actions;
 export default orderSlice.reducer;
