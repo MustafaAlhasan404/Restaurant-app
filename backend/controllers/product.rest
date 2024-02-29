@@ -36,4 +36,4 @@ Content-Type: application/json
 }
 
 ### Delete reservation
-DELETE http://localhost:3000/products/65d4720710a0f7f51bc7a179
+DELETE http://localhost:3000/products/65e1178897a6e20305e9fed4

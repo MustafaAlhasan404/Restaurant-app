@@ -108,16 +108,20 @@ router.patch("/:id", async (req, res) => {
 	}
 });
 
-// DELETE product
+// Soft DELETE product
 router.delete("/:id", async (req, res) => {
 	try {
-		const product = await Product.findByIdAndDelete(req.params.id);
-		if (!product) return res.status(404);
-		res.json({ message: "Deleted product" });
+	  const product = await Product.findByIdAndUpdate(
+		req.params.id,
+		{ deleted: true }, // Set the deleted field to true
+		{ new: true }
+	  );
+	  if (!product) return res.status(404).json({ message: "Product not found" });
+	  res.json({ message: "Product deleted" }); // Respond with a message indicating a soft delete
 	} catch (error) {
-		res.status(400).json({ message: error.message });
+	  res.status(400).json({ message: error.message });
 	}
-});
+  });
 
 // Export router
 module.exports = router;

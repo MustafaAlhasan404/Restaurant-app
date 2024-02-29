@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema({
 	},
 	options: [{ name: String, price: Number }],
 	stockable: { type: Boolean, required: true },
+	deleted: { type: Boolean, default: false }, // Add this line
 	qty: {
 		type: Number,
 		required: function() {

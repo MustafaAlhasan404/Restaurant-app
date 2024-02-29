@@ -63,6 +63,27 @@ const FirstRoute = () => {
     navigation.navigate('EditMenuKaart', { itemId });
   };
 
+  const handleDelete = async (productId) => {
+    try {
+      const response = await fetch(`https://nl-app.onrender.com/products/${productId}`, {
+        method: 'DELETE',
+        // Include headers if you need to send tokens or other information
+        // headers: {
+        //   'Authorization': 'Bearer your-token-here',
+        // },
+      });
+
+      if (response.ok) {
+        console.log('Product soft deleted successfully');
+        // Perform any additional actions like updating the UI
+      } else {
+        console.error('Failed to delete the product');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
       <View key={optionIndex}>
@@ -157,6 +178,27 @@ const SecondRoute = () => {
     navigation.navigate('EditMenuKaart', { itemId });
   };
 
+  const handleDelete = async (productId) => {
+    try {
+      const response = await fetch(`https://nl-app.onrender.com/products/${productId}`, {
+        method: 'DELETE',
+        // Include headers if you need to send tokens or other information
+        // headers: {
+        //   'Authorization': 'Bearer your-token-here',
+        // },
+      });
+
+      if (response.ok) {
+        console.log('Product soft deleted successfully');
+        // Perform any additional actions like updating the UI
+      } else {
+        console.error('Failed to delete the product');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
       <View key={optionIndex}>
@@ -248,6 +290,27 @@ const ThirdRoute = () => {
   const handleEditPress = (itemId) => {
     // Navigate to the EditMenuKaart screen with the item ID
     navigation.navigate('EditMenuKaart', { itemId });
+  };
+
+  const handleDelete = async (productId) => {
+    try {
+      const response = await fetch(`https://nl-app.onrender.com/products/${productId}`, {
+        method: 'DELETE',
+        // Include headers if you need to send tokens or other information
+        // headers: {
+        //   'Authorization': 'Bearer your-token-here',
+        // },
+      });
+
+      if (response.ok) {
+        console.log('Product soft deleted successfully');
+        // Perform any additional actions like updating the UI
+      } else {
+        console.error('Failed to delete the product');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const renderMenuItemOptions = (menuItem) => {
