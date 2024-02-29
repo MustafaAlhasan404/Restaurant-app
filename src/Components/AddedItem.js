@@ -38,9 +38,9 @@ const AddedItem = ({ productID, selectedOptions }) => {
 			removeItem({
 				product: productID,
 				selectedOptions: selectedOptions,
+				price: totalPrice,
 			})
 		);
-		console.log("Removed item from order: ", productID);
 	};
 
 	return (

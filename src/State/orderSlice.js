@@ -8,20 +8,14 @@ export const orderSlice = createSlice({
 	name: "order",
 	initialState: {
 		items: [],
+		price: 0,
 	},
 	reducers: {
 		addItem: (state, action) => {
 			console.log(`Added ${action.payload.product} to order: `);
 			state.items.push(action.payload);
-			// console.log("Current Order: ", state);
+			state.price += action.payload.price;
 		},
-		// removeItem: (state, action) => {
-		// 	console.log(`Removed ${action.payload.product} from order: `);
-		// 	state.items = state.items.filter(
-		// 		(item) => item.id !== action.payload
-		// 	);
-		// 	// console.log("Current Order: ", state);
-		// },
 		removeItem: (state, action) => {
 			console.log(`Removed item from order: ${action.payload.product}`);
 			const index = state.items.findIndex((item) => {
@@ -34,9 +28,8 @@ export const orderSlice = createSlice({
 
 			if (index !== -1) {
 				state.items.splice(index, 1);
+				state.price -= action.payload.price;
 			}
-
-			// console.log("Current Order: ", state);
 		},
 	},
 });

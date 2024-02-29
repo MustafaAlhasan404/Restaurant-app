@@ -45,6 +45,7 @@ const MenuItem = ({ menuItem }) => {
 			addItem({
 				product: menuItem._id,
 				selectedOptions: selectedOptions,
+				price: totalPrice,
 			})
 		);
 		resetItem();

@@ -196,26 +196,19 @@ export function TabViewExample() {
 }
 
 const NieuweBestellingForm = () => {
-	const [modalVisible, setModalVisible] = useState(false);
-	// const [selectedProducts, setSelectedProducts] = useState([]);
 	const [table, setTable] = useState("1");
 
 	// Get order data from Redux
-	const order = useSelector((state) => state.order) || [];
-	const [selectedProducts, setSelectedProducts] = useState(
-		order.items ? order.items : []
-	);
-	const [selectedProductsInfo, setselectedProductsInfo] = useState([]);
+	const price = useSelector((state) => state.order.price);
+	const [totalPrice, setTotalPrice] = useState(price);
+	const order = useSelector((state) => state.order);
+	const [selectedProducts, setSelectedProducts] = useState(order.items);
 
 	useEffect(() => {
 		// Sync local state with Redux on change
 		setSelectedProducts(order.items);
-		console.log("Updated selectedProducts, Order is: ", order);
-		console.log(
-			"Updated selectedProducts, selectedProducts is: ",
-			selectedProducts
-		);
-	}, [order]);
+		setTotalPrice(price);
+	}, [order, price]);
 
 	const handleSubmit = async (table, products) => {
 		// const response = await fetch("https://nl-app.onrender.com/orders", {
@@ -269,6 +262,13 @@ const NieuweBestellingForm = () => {
 								/>
 							</View>
 						))}
+
+						<View style={styles.spaceBetweenRow}>
+							<Text style={styles.menuItemName}>Total</Text>
+							<Text style={styles.menuItemPrice}>
+								${totalPrice}
+							</Text>
+						</View>
 					</View>
 
 					<Pressable
