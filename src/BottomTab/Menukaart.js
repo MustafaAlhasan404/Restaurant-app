@@ -147,16 +147,6 @@ const FirstRoute = () => {
               <Text style={styles.menuItemPrice}>€{menuItem.price.toFixed(2)}</Text>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
-                  style={styles.editButton}
-                  onPress={() => handleEditPress(menuItem._id)}
-                >
-                  <MaterialCommunityIcons
-                    name="pencil"
-                    size={20}
-                    color="white"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
                   style={styles.deleteButton}
                   onPress={() => handleDelete(menuItem._id)}
                 >
@@ -195,30 +185,9 @@ const SecondRoute = () => {
     fetchData();
   }, []);
 
-  const handleDelete = async (itemId) => {
-    try {
-      const response = await fetch(`https://nl-app.onrender.com/products/${itemId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          // Include any other headers your API requires, such as authorization tokens
-        },
-      });
-  
-      if (response.ok) {
-        // If the delete was successful, remove the item from the state
-        setMenuItems(prevItems => prevItems.filter(item => item._id !== itemId));
-        console.log("Deleted item with id:", itemId);
-      } else {
-        // If the server responded with an error, handle it here
-        const errorData = await response.json();
-        console.error("Failed to delete item:", errorData.message);
-      }
-    } catch (error) {
-      // If there was an error sending the request, handle it here
-      console.error("Error deleting item:", error);
-    }
-  };
+const handleDelete = async (itemId) => {
+};
+
 
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
@@ -258,7 +227,7 @@ const SecondRoute = () => {
             {menuItem.options && renderMenuItemOptions(menuItem)}
             <View style={styles.menuItemDetails}>
               <Text style={styles.menuItemPrice}>€{menuItem.price.toFixed(2)}</Text>
-              <View style={styles.buttonContainer}>
+              {/* <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.editButton}
                   onPress={() => handleEditPress(menuItem._id)}
@@ -279,7 +248,7 @@ const SecondRoute = () => {
                     color="white"
                   />
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
           </View>
         ))}
@@ -555,18 +524,18 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
   },
-  editButton: {
-    padding: 5,
-    backgroundColor: "#e27b00",
-    borderRadius: 5,
-    marginLeft: 10,
-  },
-  deleteButton: {
-    padding: 5,
-    backgroundColor: "#dc3545",
-    borderRadius: 5,
-    marginLeft: 10,
-  },
+  // editButton: {
+  //   padding: 5,
+  //   backgroundColor: "#e27b00",
+  //   borderRadius: 5,
+  //   marginLeft: 10,
+  // },
+  // deleteButton: {
+  //   padding: 5,
+  //   backgroundColor: "#dc3545",
+  //   borderRadius: 5,
+  //   marginLeft: 10,
+  // },
   menuItemDetails: {
     flexDirection: "row",
     justifyContent: "space-between",

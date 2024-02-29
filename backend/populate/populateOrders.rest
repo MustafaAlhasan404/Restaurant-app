@@ -71,13 +71,13 @@ Content-Type: application/json
 {
   "products": [
     {
-      "product": "65e07c58711954e375ec49de",
+      "product": "65e07c58711954e375ec49e2",
       "selectedOptions": []
     },
     {
-      "product": "65e07c58711954e375ec49de",
+      "product": "65e07c58711954e375ec49e2",
       "selectedOptions": []
     }
   ],
-  "table": 51
+  "table": 69
 }

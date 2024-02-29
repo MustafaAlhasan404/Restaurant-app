@@ -179,19 +179,5 @@ router.delete("/:id", async (req, res) => {
 	}
   });
   
-  // Check if product is in open orders
-router.get("/product-in-open-orders/:productId", async (req, res) => {
-	try {
-	  const { productId } = req.params;
-	  const openOrders = await Order.find({
-		'products.product': productId,
-		status: { $in: ["unprocessed", "processed"] }
-	  });
-  
-	  res.json({ isInOpenOrder: openOrders.length > 0 });
-	} catch (error) {
-	  res.status(500).json({ message: error.message });
-	}
-  });
 
 module.exports = router;
