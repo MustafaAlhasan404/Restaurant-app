@@ -166,18 +166,19 @@ router.patch("/:orderId/paid", async (req, res) => {
 router.delete("/:id", async (req, res) => {
 	try {
 	  const { id } = req.params;
-	  const order = await Order.findById(id);
+	  const result = await Order.findByIdAndDelete(id);
   
-	  if (!order) {
+	  if (!result) {
 		return res.status(404).json({ error: "Order not found" });
 	  }
   
-	  await order.remove();
 	  res.status(200).json({ message: "Order deleted successfully" });
 	} catch (error) {
-	  res.status(500).json({ message: error.message });
+	  console.error("Error deleting order:", error);
+	  res.status(500).json({ message: error.message || "Internal Server Error" });
 	}
   });
+  
   
 
 module.exports = router;

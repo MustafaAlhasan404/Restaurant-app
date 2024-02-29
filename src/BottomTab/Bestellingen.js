@@ -13,26 +13,25 @@ import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import FloatingButton from "../Components/FloatingButton";
 
-const handleDeleteOrder = async (orderId) => {
-  try {
-    const response = await axios.delete(`https://nl-app.onrender.com/orders/${orderId}`);
-    if (response.status === 200) {
-      // Update the local state to remove the deleted order
-      setOrders(orders.filter((order) => order._id !== orderId));
-      Alert.alert("Success", "Order deleted successfully");
-    } else {
-      throw new Error("Failed to delete order");
-    }
-  } catch (error) {
-    Alert.alert("Error", error.message || "Failed to delete order");
-  }
-};
-
 
 const Bestellingen = ({ route }) => {
   const [orders, setOrders] = useState([]);
   const flatListRef = useRef();
   const initialLoad = useRef(true);
+  const handleDeleteOrder = async (orderId) => {
+    try {
+      const response = await axios.delete(`https://nl-app.onrender.com/orders/${orderId}`);
+      if (response.status === 200) {
+        // Update the local state to remove the deleted order
+        setOrders(orders.filter((order) => order._id !== orderId));
+        Alert.alert("Success", "Order deleted successfully");
+      } else {
+        throw new Error("Failed to delete order");
+      }
+    } catch (error) {
+      Alert.alert("Error", error.message || "Failed to delete order");
+    }
+  };
 
   // Function to fetch orders from the server
   const fetchOrders = async () => {
