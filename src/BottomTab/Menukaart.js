@@ -38,11 +38,6 @@ const renderTabBar = (props) => (
   />
 );
 
-const handleEditPress = (itemId) => {
-  // Implement your edit logic here
-  console.log("Edit item with id:", itemId);
-};
-
 const FirstRoute = () => {
   const [menuItems, setMenuItems] = useState([]);
 
