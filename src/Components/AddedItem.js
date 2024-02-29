@@ -33,14 +33,14 @@ const AddedItem = ({ productID, selectedOptions }) => {
 
 	const dispatch = useDispatch();
 
-	const handleDeleteProduct = () => {
-		// dispatch(
-		// 	removeItem({
-		// 		product: menuItem._id,
-		// 		selectedOptions: selectedOptions,
-		// 	})
-		// );
-		console.log("Removing Item");
+	const handleRemoveProduct = (productID, selectedOptions) => {
+		dispatch(
+			removeItem({
+				product: productID,
+				selectedOptions: selectedOptions,
+			})
+		);
+		console.log("Removed item from order: ", productID);
 	};
 
 	return (
@@ -73,7 +73,9 @@ const AddedItem = ({ productID, selectedOptions }) => {
 				</Text>
 				<Pressable
 					style={styles.addButton}
-					onPress={() => handleDeleteProduct()}
+					onPress={() =>
+						handleRemoveProduct(productID, selectedOptions)
+					}
 				>
 					<MaterialCommunityIcons
 						name="delete"

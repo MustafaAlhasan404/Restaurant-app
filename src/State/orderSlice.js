@@ -15,11 +15,27 @@ export const orderSlice = createSlice({
 			state.items.push(action.payload);
 			// console.log("Current Order: ", state);
 		},
+		// removeItem: (state, action) => {
+		// 	console.log(`Removed ${action.payload.product} from order: `);
+		// 	state.items = state.items.filter(
+		// 		(item) => item.id !== action.payload
+		// 	);
+		// 	// console.log("Current Order: ", state);
+		// },
 		removeItem: (state, action) => {
-			console.log(`Removed ${action.payload.product} from order: `);
-			state.items = state.items.filter(
-				(item) => item.id !== action.payload
-			);
+			console.log(`Removed item from order: ${action.payload.product}`);
+			const index = state.items.findIndex((item) => {
+				return (
+					item.product === action.payload.product &&
+					JSON.stringify(item.selectedOptions) ===
+						JSON.stringify(action.payload.selectedOptions)
+				);
+			});
+
+			if (index !== -1) {
+				state.items.splice(index, 1);
+			}
+
 			// console.log("Current Order: ", state);
 		},
 	},

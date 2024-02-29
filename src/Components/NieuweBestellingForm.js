@@ -516,6 +516,7 @@ const styles = StyleSheet.create({
 	orderSummary: {
 		backgroundColor: "white",
 		padding: 15,
+		marginVertical: 10,
 	},
 	page: {
 		height: "auto",
