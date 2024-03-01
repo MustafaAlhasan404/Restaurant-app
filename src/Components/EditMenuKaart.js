@@ -240,13 +240,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginTop: 10,
-    marginBottom: 5,
+    marginBottom: 10,
     color: "#333",
   },
   optionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   addButton: {
     backgroundColor: "#e27b00",

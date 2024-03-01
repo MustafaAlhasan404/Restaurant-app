@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   header: {
     width: 250, // Set a fixed width for each item
     height: 100, // Set a fixed height for each item (optional, depending on your design)
-    marginTop: 30,
+    marginTop: 20,
     backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
