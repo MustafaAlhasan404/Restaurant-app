@@ -332,13 +332,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   editButton: {
-    padding: 9.5,
+    width: 40,
+    padding: 10,
     backgroundColor: "#007bff", // You can choose a different color
     borderRadius: 5,
     marginRight: 10,
     alignSelf: "flex-start",
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "center",
   },
 });
