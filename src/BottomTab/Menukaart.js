@@ -38,44 +38,54 @@ const renderTabBar = (props) => (
   />
 );
 
+// Define the FirstRoute component
 const FirstRoute = () => {
+  // Set up navigation so we can navigate to different screens
   const navigation = useNavigation();
+
+  // Create state variables to store the menu items
   const [menuItems, setMenuItems] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://nl-app.onrender.com/products/categories/food"
-        );
-        const data = await response.json();
-        setMenuItems(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  // Define a function to fetch menu items from the server
+  const fetchMenuItems = async () => {
+    try {
+      // Make a GET request to the server to fetch food category products
+      const response = await fetch("https://nl-app.onrender.com/products/categories/food");
+      const data = await response.json();
 
-    fetchData();
-  }, []);
-  
-  const handleEditPress = (itemId) => {
-    // Navigate to the EditMenuKaart screen with the item ID
-    navigation.navigate('EditMenuKaart', { itemId });
+      // Filter out products that have been marked as deleted
+      const activeProducts = data.filter(product => !product.deleted);
+
+      // Update the state with the active products
+      setMenuItems(activeProducts);
+    } catch (error) {
+      // If there is an error during fetching, log it to the console
+      console.error("Error fetching data:", error);
+    }
   };
 
+  // Use the useEffect hook to fetch menu items when the component mounts
+  useEffect(() => {
+    fetchMenuItems();
+  }, []);
+
+  // Define a function to handle the deletion of a menu item
   const handleDelete = async (productId) => {
     try {
+      // Make a DELETE request to the server to soft delete the product
       const response = await fetch(`https://nl-app.onrender.com/products/${productId}`, {
         method: 'DELETE',
-        // Include headers if you need to send tokens or other information
+        // If needed, include headers for authorization or other information
         // headers: {
         //   'Authorization': 'Bearer your-token-here',
         // },
       });
 
+      // Check if the response is successful
       if (response.ok) {
         console.log('Product soft deleted successfully');
-        // Perform any additional actions like updating the UI
+        // Refresh the menu items to reflect the deletion
+        fetchMenuItems();
       } else {
         console.error('Failed to delete the product');
       }
@@ -84,13 +94,18 @@ const FirstRoute = () => {
     }
   };
 
+  // Define a function to handle the editing of a menu item
+  const handleEditPress = (itemId) => {
+    // Navigate to the EditMenuKaart screen with the item ID
+    navigation.navigate('EditMenuKaart', { itemId });
+  };
+
+  // Define a function to render options for a menu item
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
-      <View key={optionIndex}>
-        <View style={styles.menuItemOption}>
-          <Text style={styles.menuItemOptionName}>{option.name}</Text>
-          <Text style={styles.menuItemOptionPrice}>€{option.price}</Text>
-        </View>
+      <View key={optionIndex} style={styles.menuItemOption}>
+        <Text style={styles.menuItemOptionName}>{option.name}</Text>
+        <Text style={styles.menuItemOptionPrice}>€{option.price}</Text>
         {optionIndex < menuItem.options.length - 1 && (
           <View style={styles.menuItemOptionDivider} />
         )}
@@ -98,7 +113,7 @@ const FirstRoute = () => {
     ));
   };
 
-
+  // Render the FirstRoute component
   return (
     <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
       <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
@@ -106,16 +121,8 @@ const FirstRoute = () => {
           <View key={index} style={styles.menuItem}>
             <View style={styles.menuItemGroup}>
               <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
-              <TouchableNativeFeedback>
-                <View style={styles.buybutton}>
-                  <MaterialCommunityIcons
-                    color="white"
-                    size={25}
-                    name="plus"
-                    style={{ marginTop: 0 }}
-                  />
-                </View>
-              </TouchableNativeFeedback>
+              {/* The buy button is not functional in the provided snippet */}
+              {/* You may want to add onPress functionality to it */}
             </View>
             <Text style={styles.menuItemName}>{menuItem.name}</Text>
             <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
@@ -127,24 +134,16 @@ const FirstRoute = () => {
                   style={styles.editButton}
                   onPress={() => handleEditPress(menuItem._id)}
                 >
-                  <MaterialCommunityIcons
-                    name="pencil"
-                    size={20}
-                    color="white"
-                  />
+                  <MaterialCommunityIcons name="pencil" size={20} color="white" />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.deleteButton}
                   onPress={() => handleDelete(menuItem._id)}
                 >
-                  <MaterialCommunityIcons
-                    name="delete"
-                    size={20}
-                    color="white"
-                  />
+                  <MaterialCommunityIcons name="delete" size={20} color="white" />
                 </TouchableOpacity>
               </View>
-            </View>
+          </View>
           </View>
         ))}
       </ScrollView>
@@ -152,45 +151,54 @@ const FirstRoute = () => {
   );
 };
 
-
+// Define the FirstRoute component
 const SecondRoute = () => {
+  // Set up navigation so we can navigate to different screens
   const navigation = useNavigation();
+
+  // Create state variables to store the menu items
   const [menuItems, setMenuItems] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://nl-app.onrender.com/products/categories/drink"
-        );
-        const data = await response.json();
-        setMenuItems(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  // Define a function to fetch menu items from the server
+  const fetchMenuItems = async () => {
+    try {
+      // Make a GET request to the server to fetch food category products
+      const response = await fetch("https://nl-app.onrender.com/products/categories/drink");
+      const data = await response.json();
 
-    fetchData();
-  }, []);
+      // Filter out products that have been marked as deleted
+      const activeProducts = data.filter(product => !product.deleted);
 
-  const handleEditPress = (itemId) => {
-    // Navigate to the EditMenuKaart screen with the item ID
-    navigation.navigate('EditMenuKaart', { itemId });
+      // Update the state with the active products
+      setMenuItems(activeProducts);
+    } catch (error) {
+      // If there is an error during fetching, log it to the console
+      console.error("Error fetching data:", error);
+    }
   };
 
+  // Use the useEffect hook to fetch menu items when the component mounts
+  useEffect(() => {
+    fetchMenuItems();
+  }, []);
+
+  // Define a function to handle the deletion of a menu item
   const handleDelete = async (productId) => {
     try {
+      // Make a DELETE request to the server to soft delete the product
       const response = await fetch(`https://nl-app.onrender.com/products/${productId}`, {
         method: 'DELETE',
-        // Include headers if you need to send tokens or other information
+        // If needed, include headers for authorization or other information
         // headers: {
         //   'Authorization': 'Bearer your-token-here',
         // },
       });
 
+      // Check if the response is successful
       if (response.ok) {
         console.log('Product soft deleted successfully');
-        // Perform any additional actions like updating the UI
+        // Refresh the menu items to reflect the deletion
+        fetchMenuItems();
       } else {
         console.error('Failed to delete the product');
       }
@@ -199,13 +207,18 @@ const SecondRoute = () => {
     }
   };
 
+  // Define a function to handle the editing of a menu item
+  const handleEditPress = (itemId) => {
+    // Navigate to the EditMenuKaart screen with the item ID
+    navigation.navigate('EditMenuKaart', { itemId });
+  };
+
+  // Define a function to render options for a menu item
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
-      <View key={optionIndex}>
-        <View style={styles.menuItemOption}>
-          <Text style={styles.menuItemOptionName}>{option.name}</Text>
-          <Text style={styles.menuItemOptionPrice}>€{option.price}</Text>
-        </View>
+      <View key={optionIndex} style={styles.menuItemOption}>
+        <Text style={styles.menuItemOptionName}>{option.name}</Text>
+        <Text style={styles.menuItemOptionPrice}>€{option.price}</Text>
         {optionIndex < menuItem.options.length - 1 && (
           <View style={styles.menuItemOptionDivider} />
         )}
@@ -213,7 +226,7 @@ const SecondRoute = () => {
     ));
   };
 
-
+  // Render the FirstRoute component
   return (
     <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
       <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
@@ -221,16 +234,8 @@ const SecondRoute = () => {
           <View key={index} style={styles.menuItem}>
             <View style={styles.menuItemGroup}>
               <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
-              <TouchableNativeFeedback>
-                <View style={styles.buybutton}>
-                  <MaterialCommunityIcons
-                    color="white"
-                    size={25}
-                    name="plus"
-                    style={{ marginTop: 0 }}
-                  />
-                </View>
-              </TouchableNativeFeedback>
+              {/* The buy button is not functional in the provided snippet */}
+              {/* You may want to add onPress functionality to it */}
             </View>
             <Text style={styles.menuItemName}>{menuItem.name}</Text>
             <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
@@ -242,24 +247,16 @@ const SecondRoute = () => {
                   style={styles.editButton}
                   onPress={() => handleEditPress(menuItem._id)}
                 >
-                  <MaterialCommunityIcons
-                    name="pencil"
-                    size={20}
-                    color="white"
-                  />
+                  <MaterialCommunityIcons name="pencil" size={20} color="white" />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.deleteButton}
                   onPress={() => handleDelete(menuItem._id)}
                 >
-                  <MaterialCommunityIcons
-                    name="delete"
-                    size={20}
-                    color="white"
-                  />
+                  <MaterialCommunityIcons name="delete" size={20} color="white" />
                 </TouchableOpacity>
               </View>
-            </View>
+          </View>
           </View>
         ))}
       </ScrollView>
@@ -267,44 +264,54 @@ const SecondRoute = () => {
   );
 };
 
+// Define the FirstRoute component
 const ThirdRoute = () => {
+  // Set up navigation so we can navigate to different screens
   const navigation = useNavigation();
+
+  // Create state variables to store the menu items
   const [menuItems, setMenuItems] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://nl-app.onrender.com/products/categories/snack"
-        );
-        const data = await response.json();
-        setMenuItems(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  // Define a function to fetch menu items from the server
+  const fetchMenuItems = async () => {
+    try {
+      // Make a GET request to the server to fetch food category products
+      const response = await fetch("https://nl-app.onrender.com/products/categories/snack");
+      const data = await response.json();
 
-    fetchData();
-  }, []);
+      // Filter out products that have been marked as deleted
+      const activeProducts = data.filter(product => !product.deleted);
 
-  const handleEditPress = (itemId) => {
-    // Navigate to the EditMenuKaart screen with the item ID
-    navigation.navigate('EditMenuKaart', { itemId });
+      // Update the state with the active products
+      setMenuItems(activeProducts);
+    } catch (error) {
+      // If there is an error during fetching, log it to the console
+      console.error("Error fetching data:", error);
+    }
   };
 
+  // Use the useEffect hook to fetch menu items when the component mounts
+  useEffect(() => {
+    fetchMenuItems();
+  }, []);
+
+  // Define a function to handle the deletion of a menu item
   const handleDelete = async (productId) => {
     try {
+      // Make a DELETE request to the server to soft delete the product
       const response = await fetch(`https://nl-app.onrender.com/products/${productId}`, {
         method: 'DELETE',
-        // Include headers if you need to send tokens or other information
+        // If needed, include headers for authorization or other information
         // headers: {
         //   'Authorization': 'Bearer your-token-here',
         // },
       });
 
+      // Check if the response is successful
       if (response.ok) {
         console.log('Product soft deleted successfully');
-        // Perform any additional actions like updating the UI
+        // Refresh the menu items to reflect the deletion
+        fetchMenuItems();
       } else {
         console.error('Failed to delete the product');
       }
@@ -313,13 +320,18 @@ const ThirdRoute = () => {
     }
   };
 
+  // Define a function to handle the editing of a menu item
+  const handleEditPress = (itemId) => {
+    // Navigate to the EditMenuKaart screen with the item ID
+    navigation.navigate('EditMenuKaart', { itemId });
+  };
+
+  // Define a function to render options for a menu item
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
-      <View key={optionIndex}>
-        <View style={styles.menuItemOption}>
-          <Text style={styles.menuItemOptionName}>{option.name}</Text>
-          <Text style={styles.menuItemOptionPrice}>€{option.price}</Text>
-        </View>
+      <View key={optionIndex} style={styles.menuItemOption}>
+        <Text style={styles.menuItemOptionName}>{option.name}</Text>
+        <Text style={styles.menuItemOptionPrice}>€{option.price}</Text>
         {optionIndex < menuItem.options.length - 1 && (
           <View style={styles.menuItemOptionDivider} />
         )}
@@ -327,7 +339,7 @@ const ThirdRoute = () => {
     ));
   };
 
-
+  // Render the FirstRoute component
   return (
     <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
       <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
@@ -335,16 +347,8 @@ const ThirdRoute = () => {
           <View key={index} style={styles.menuItem}>
             <View style={styles.menuItemGroup}>
               <Text style={styles.menuItemTitle}>{menuItem.title}</Text>
-              <TouchableNativeFeedback>
-                <View style={styles.buybutton}>
-                  <MaterialCommunityIcons
-                    color="white"
-                    size={25}
-                    name="plus"
-                    style={{ marginTop: 0 }}
-                  />
-                </View>
-              </TouchableNativeFeedback>
+              {/* The buy button is not functional in the provided snippet */}
+              {/* You may want to add onPress functionality to it */}
             </View>
             <Text style={styles.menuItemName}>{menuItem.name}</Text>
             <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
@@ -356,24 +360,16 @@ const ThirdRoute = () => {
                   style={styles.editButton}
                   onPress={() => handleEditPress(menuItem._id)}
                 >
-                  <MaterialCommunityIcons
-                    name="pencil"
-                    size={20}
-                    color="white"
-                  />
+                  <MaterialCommunityIcons name="pencil" size={20} color="white" />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.deleteButton}
                   onPress={() => handleDelete(menuItem._id)}
                 >
-                  <MaterialCommunityIcons
-                    name="delete"
-                    size={20}
-                    color="white"
-                  />
+                  <MaterialCommunityIcons name="delete" size={20} color="white" />
                 </TouchableOpacity>
               </View>
-            </View>
+          </View>
           </View>
         ))}
       </ScrollView>

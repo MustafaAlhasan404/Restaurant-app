@@ -3,7 +3,7 @@ POST http://localhost:3000/products
 Content-Type: application/json
 
 {
-  "name": "Mango Smoothie",
+  "name": "banana Smoothie",
   "price": 3.50,
   "ingredients": "Mango, ice, mango nectar, sugar",
   "category": "drink",
