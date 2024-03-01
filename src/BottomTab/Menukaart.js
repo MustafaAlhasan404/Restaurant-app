@@ -38,7 +38,6 @@ const renderTabBar = (props) => (
   />
 );
 
-// Define the FirstRoute component
 const FirstRoute = () => {
   // Set up navigation so we can navigate to different screens
   const navigation = useNavigation();
@@ -69,6 +68,11 @@ const FirstRoute = () => {
     fetchMenuItems();
   }, []);
 
+  const handleEditPress = (product) => {
+    navigation.navigate('EditMenuKaart', { product: product });
+  };
+    
+
   // Define a function to handle the deletion of a menu item
   const handleDelete = async (productId) => {
     try {
@@ -94,11 +98,6 @@ const FirstRoute = () => {
     }
   };
 
-  // Define a function to handle the editing of a menu item
-  const handleEditPress = (itemId) => {
-    // Navigate to the EditMenuKaart screen with the item ID
-    navigation.navigate('EditMenuKaart', { itemId });
-  };
 
   // Define a function to render options for a menu item
   const renderMenuItemOptions = (menuItem) => {
@@ -112,8 +111,6 @@ const FirstRoute = () => {
       </View>
     ));
   };
-
-  // Render the FirstRoute component
   return (
     <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
       <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
@@ -132,7 +129,7 @@ const FirstRoute = () => {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.editButton}
-                  onPress={() => handleEditPress(menuItem._id)}
+                  onPress={() => handleEditPress(menuItem)}
                 >
                   <MaterialCommunityIcons name="pencil" size={20} color="white" />
                 </TouchableOpacity>
@@ -151,7 +148,6 @@ const FirstRoute = () => {
   );
 };
 
-// Define the FirstRoute component
 const SecondRoute = () => {
   // Set up navigation so we can navigate to different screens
   const navigation = useNavigation();
@@ -207,12 +203,11 @@ const SecondRoute = () => {
     }
   };
 
-  // Define a function to handle the editing of a menu item
-  const handleEditPress = (itemId) => {
-    // Navigate to the EditMenuKaart screen with the item ID
-    navigation.navigate('EditMenuKaart', { itemId });
+  const handleEditPress = (product) => {
+    navigation.navigate('EditMenuKaart', { product: product });
   };
-
+  
+  
   // Define a function to render options for a menu item
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
@@ -245,7 +240,7 @@ const SecondRoute = () => {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.editButton}
-                  onPress={() => handleEditPress(menuItem._id)}
+                  onPress={() => handleEditPress(menuItem)}
                 >
                   <MaterialCommunityIcons name="pencil" size={20} color="white" />
                 </TouchableOpacity>
@@ -264,7 +259,6 @@ const SecondRoute = () => {
   );
 };
 
-// Define the FirstRoute component
 const ThirdRoute = () => {
   // Set up navigation so we can navigate to different screens
   const navigation = useNavigation();
@@ -319,13 +313,10 @@ const ThirdRoute = () => {
       console.error('Error:', error);
     }
   };
-
-  // Define a function to handle the editing of a menu item
-  const handleEditPress = (itemId) => {
-    // Navigate to the EditMenuKaart screen with the item ID
-    navigation.navigate('EditMenuKaart', { itemId });
+  const handleEditPress = (product) => {
+    navigation.navigate('EditMenuKaart', { product: product });
   };
-
+    
   // Define a function to render options for a menu item
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
@@ -358,7 +349,7 @@ const ThirdRoute = () => {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.editButton}
-                  onPress={() => handleEditPress(menuItem._id)}
+                  onPress={() => handleEditPress(menuItem)}
                 >
                   <MaterialCommunityIcons name="pencil" size={20} color="white" />
                 </TouchableOpacity>

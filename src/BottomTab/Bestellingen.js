@@ -19,63 +19,44 @@ const Bestellingen = ({ navigation }) => {
   const flatListRef = useRef(null);
   const route = useRoute();
 
-const handleEditOrder = (order) => {
-  // Navigate to the EditBestelling screen and pass the entire order object
-  navigation.navigate('EditBestelling', { order: order });
-};
-
-  const handleDeleteOrder = async (orderId) => {
+  // Abstract the fetch logic into a function
+  const fetchOrders = async () => {
     try {
-      const response = await axios.delete(`https://nl-app.onrender.com/orders/${orderId}`);
-      if (response.status === 200) {
-        // Update the local state to remove the deleted order
-        setOrders(orders.filter((order) => order._id !== orderId));
-        Alert.alert("Success", "Order deleted successfully");
-      } else {
-        throw new Error("Failed to delete order");
-      }
+      const response = await axios.get("https://nl-app.onrender.com/orders");
+      // Map products to new array with details
+      const ordersWithDetails = await Promise.all(
+        response.data.map(async (order) => {
+          order.products = await Promise.all(
+            order.products.map(async (product) => {
+              const productDetails = await axios.get(
+                `https://nl-app.onrender.com/products/${product.product}`
+              );
+              return {
+                ...product,
+                name: productDetails.data.name,
+                price: productDetails.data.price,
+              };
+            })
+          );
+          return order;
+        })
+      );
+      setOrders(ordersWithDetails);
     } catch (error) {
-      Alert.alert("Error", error.message || "Failed to delete order");
+      console.error("Error fetching orders", error);
     }
   };
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await axios.get(
-          "https://nl-app.onrender.com/orders"
-        );
-
-        // Map products to new array with details
-        const ordersWithDetails = await Promise.all(
-          response.data.map(async (order) => {
-            order.products = await Promise.all(
-              order.products.map(async (product) => {
-                const productDetails = await axios.get(
-                  `https://nl-app.onrender.com/products/${product.product}`
-                );
-
-                return {
-                  ...product,
-                  name: productDetails.data.name,
-                  price: productDetails.data.price,
-                };
-              })
-            );
-
-            return order;
-          })
-        );
-
-        setOrders(ordersWithDetails);
-      } catch (error) {
-        console.error("Error fetching orders", error);
-      }
-    };
-
-    fetchOrders();
-  }, []);
-
+    // Subscribe to the focus event to refresh orders whenever the screen is focused
+    const unsubscribe = navigation.addListener('focus', () => {
+      // Call fetchOrders to refresh the list of orders
+      fetchOrders();
+    });
+  
+    // Return the function to unsubscribe from the event when the component unmounts
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -90,21 +71,41 @@ const handleEditOrder = (order) => {
     return unsubscribe;
   }, [navigation, orders, route.params?.orderId]);
 
+  const handleEditOrder = (order) => {
+    // Navigate to the EditBestelling screen and pass the entire order object
+    navigation.navigate('EditBestelling', { order: order });
+  };
+
+  const handleDeleteOrder = async (orderId) => {
+    try {
+      const response = await axios.delete(`https://nl-app.onrender.com/orders/${orderId}`);
+      if (response.status === 200) {
+        // Call fetchOrders to refresh the list after deletion
+        fetchOrders();
+        Alert.alert("Success", "Order deleted successfully");
+      } else {
+        throw new Error("Failed to delete order");
+      }
+    } catch (error) {
+      Alert.alert("Error", error.message || "Failed to delete order");
+    }
+  };
+
   const changeOrderStatus = async (orderId, newStatus) => {
     try {
       let patchUrl = `https://nl-app.onrender.com/orders/${orderId}/${newStatus}`;
-      await axios.patch(patchUrl);
-      setOrders(
-        orders.map((order) =>
-          order._id === orderId
-            ? { ...order, status: newStatus }
-            : order
-        )
-      );
+      const response = await axios.patch(patchUrl);
+      if (response.status === 200) {
+        // Call fetchOrders to refresh the list after status change
+        fetchOrders();
+      } else {
+        throw new Error("Failed to update order status");
+      }
     } catch (error) {
       console.error("Error updating order status:", error);
     }
   };
+
 
   const showStatusOptions = (orderId, currentStatus) => {
     let newStatus = currentStatus === 'unprocessed' ? 'processed' : 'paid';
