@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Switch } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; // Import the Picker component
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const AddVoorraad = () => {
   const [name, setName] = useState('');
@@ -9,7 +10,55 @@ const AddVoorraad = () => {
   const [category, setCategory] = useState('food'); // Default to 'food' as per schema
   const [stockable, setStockable] = useState(true); // Default to true as per schema
   const [qty, setQty] = useState('');
-
+  const [options, setOptions] = useState([]);
+  const handleOptionNameChange = (index, value) => {
+    const newOptions = [...options];
+    newOptions[index].name = value;
+    setOptions(newOptions);
+  };
+  
+  const handleOptionPriceChange = (index, value) => {
+    const newOptions = [...options];
+    newOptions[index].price = value;
+    setOptions(newOptions);
+  };
+  
+  const addOption = () => {
+    setOptions([...options, { name: '', price: '' }]);
+  };
+  
+  const removeOption = (index) => {
+    const newOptions = [...options];
+    newOptions.splice(index, 1);
+    setOptions(newOptions);
+  };
+  const renderOptions = () => {
+    return options.map((option, index) => (
+      <View key={index} style={styles.optionContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Option Name"
+          value={option.name}
+          onChangeText={(text) => handleOptionNameChange(index, text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Option Price"
+          value={option.price.toString()}
+          onChangeText={(text) => handleOptionPriceChange(index, text)}
+          keyboardType="numeric"
+        />
+        <TouchableOpacity onPress={() => removeOption(index)} style={styles.removeButton}>
+          <MaterialCommunityIcons
+            name="trash-can-outline"
+            size={20}
+            color="white"
+          />
+        </TouchableOpacity>
+      </View>
+    ));
+  };
+  
   const handleSubmit = async () => {
     // Basic front-end validation
     if (!name || !price || (stockable && !qty)) {
@@ -25,6 +74,7 @@ const AddVoorraad = () => {
         category,
         stockable,  // Send the boolean value directly
         qty: stockable ? parseInt(qty, 10) : 0, // Set qty to 0 if stockable is false
+        options,
       };
 
       const response = await fetch('https://nl-app.onrender.com/products', {
@@ -58,7 +108,7 @@ const AddVoorraad = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Add Product to Inventory</Text>
+      <Text style={styles.text}>Add Product</Text>
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -107,6 +157,10 @@ const AddVoorraad = () => {
           keyboardType="numeric"
         />
       )}
+      {renderOptions()}
+<TouchableOpacity style={styles.addButton} onPress={addOption}>
+  <Text style={styles.addButtonText}>Add Option</Text>
+</TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Add Product</Text>
       </TouchableOpacity>
@@ -125,9 +179,36 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 10,
     color: "#333",
   },
+  optionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  addButton: {
+    backgroundColor: "#e27b00", // Adjust the color to match your app's theme if necessary
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 0,
+  },
+  addButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  removeButton: {
+    marginLeft: 10,
+    marginBottom: 10,
+    backgroundColor: "#dc3545", // Adjust the color to match your app's theme if necessary
+    padding: 5,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  // If the input style is not already defined in AddVoorraad.js, add it as well
   input: {
     backgroundColor: "#fff",
     borderWidth: 1,
@@ -140,6 +221,7 @@ const styles = StyleSheet.create({
   },
   // ... existing styles for input ...
   picker: {
+    height: 200,
     backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#ddd",
