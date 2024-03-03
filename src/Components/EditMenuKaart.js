@@ -53,7 +53,6 @@ const EditMenuKaart = () => {
   };
 
   const handleSubmit = async () => {
-    // Basic front-end validation
     if (!name || !price || (stockable && !qty)) {
       Alert.alert('Error', 'Please fill in all required fields.');
       return;
@@ -67,7 +66,7 @@ const EditMenuKaart = () => {
         category,
         stockable,
         qty: stockable ? parseInt(qty, 10) : 0,
-        options, // Include options in the updated product
+        options,
       };
 
       const response = await fetch(`https://nl-app.onrender.com/products/${product._id}`, {
@@ -85,12 +84,19 @@ const EditMenuKaart = () => {
 
       const responseData = await response.json();
       Alert.alert('Success', 'Product updated successfully: ' + responseData.name);
+
+      // Invoke the callback function if provided
+      if (route.params.onProductUpdated) {
+        route.params.onProductUpdated(responseData);
+      }
+
       // Optionally, navigate back or update the state to reflect the changes
     } catch (error) {
       console.error(error);
       Alert.alert('Error', error.message);
     }
   };
+
 
   const renderOptions = () => {
     return options.map((option, index) => (

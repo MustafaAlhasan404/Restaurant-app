@@ -63,13 +63,21 @@ const FirstRoute = () => {
     }
   };
 
-  // Use the useEffect hook to fetch menu items when the component mounts
   useEffect(() => {
-    fetchMenuItems();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused, fetch menu items again
+      fetchMenuItems();
+    });
+  
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
 
   const handleEditPress = (product) => {
-    navigation.navigate('EditMenuKaart', { product: product });
+    navigation.navigate('EditMenuKaart', {
+      product: product,
+      onProductUpdated: fetchMenuItems, // Pass fetchMenuItems as a callback
+    });
   };
     
 
@@ -105,7 +113,7 @@ const FirstRoute = () => {
       <View key={optionIndex} style={styles.menuItemOption}>
         <Text style={styles.menuItemOptionName}>{option.name}</Text>
         <Text style={styles.menuItemOptionPrice}>€{option.price}</Text>
-        {optionIndex < menuItem.options.length - 1 && (
+        {optionIndex < menuItem.options.length && (
           <View style={styles.menuItemOptionDivider} />
         )}
       </View>
@@ -173,10 +181,15 @@ const SecondRoute = () => {
     }
   };
 
-  // Use the useEffect hook to fetch menu items when the component mounts
   useEffect(() => {
-    fetchMenuItems();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused, fetch menu items again
+      fetchMenuItems();
+    });
+  
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
 
   // Define a function to handle the deletion of a menu item
   const handleDelete = async (productId) => {
@@ -284,10 +297,15 @@ const ThirdRoute = () => {
     }
   };
 
-  // Use the useEffect hook to fetch menu items when the component mounts
   useEffect(() => {
-    fetchMenuItems();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused, fetch menu items again
+      fetchMenuItems();
+    });
+  
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
 
   // Define a function to handle the deletion of a menu item
   const handleDelete = async (productId) => {
@@ -497,7 +515,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 5,
+    paddingVertical: 2.5,
     paddingHorizontal: 10,
     backgroundColor: "#f8f8f8",
     borderRadius: 5,
