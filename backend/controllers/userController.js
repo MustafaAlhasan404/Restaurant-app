@@ -53,21 +53,25 @@ router.get("/:id", async (req, res) => {
 // CREATE new user
 router.post("/", async (req, res) => {
     const { Name, username, password, role } = req.body;
-
+  
     try {
-        const newUser = new User({
-            Name,
-            username,
-            password,
-            role,
-        });
-
-        const createdUser = await newUser.save();
-        res.status(201).json(createdUser);
+      const newUser = new User({
+        Name,
+        username,
+        password,
+        role,
+      });
+  
+      const createdUser = await newUser.save();
+      res.status(201).json(createdUser);
     } catch (error) {
+      if (error.code === 11000) { // MongoDB duplicate key error code
+        res.status(400).json({ message: "Username already exists." });
+      } else {
         res.status(400).json({ message: error.message });
+      }
     }
-});
+  });
 
 // UPDATE user
 router.patch("/:id", async (req, res) => {

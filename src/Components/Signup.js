@@ -10,8 +10,14 @@ const Signup = ({ navigation }) => {
 
   // Function to handle the signup action
   const handleSignup = () => {
+    // Check if the password length is less than 8 characters
+    if (password.length < 8) {
+      Alert.alert("Signup Error", "Password must be at least 8 characters long.");
+      return;
+    }
+  
     const signupUrl = 'https://nl-app.onrender.com/users'; // Replace with your backend's actual URL
-
+  
     fetch(signupUrl, {
       method: 'POST',
       headers: {
@@ -26,9 +32,17 @@ const Signup = ({ navigation }) => {
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Signup failed');
+        // If the response status code is 400, it could be a validation error like duplicate username
+        if (response.status === 400) {
+          response.json().then(data => {
+            Alert.alert("Signup Error", data.message);
+          });
+        } else {
+          throw new Error('Signup failed');
+        }
+      } else {
+        return response.json();
       }
-      return response.json();
     })
     .then(data => {
       // Assuming the response contains the created user object
