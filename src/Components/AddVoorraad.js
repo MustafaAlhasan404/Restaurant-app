@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Switch } from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView,Platform,ScrollView,TextInput, TouchableOpacity, Alert, Switch } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; // Import the Picker component
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -107,7 +107,11 @@ const AddVoorraad = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <ScrollView>
       <Text style={styles.text}>Add Product</Text>
       <TextInput
         style={styles.input}
@@ -164,7 +168,8 @@ const AddVoorraad = () => {
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Add Product</Text>
       </TouchableOpacity>
-    </View>
+          </ScrollView>
+          </KeyboardAvoidingView>
   );
 };
 
@@ -173,7 +178,7 @@ export default AddVoorraad;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 30,
     backgroundColor: "#e0d5d6",
   },
   text: {
@@ -221,11 +226,11 @@ const styles = StyleSheet.create({
   },
   // ... existing styles for input ...
   picker: {
-    height: 200,
+    height: 150,
+    overflow: "hidden",
     backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#ddd",
-    padding: 10,
     marginBottom: 10,
     borderRadius: 10,
     fontSize: 14,

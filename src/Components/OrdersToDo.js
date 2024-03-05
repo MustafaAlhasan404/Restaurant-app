@@ -8,8 +8,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
-const AccordionItem = ({ item }) => {
+import axios from 'axios'; // Import axios
+import Icon from 'react-native-vector-icons/FontAwesome'; // Import Icon
+const AccordionItem = ({ item, fetchOrders }) => {
   const [isOpened, setIsOpened] = useState(false);
   const navigation = useNavigation();
   const animation = useState(new Animated.Value(0))[0];
@@ -40,6 +41,29 @@ const AccordionItem = ({ item }) => {
       useNativeDriver: false,
     }).start();
   }, [isOpened]);
+
+  // Function to change the order status
+  const changeOrderStatus = async (orderId, newStatus) => {
+    try {
+      let patchUrl = `https://nl-app.onrender.com/orders/${orderId}/${newStatus}`;
+      const response = await axios.patch(patchUrl);
+      if (response.status === 200) {
+        // Call fetchOrders to refresh the list after status change
+        fetchOrders();
+      } else {
+        throw new Error("Failed to update order status");
+      }
+    } catch (error) {
+      console.error("Error updating order status:", error);
+    }
+  };
+
+  const handleStatusChangePress = () => {
+    // Define the new status you want to set when the arrow is clicked
+    const newStatus = 'processed'; // Example status
+    changeOrderStatus(item._id, newStatus);
+  };
+
   return (
     <TouchableOpacity onPress={navigateToBestellingen}>
       <View style={styles.accordionContainer}>
@@ -48,6 +72,10 @@ const AccordionItem = ({ item }) => {
           <View style={styles.dateContainer}>
             <Text style={styles.orderdate}>Geplaatst: {orderTime}</Text>
           </View>
+          {/* Arrow Icon Button */}
+          <TouchableOpacity onPress={handleStatusChangePress} style={styles.statusChangeButton}>
+            <Icon name="arrow-right" size={24} color="#000" />
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
@@ -57,23 +85,29 @@ const AccordionItem = ({ item }) => {
 const OrdersToDo = () => {
   const [orders, setOrders] = useState([]);
   const [badgeNumber, setBadgeNumber] = useState(0);
-
   const fetchOrders = async () => {
     try {
+      // Fetch all orders from the backend
       const response = await fetch('https://nl-app.onrender.com/orders');
       const data = await response.json();
-      const todaysOrders = data.filter(order => {
+      
+      // Filter out only unprocessed orders
+      const unprocessedOrders = data.filter(order => order.status === 'unprocessed');
+      
+      // Optionally, filter for today's unprocessed orders if needed
+      const todaysUnprocessedOrders = unprocessedOrders.filter(order => {
         const orderDate = new Date(order.orderDate);
         orderDate.setHours(0, 0, 0, 0);
         return orderDate.getTime() === new Date().setHours(0, 0, 0, 0);
       });
-      setOrders(todaysOrders);
-      setBadgeNumber(todaysOrders.length);
+  
+      // Update state with the filtered unprocessed orders
+      setOrders(todaysUnprocessedOrders);
+      setBadgeNumber(todaysUnprocessedOrders.length);
     } catch (error) {
       console.error('Failed to fetch orders:', error);
     }
   };
-
   useEffect(() => {
     fetchOrders();
     const intervalId = setInterval(fetchOrders, 5000); // Poll every 5 seconds
@@ -83,13 +117,13 @@ const OrdersToDo = () => {
   return (
     // The main container for the OrdersToDo component, styled with styles.container.
     <View style={styles.container}>
-    
+
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-    
+
         <View style={styles.badgenumber}>
           <Text style={styles.badgenumbertext}>{badgeNumber}</Text>
         </View>
-      
+
         <Text style={styles.contentheader}>Open bestellingen:</Text>
       </View>
       <View style={styles.fixedSizeContainer}>
@@ -97,7 +131,7 @@ const OrdersToDo = () => {
           // Array of orders to be rendered.
           data={orders}
           // Function to render each item using the AccordionItem component.
-          renderItem={({ item }) => <AccordionItem item={item} />}
+          renderItem={({ item }) =>         <AccordionItem item={item} fetchOrders={fetchOrders} />}
           // Function to extract a unique key for each item.
           keyExtractor={(item) => item._id}
           // Prop to hide the vertical scroll indicator.
@@ -154,7 +188,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   title: {
-    fontSize:32,
+    fontSize: 32,
     fontWeight: "bold",
     textAlign: "center",
     flex: 0, // Take up all available space
@@ -162,13 +196,19 @@ const styles = StyleSheet.create({
   orderdate: {
     // ... existing styles for orderdate ...
     textAlign: 'center',
-    fontSize:16 // Center the text within the Text component
+    fontSize: 16 // Center the text within the Text component
   },
   dateContainer: {
     // This container will ensure the date is centered
     flex: 0.5, // Take up all available space
     justifyContent: 'center', // Center content horizontally in the container
     alignItems: 'center', // Center content vertically in the container
+  },
+  statusChangeButton: {
+    position: 'absolute', // Position the button absolutely within its parent
+    right: 10, // Position it 10 pixels from the right
+    top: '50%', // Center it vertically
+    transform: [{ translateY: -12 }], // Adjust the position to center the icon
   },
 
   // Add additional styles for the horizontal layout if necessary
