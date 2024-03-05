@@ -23,9 +23,11 @@ const Bestellingen = ({ navigation }) => {
   const fetchOrders = async () => {
     try {
       const response = await axios.get("https://nl-app.onrender.com/orders");
+      // Sort the orders by date from newest to oldest
+      const sortedOrders = response.data.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
       // Map products to new array with details
       const ordersWithDetails = await Promise.all(
-        response.data.map(async (order) => {
+        sortedOrders.map(async (order) => {
           order.products = await Promise.all(
             order.products.map(async (product) => {
               const productDetails = await axios.get(
