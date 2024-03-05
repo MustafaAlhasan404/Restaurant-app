@@ -70,21 +70,49 @@ const NieuweReservering = () => {
   const fetchReservations = async () => {
     try {
       const response = await axios.get('http://nl-app.onrender.com/reservations');
-      setReservations(response.data);
+      const sortedReservations = response.data.sort((a, b) => {
+        // Convert dateTime strings to Date objects
+        const dateA = new Date(a.dateTime);
+        const dateB = new Date(b.dateTime);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Normalize today's date to midnight
+  
+        // Check if dates are in the past, present, or future
+        const isPastA = dateA < today;
+        const isPastB = dateB < today;
+        const isTodayA = dateA.toDateString() === today.toDateString();
+        const isTodayB = dateB.toDateString() === today.toDateString();
+  
+        // Today's reservations come first
+        if (isTodayA && !isTodayB) return -1;
+        if (!isTodayA && isTodayB) return 1;
+  
+        // Future reservations come next, sorted by closest date first
+        if (!isPastA && !isPastB) return dateA - dateB;
+  
+        // Past reservations come last, sorted by most recent first
+        if (isPastA && isPastB) return dateB - dateA;
+  
+        // If one is past and the other is future, the future one comes first
+        return isPastA ? 1 : -1;
+      });
+      setReservations(sortedReservations);
     } catch (error) {
       Alert.alert('Error', 'Could not fetch reservations');
     }
   };
+  
 
   useEffect(() => {
     fetchReservations();
-
+  
     // Add a focus listener
     const unsubscribe = navigation.addListener('focus', fetchReservations);
-
+  
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [navigation]);
+  
 
   // Determine if the user can edit or delete reservations
   const canEdit = user && user.role === 'manager';
