@@ -108,10 +108,10 @@ const AddVoorraad = () => {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    behavior={Platform.OS === "android" ? null : "padding"}
       style={styles.container}
     >
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <Text style={styles.text}>Add Product</Text>
       <TextInput
         style={styles.input}
@@ -178,7 +178,7 @@ export default AddVoorraad;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
+    padding: 25,
     backgroundColor: "#e0d5d6",
   },
   text: {
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   },
   // ... existing styles for input ...
   picker: {
-    height: 150,
+    height: 10,
     overflow: "hidden",
     backgroundColor: "#fff",
     borderWidth: 1,
@@ -255,6 +255,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   button: {
+     marginBottom: Platform.OS === 'android' ? 20 : 0,
     backgroundColor: "#e27b00",
     padding: 15,
     borderRadius: 10,
