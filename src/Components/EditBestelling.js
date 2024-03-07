@@ -611,7 +611,6 @@ const styles = StyleSheet.create({
 	},
 	page: {
 		padding: 20,
-		backgroundColor: "red",
 	},
 	spaceBetweenRow: {
 		width: "100%",
