@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "react-native-paper";
-import AddVoorraad from "./src/Components/AddVoorraad";
+import Nieuwproduct from "./src/Components/Nieuwproduct";
 // Import UserProvider from the context file
 import { UserProvider } from "./src/contexts/UserContext";
 // Import screens and components
@@ -180,8 +180,8 @@ function StackNavigator() {
 				}}
 			/>
 			<Stack.Screen
-				name="AddVoorraad"
-				component={AddVoorraad}
+				name="Nieuw product"
+				component={Nieuwproduct}
 				options={{
 					headerShown: true,
 					headerStyle: {

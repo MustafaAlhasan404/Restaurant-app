@@ -8,8 +8,8 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { FAB } from 'react-native-paper';
-import { useUser } from '../contexts/UserContext'; // Import useUser hook
+import { FAB } from "react-native-paper";
+import { useUser } from "../contexts/UserContext"; // Import useUser hook
 
 const FloatingButton = () => {
   const [open, setOpen] = useState(false);
@@ -114,38 +114,44 @@ const FloatingButton = () => {
 
   return (
     <View style={[styles.container]}>
-      {user && user.role === 'manager' && (
+      {user && user.role === "manager" && (
         <TouchableWithoutFeedback>
-          <Animated.View style={[styles.button, styles.secondary, NieuweProductStyle]}>
+          <Animated.View
+            style={[styles.button, styles.secondary, NieuweProductStyle]}
+          >
             <Pressable
               onPress={() => {
                 toggleMenu(); // Close the menu when an option is selected
-                navigation.navigate("AddVoorraad"); // Navigate to AddVoorraad
+                navigation.navigate("Nieuw product"); // Navigate to AddVoorraad
               }}
             >
-              <Text style={styles.text}>Nieuwe Product</Text>
+              <Text style={styles.text}>Nieuw product</Text>
             </Pressable>
           </Animated.View>
         </TouchableWithoutFeedback>
       )}
 
-      {user && user.role === 'manager' && (
+      {user && user.role === "manager" && (
         <TouchableWithoutFeedback>
-          <Animated.View style={[styles.button, styles.secondary, NieuweEmployeeStyle]}>
+          <Animated.View
+            style={[styles.button, styles.secondary, NieuweEmployeeStyle]}
+          >
             <Pressable
               onPress={() => {
                 toggleMenu(); // Close the menu when an option is selected
                 navigation.navigate("Signup"); // Navigate to Signup
               }}
             >
-              <Text style={styles.text}>Nieuwe Employee</Text>
+              <Text style={styles.text}>Nieuwe medewerker</Text>
             </Pressable>
           </Animated.View>
         </TouchableWithoutFeedback>
       )}
 
       <TouchableWithoutFeedback>
-        <Animated.View style={[styles.button, styles.secondary, NweReserveringStyle]}>
+        <Animated.View
+          style={[styles.button, styles.secondary, NweReserveringStyle]}
+        >
           <Pressable
             onPress={() => {
               toggleMenu(); // Close the menu when an option is selected
@@ -157,7 +163,9 @@ const FloatingButton = () => {
         </Animated.View>
       </TouchableWithoutFeedback>
       <TouchableWithoutFeedback>
-        <Animated.View style={[styles.button, styles.secondary, NweBestellingStyle]}>
+        <Animated.View
+          style={[styles.button, styles.secondary, NweBestellingStyle]}
+        >
           <Pressable
             onPress={() => {
               toggleMenu(); // Close the menu when an option is selected
@@ -172,6 +180,7 @@ const FloatingButton = () => {
       <FAB
         style={[styles.fab, rotation]}
         icon="plus"
+        color="white"
         onPress={toggleMenu} // Make sure this is correctly bound
       />
     </View>
@@ -190,7 +199,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 48,
     height: 48,
-    borderRadius: 24,
+    borderRadius: 100,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
@@ -201,15 +210,23 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   secondary: {
-    width: 150,
-    height: 48,
+    width: 190,
+    height: "auto",
     borderRadius: 24,
-    backgroundColor: "#e27b00",
+    backgroundColor: "#fce9d2",
+    borderWidth: 1,
+    borderColor: "#dedede",
+    paddingVertical: 15,
+    paddingHorizontal: 5,
+    position: "absolute",
+    right: -90,
   },
   text: {
-    color: "#555",
+    color: "black",
   },
   fab: {
-    backgroundColor: '#e27b00',
+    backgroundColor: "#e27b00",
+    borderRadius: 100,
+    padding: 7,
   },
 });

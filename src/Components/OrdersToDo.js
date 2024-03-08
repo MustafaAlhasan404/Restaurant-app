@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -6,22 +6,22 @@ import {
   View,
   Animated,
   TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios'; // Import axios
-import Icon from 'react-native-vector-icons/FontAwesome'; // Import Icon
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios"; // Import axios
+import Icon from "react-native-vector-icons/FontAwesome"; // Import Icon
 const AccordionItem = ({ item, fetchOrders }) => {
   const [isOpened, setIsOpened] = useState(false);
   const navigation = useNavigation();
   const animation = useState(new Animated.Value(0))[0];
   const orderTime = new Date(item.orderDate).toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
+    hour: "2-digit",
+    minute: "2-digit",
   });
 
   const navigateToBestellingen = () => {
     // Navigate to the Bestellingen screen with the orderId as a parameter
-    navigation.navigate('Bestellingen', { orderId: item._id });
+    navigation.navigate("Bestellingen", { orderId: item._id });
   };
 
   const toggleAccordion = () => {
@@ -32,7 +32,6 @@ const AccordionItem = ({ item, fetchOrders }) => {
     inputRange: [0, 1],
     outputRange: [0, 270], // Adjust this value to fit the content
   });
-
 
   useEffect(() => {
     Animated.timing(animation, {
@@ -60,7 +59,7 @@ const AccordionItem = ({ item, fetchOrders }) => {
 
   const handleStatusChangePress = () => {
     // Define the new status you want to set when the arrow is clicked
-    const newStatus = 'processed'; // Example status
+    const newStatus = "processed"; // Example status
     changeOrderStatus(item._id, newStatus);
   };
 
@@ -73,8 +72,11 @@ const AccordionItem = ({ item, fetchOrders }) => {
             <Text style={styles.orderdate}>Geplaatst: {orderTime}</Text>
           </View>
           {/* Arrow Icon Button */}
-          <TouchableOpacity onPress={handleStatusChangePress} style={styles.statusChangeButton}>
-            <Icon name="arrow-right" size={24} color="#000" />
+          <TouchableOpacity
+            onPress={handleStatusChangePress}
+            style={styles.statusChangeButton}
+          >
+            <Icon name="arrow-right" size={24} color="#000" style={{}} />
           </TouchableOpacity>
         </View>
       </View>
@@ -88,24 +90,26 @@ const OrdersToDo = () => {
   const fetchOrders = async () => {
     try {
       // Fetch all orders from the backend
-      const response = await fetch('https://nl-app.onrender.com/orders');
+      const response = await fetch("https://nl-app.onrender.com/orders");
       const data = await response.json();
-      
+
       // Filter out only unprocessed orders
-      const unprocessedOrders = data.filter(order => order.status === 'unprocessed');
-      
+      const unprocessedOrders = data.filter(
+        (order) => order.status === "unprocessed"
+      );
+
       // Optionally, filter for today's unprocessed orders if needed
-      const todaysUnprocessedOrders = unprocessedOrders.filter(order => {
+      const todaysUnprocessedOrders = unprocessedOrders.filter((order) => {
         const orderDate = new Date(order.orderDate);
         orderDate.setHours(0, 0, 0, 0);
         return orderDate.getTime() === new Date().setHours(0, 0, 0, 0);
       });
-  
+
       // Update state with the filtered unprocessed orders
       setOrders(todaysUnprocessedOrders);
       setBadgeNumber(todaysUnprocessedOrders.length);
     } catch (error) {
-      console.error('Failed to fetch orders:', error);
+      console.error("Failed to fetch orders:", error);
     }
   };
   useEffect(() => {
@@ -117,9 +121,14 @@ const OrdersToDo = () => {
   return (
     // The main container for the OrdersToDo component, styled with styles.container.
     <View style={styles.container}>
-
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: 20,
+          marginBottom: 15,
+        }}
+      >
         <View style={styles.badgenumber}>
           <Text style={styles.badgenumbertext}>{badgeNumber}</Text>
         </View>
@@ -131,7 +140,9 @@ const OrdersToDo = () => {
           // Array of orders to be rendered.
           data={orders}
           // Function to render each item using the AccordionItem component.
-          renderItem={({ item }) =>         <AccordionItem item={item} fetchOrders={fetchOrders} />}
+          renderItem={({ item }) => (
+            <AccordionItem item={item} fetchOrders={fetchOrders} />
+          )}
           // Function to extract a unique key for each item.
           keyExtractor={(item) => item._id}
           // Prop to hide the vertical scroll indicator.
@@ -143,21 +154,22 @@ const OrdersToDo = () => {
 };
 const styles = StyleSheet.create({
   fixedSizeContainer: {
-    height: 300, // Set a fixed height for the FlatList container
-    width: '100%', // Set the width to take up 100% of the parent container
+    height: 400, // Set a fixed height for the FlatList container
+    width: "100%", // Set the width to take up 100% of the parent container
   },
   container: {
     container: {
       flex: 1, // The container will fill the entire screen.
-      justifyContent: 'center', // Centers content vertically in the container.
-      alignItems: 'center', // Centers content horizontally in the container.
+      justifyContent: "center", // Centers content vertically in the container.
+      alignItems: "center", // Centers content horizontally in the container.
     },
   },
   acco: {},
   header: {
-    width: 250, // Set a fixed width for each item
-    height: 100, // Set a fixed height for each item (optional, depending on your design)
-    marginTop: 20,
+    width: "100%", // Set a fixed width for each item
+    height: "auto", // Set a fixed height for each item (optional, depending on your design)
+    marginTop: 0,
+    marginBottom: 10,
     backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
@@ -172,7 +184,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e27b00",
     width: 23,
     height: 23,
-    justifyContent: 'center', // Center the text vertically
+    justifyContent: "center", // Center the text vertically
     borderRadius: 40,
   },
   badgenumbertext: {
@@ -188,27 +200,26 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   title: {
-    fontSize: 32,
+    fontSize: 18,
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "left",
     flex: 0, // Take up all available space
   },
   orderdate: {
     // ... existing styles for orderdate ...
-    textAlign: 'center',
-    fontSize: 16 // Center the text within the Text component
+    textAlign: "left",
+    fontSize: 14, // Center the text within the Text component
   },
   dateContainer: {
     // This container will ensure the date is centered
     flex: 0.5, // Take up all available space
-    justifyContent: 'center', // Center content horizontally in the container
-    alignItems: 'center', // Center content vertically in the container
+    justifyContent: "flex-start", // Center content horizontally in the container
+    alignItems: "flex-start", // Center content vertically in the container
   },
   statusChangeButton: {
-    position: 'absolute', // Position the button absolutely within its parent
+    position: "absolute", // Position the button absolutely within its parent
     right: 10, // Position it 10 pixels from the right
-    top: '50%', // Center it vertically
-    transform: [{ translateY: -12 }], // Adjust the position to center the icon
+    top: "50%", // Center it vertically
   },
 
   // Add additional styles for the horizontal layout if necessary
