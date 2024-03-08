@@ -113,19 +113,19 @@ module.exports = router;
 
 // Update order status to "unprocessed"
 router.patch("/:orderId/unprocessed", async (req, res) => {
-    try {
-        const { orderId } = req.params;
+	try {
+		const { orderId } = req.params;
 
-        const updatedOrder = await Order.findByIdAndUpdate(
-            orderId,
-            { status: "unprocessed" },
-            { new: true }
-        );
+		const updatedOrder = await Order.findByIdAndUpdate(
+			orderId,
+			{ status: "unprocessed" },
+			{ new: true }
+		);
 
-        res.status(200).json(updatedOrder);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+		res.status(200).json(updatedOrder);
+	} catch (error) {
+		res.status(400).json({ message: error.message });
+	}
 });
 
 // Update order status to "processed"
@@ -165,19 +165,20 @@ router.patch("/:orderId/paid", async (req, res) => {
 // Delete order by id
 router.delete("/:id", async (req, res) => {
 	try {
-	  const { id } = req.params;
-	  const result = await Order.findByIdAndDelete(id);
-  
-	  if (!result) {
-		return res.status(404).json({ error: "Order not found" });
-	  }
-  
-	  res.status(200).json({ message: "Order deleted successfully" });
+		const { id } = req.params;
+		const result = await Order.findByIdAndDelete(id);
+
+		if (!result) {
+			return res.status(404).json({ error: "Order not found" });
+		}
+
+		res.status(200).json({ message: "Order deleted successfully" });
 	} catch (error) {
-	  console.error("Error deleting order:", error);
-	  res.status(500).json({ message: error.message || "Internal Server Error" });
+		console.error("Error deleting order:", error);
+		res.status(500).json({
+			message: error.message || "Internal Server Error",
+		});
 	}
-  });
-  
+});
 
 module.exports = router;

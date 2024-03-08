@@ -216,31 +216,34 @@ const NieuweBestellingForm = () => {
 	const handleSubmit = async (table, products) => {
 		// Check if no products are selected
 		if (products.length === 0) {
-		  Alert.alert("Error", "Please select at least one product to place an order.");
-		  return; // Exit the function early if no products are selected
+			Alert.alert(
+				"Error",
+				"Please select at least one product to place an order."
+			);
+			return; // Exit the function early if no products are selected
 		}
-	  
+
 		console.log("Submitting order...");
+		console.log(products);
 		const response = await fetch("https://nl-app.onrender.com/orders", {
-		  method: "POST",
-		  headers: {
-			"Content-Type": "application/json",
-		  },
-		  body: JSON.stringify({
-			table: table,
-			products: products,
-		  }),
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				table: table,
+				products: products,
+			}),
 		});
 		const data = await response.json();
 		console.log(data);
 		if (response.status === 201) {
-		  console.log("Order created successfully!");
-		  dispatch(emptyOrder());
-		  Alert.alert("Success", "Order created successfully");
+			console.log("Order created successfully!");
+			dispatch(emptyOrder());
+			Alert.alert("Success", "Order created successfully");
 		}
 		navigation.navigate("Home");
-	  };
-	  
+	};
 
 	return (
 		<View>

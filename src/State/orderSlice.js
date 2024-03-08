@@ -1,9 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-	selectedProducts: [],
-};
-
 export const orderSlice = createSlice({
 	name: "order",
 	initialState: {
@@ -12,7 +8,8 @@ export const orderSlice = createSlice({
 	},
 	reducers: {
 		addItem: (state, action) => {
-			console.log(`Added ${action.payload.product} to order: `);
+			console.log(`Added to order: `);
+			console.log(action.payload);
 			state.items.push(action.payload);
 			state.price += action.payload.price;
 		},
@@ -35,8 +32,12 @@ export const orderSlice = createSlice({
 			state.items = [];
 			state.price = 0;
 		},
+		createOrder: (state, action) => {
+			state.items = action.payload.products;
+			state.price = action.payload.totalPrice;
+		},
 	},
 });
 
-export const { addItem, removeItem, emptyOrder } = orderSlice.actions;
+export const { addItem, removeItem, emptyOrder, createOrder } = orderSlice.actions;
 export default orderSlice.reducer;

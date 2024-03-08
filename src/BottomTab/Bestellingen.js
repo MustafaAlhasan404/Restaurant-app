@@ -190,8 +190,9 @@ const Bestellingen = ({ navigation }) => {
 											</Text>
 										</View>
 										{product.selectedOptions.map(
-											(option) => (
+											(option, index) => (
 												<View
+													key={index}
 													style={[
 														styles.spaceBetweenRow,
 														styles.option,

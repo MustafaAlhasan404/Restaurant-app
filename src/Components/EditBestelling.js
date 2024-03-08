@@ -19,8 +19,12 @@ import MenuItem from "./MenuItem";
 import AddedItem from "./AddedItem";
 import { useRoute } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
-import { addItem, removeItem } from "../State/orderSlice";
-import { emptyOrder } from "../State/orderSlice";
+import {
+	addItem,
+	removeItem,
+	createOrder,
+	emptyOrder,
+} from "../State/orderSlice";
 import { useNavigation } from "@react-navigation/native";
 
 const renderTabBar = (props) => (
@@ -198,59 +202,32 @@ export function TabViewExample() {
 }
 
 const EditBestelling = () => {
-	const [order, setOrder] = useState({});
+	// const [order, setOrder] = useState({});
 
 	const route = useRoute();
 	const orderId = route.params.order;
 
-	// useEffect(() => {
-
-	// 	const getProductDetails = async (productId) => {
-	// 		const response = await fetch(
-	// 			`https://nl-app.onrender.com/products/${productID}`
-	// 		);
-	// 		const data = await response.json();
-	// 		return data;
-	// 	};
-
-	// 	const dispatch = useDispatch();
-
-	// 	// Add order product details to redux
-	// 	order.products.forEach((product) => {
-	// 		const productDetails = getProductDetails(product.product);
-
-	// 		const totalPrice = productDetails.price;
-	// 		// for (let i = 0; i < product.selectedOptions.length; i++) {
-	// 		// 	price += product.selectedOptions[i].price;
-	// 		// }
-
-	// 		product.dispatch(
-	// 			addItem({
-	// 				product: product.product,
-	// 				selectedOptions: product.selectedOptions,
-	// 				price: totalPrice,
-	// 			})
-	// 		);
-	// 	});
-	// }, []);
-
 	const [table, setTable] = useState("");
 	const [selectedProducts, setSelectedProducts] = useState([]);
-	// const price = useSelector((state) => state.order.price);
-	const price = 0;
-	const [totalPrice, setTotalPrice] = useState(price);
+	const [totalPrice, setTotalPrice] = useState(0);
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
+		dispatch(emptyOrder());
 		const fetchOrder = async () => {
 			try {
 				const response = await fetch(
 					`https://nl-app.onrender.com/orders/${orderId}`
 				);
 				const data = await response.json();
-				setOrder(data);
+				// setOrder(data);
 				setTable(data.table.toString());
 				setSelectedProducts(data.products);
 				setTotalPrice(data.totalPrice);
+
+				dispatch(createOrder(data));
+
 				console.log(data);
 			} catch (error) {
 				console.log(error);
@@ -262,13 +239,15 @@ const EditBestelling = () => {
 
 	const navigation = useNavigation();
 
-	// // Sync local state with Redux on change
-	// useEffect(() => {
-	// 	setSelectedProducts(order.items);
-	// 	setTotalPrice(price);
-	// }, [order, price]);
+	const order = useSelector((state) => state.order);
+	const price = useSelector((state) => state.order.price);
 
-	const dispatch = useDispatch();
+	// Sync local state with Redux on change
+	useEffect(() => {
+		setSelectedProducts(order.items);
+		setTotalPrice(price);
+	}, [order, price]);
+
 	const handleSubmit = async (table, products) => {
 		// Check if no products are selected
 		if (products.length === 0) {
@@ -276,7 +255,7 @@ const EditBestelling = () => {
 				"Error",
 				"Please select at least one product to place an order."
 			);
-			return; // Exit the function early if no products are selected
+			return;
 		}
 
 		console.log("Submitting order...");
@@ -337,15 +316,14 @@ const EditBestelling = () => {
 							</Text>
 						</View>
 
-						{order.products &&
-							order.products.map((item, index) => (
-								<View key={index}>
-									<AddedItem
-										productID={item.product}
-										selectedOptions={item.selectedOptions}
-									/>
-								</View>
-							))}
+						{order.items.map((item, index) => (
+							<View key={index}>
+								<AddedItem
+									productID={item.product}
+									selectedOptions={item.selectedOptions}
+								/>
+							</View>
+						))}
 
 						<View style={styles.spaceBetweenRow}>
 							<Text style={styles.menuItemName}>Total</Text>
@@ -359,19 +337,12 @@ const EditBestelling = () => {
 						style={styles.savebutton}
 						onPress={() => handleSubmit(table, selectedProducts)}
 					>
-						<Text style={styles.buttontext}>Place order</Text>
+						<Text style={styles.buttontext}>Update order</Text>
 					</Pressable>
 				</View>
 			</View>
 		</ScrollView>
 	);
-
-	// return (
-	// 	<View style={styles.page}>
-	// 		<Text>Table: {order.table}</Text>
-	// 		<Text>{JSON.stringify(order)}</Text>
-	// 	</View>
-	// );
 };
 
 export default EditBestelling;

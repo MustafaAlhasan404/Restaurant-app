@@ -24,6 +24,10 @@ const orderSchema = new mongoose.Schema({
 		type: Number,
 		required: true,
 	},
+	notes: {
+		type: String,
+		required: false,
+	},
 	status: {
 		type: String,
 		enum: ["unprocessed", "processed", "paid"],
