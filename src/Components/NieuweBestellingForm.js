@@ -14,9 +14,6 @@ import {
 	Alert,
 } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import { Formik } from "formik";
-import * as yup from "yup";
-import { Picker } from "@react-native-picker/picker";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MenuItem from "./MenuItem";
 import AddedItem from "./AddedItem";
