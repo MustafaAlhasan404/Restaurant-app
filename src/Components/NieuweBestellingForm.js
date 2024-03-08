@@ -197,6 +197,7 @@ export function TabViewExample() {
 
 const NieuweBestellingForm = () => {
 	const [table, setTable] = useState("1");
+	const [notes, setNotes] = useState("");
 
 	// Get order data from Redux
 	const price = useSelector((state) => state.order.price);
@@ -213,7 +214,7 @@ const NieuweBestellingForm = () => {
 	}, [order, price]);
 
 	const dispatch = useDispatch();
-	const handleSubmit = async (table, products) => {
+	const handleSubmit = async (table, products, notes) => {
 		// Check if no products are selected
 		if (products.length === 0) {
 			Alert.alert(
@@ -233,6 +234,7 @@ const NieuweBestellingForm = () => {
 			body: JSON.stringify({
 				table: table,
 				products: products,
+				notes: notes,
 			}),
 		});
 		const data = await response.json();
@@ -290,9 +292,19 @@ const NieuweBestellingForm = () => {
 						</View>
 					</View>
 
+					<Text style={styles.label}>Notes (Optional):</Text>
+					<TextInput
+						style={styles.input}
+						placeholder="Notes"
+						value={notes}
+						onChangeText={setNotes}
+					/>
+
 					<Pressable
 						style={styles.savebutton}
-						onPress={() => handleSubmit(table, selectedProducts)}
+						onPress={() =>
+							handleSubmit(table, selectedProducts, notes)
+						}
 					>
 						<Text style={styles.buttontext}>Place order</Text>
 					</Pressable>

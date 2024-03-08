@@ -208,6 +208,7 @@ const EditBestelling = () => {
 	const orderId = route.params.order;
 
 	const [table, setTable] = useState("");
+	const [notes, setNotes] = useState("");
 	const [selectedProducts, setSelectedProducts] = useState([]);
 	const [totalPrice, setTotalPrice] = useState(0);
 
@@ -223,6 +224,7 @@ const EditBestelling = () => {
 				const data = await response.json();
 				// setOrder(data);
 				setTable(data.table.toString());
+				setNotes(data.notes);
 				setSelectedProducts(data.products);
 				setTotalPrice(data.totalPrice);
 
@@ -274,6 +276,7 @@ const EditBestelling = () => {
 			body: JSON.stringify({
 				table: table,
 				products: products,
+				notes: notes,
 			}),
 		});
 		const data = await response.json();
@@ -332,6 +335,14 @@ const EditBestelling = () => {
 							</Text>
 						</View>
 					</View>
+
+					<Text style={styles.label}>Notes:</Text>
+					<TextInput
+						style={styles.input}
+						placeholder={"Notes"}
+						value={notes}
+						onChangeText={setNotes}
+					/>
 
 					<Pressable
 						style={styles.savebutton}

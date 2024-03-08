@@ -226,6 +226,12 @@ const Bestellingen = ({ navigation }) => {
 									</View>
 								))}
 							</View>
+							{item.notes && (
+								<View style={styles.notes}>
+									<Text>Notes:</Text>
+									<Text>{item.notes}</Text>
+								</View>
+							)}
 							<View style={styles.spaceBetweenRow}>
 								<View style={styles.buttonGroup}>
 									{item.status === "unprocessed" && (
@@ -395,5 +401,8 @@ const styles = StyleSheet.create({
 	optionText: {
 		fontSize: 10,
 		textTransform: "capitalize",
+	},
+	notes: {
+		marginBottom: 10,
 	},
 });

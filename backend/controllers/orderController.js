@@ -64,7 +64,7 @@ router.get("/unpaid", async (req, res) => {
 // Create a new order
 router.post("/", async (req, res) => {
 	try {
-		const { products, table } = req.body;
+		const { products, table, notes } = req.body;
 
 		if (!products || !table) {
 			return res.status(400).json({ error: "Required fields missing" });
@@ -98,6 +98,7 @@ router.post("/", async (req, res) => {
 			products,
 			table,
 			totalPrice,
+			notes,
 		});
 
 		await newOrder.save();
