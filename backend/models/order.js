@@ -9,6 +9,7 @@ const orderSchema = new mongoose.Schema({
 				required: true,
 			},
 			selectedOptions: [{ name: String, price: Number }],
+			price: Number,
 		},
 	],
 	table: {
