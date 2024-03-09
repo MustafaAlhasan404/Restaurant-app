@@ -50,7 +50,7 @@ const AddReservation = ({ navigation }) => {
 
   const handleSubmit = async () => {
     if (!name || !time || !numGuests) {
-      Alert.alert("Error", "Please fill in all fields");
+      Alert.alert("Fout", "Vul alle velden in.");
       return;
     }
 
@@ -85,7 +85,10 @@ const AddReservation = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={{ marginTop: 50 }}>
+      <Text style={styles.screendescription}>
+        Voeg hier een nieuwe reservering toe.
+      </Text>
+      <View>
         <View style={styles.inputContainer}>
           <Text style={styles.formlabel}>Naam:</Text>
           <TextInput style={styles.input} value={name} onChangeText={setName} />
@@ -157,7 +160,7 @@ const AddReservation = ({ navigation }) => {
       </View>
 
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Reservering aanmaken</Text>
+        <Text style={styles.buttonText}>Reservering toevoegen</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -168,6 +171,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: "#e0d5d6",
+    paddingTop: 30,
   },
   formlabel: { fontWeight: "700", fontSize: 14, marginBottom: 7 },
   inputContainer: {
@@ -208,6 +212,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 10,
     marginBottom: 50,
+  },
+  screendescription: {
+    marginBottom: 40,
   },
   buttonText: {
     color: "white",

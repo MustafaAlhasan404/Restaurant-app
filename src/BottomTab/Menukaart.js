@@ -15,11 +15,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Components/Header";
 import FloatingButton from "../Components/FloatingButton"; // Import the FloatingButton component
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
 const renderTabBar = (props) => (
   <TabBar
     renderLabel={({ route, focused }) => (
-      <Text style={{ fontWeight: 400, color: focused ? "black" : "grey" }}>
+      <Text style={{ fontWeight: 500, color: focused ? "black" : "grey" }}>
         {route.title}
       </Text>
     )}
@@ -30,7 +30,7 @@ const renderTabBar = (props) => (
     getLabelText={({ route }) => route.title}
     style={{
       marginTop: 0,
-      backgroundColor: "#ebcda9",
+      backgroundColor: "white",
       elevation: 0,
       borderBottomWidth: 1,
       borderBottomColor: "#bababa",
@@ -49,11 +49,13 @@ const FirstRoute = () => {
   const fetchMenuItems = async () => {
     try {
       // Make a GET request to the server to fetch food category products
-      const response = await fetch("https://nl-app.onrender.com/products/categories/food");
+      const response = await fetch(
+        "https://nl-app.onrender.com/products/categories/food"
+      );
       const data = await response.json();
 
       // Filter out products that have been marked as deleted
-      const activeProducts = data.filter(product => !product.deleted);
+      const activeProducts = data.filter((product) => !product.deleted);
 
       // Update the state with the active products
       setMenuItems(activeProducts);
@@ -64,48 +66,49 @@ const FirstRoute = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       // The screen is focused, fetch menu items again
       fetchMenuItems();
     });
-  
+
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [navigation]);
 
   const handleEditPress = (product) => {
-    navigation.navigate('EditMenuKaart', {
+    navigation.navigate("EditMenuKaart", {
       product: product,
       onProductUpdated: fetchMenuItems, // Pass fetchMenuItems as a callback
     });
   };
-    
 
   // Define a function to handle the deletion of a menu item
   const handleDelete = async (productId) => {
     try {
       // Make a DELETE request to the server to soft delete the product
-      const response = await fetch(`https://nl-app.onrender.com/products/${productId}`, {
-        method: 'DELETE',
-        // If needed, include headers for authorization or other information
-        // headers: {
-        //   'Authorization': 'Bearer your-token-here',
-        // },
-      });
+      const response = await fetch(
+        `https://nl-app.onrender.com/products/${productId}`,
+        {
+          method: "DELETE",
+          // If needed, include headers for authorization or other information
+          // headers: {
+          //   'Authorization': 'Bearer your-token-here',
+          // },
+        }
+      );
 
       // Check if the response is successful
       if (response.ok) {
-        console.log('Product soft deleted successfully');
+        console.log("Product soft deleted successfully");
         // Refresh the menu items to reflect the deletion
         fetchMenuItems();
       } else {
-        console.error('Failed to delete the product');
+        console.error("Failed to delete the product");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
-
 
   // Define a function to render options for a menu item
   const renderMenuItemOptions = (menuItem) => {
@@ -133,22 +136,32 @@ const FirstRoute = () => {
             <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
             {menuItem.options && renderMenuItemOptions(menuItem)}
             <View style={styles.menuItemDetails}>
-              <Text style={styles.menuItemPrice}>€{menuItem.price.toFixed(2)}</Text>
+              <Text style={styles.menuItemPrice}>
+                €{menuItem.price.toFixed(2)}
+              </Text>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.editButton}
                   onPress={() => handleEditPress(menuItem)}
                 >
-                  <MaterialCommunityIcons name="pencil" size={20} color="white" />
+                  <MaterialCommunityIcons
+                    name="pencil"
+                    size={20}
+                    color="white"
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.deleteButton}
                   onPress={() => handleDelete(menuItem._id)}
                 >
-                  <MaterialCommunityIcons name="delete" size={20} color="white" />
+                  <MaterialCommunityIcons
+                    name="delete"
+                    size={20}
+                    color="white"
+                  />
                 </TouchableOpacity>
               </View>
-          </View>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -167,11 +180,13 @@ const SecondRoute = () => {
   const fetchMenuItems = async () => {
     try {
       // Make a GET request to the server to fetch food category products
-      const response = await fetch("https://nl-app.onrender.com/products/categories/drink");
+      const response = await fetch(
+        "https://nl-app.onrender.com/products/categories/drink"
+      );
       const data = await response.json();
 
       // Filter out products that have been marked as deleted
-      const activeProducts = data.filter(product => !product.deleted);
+      const activeProducts = data.filter((product) => !product.deleted);
 
       // Update the state with the active products
       setMenuItems(activeProducts);
@@ -182,11 +197,11 @@ const SecondRoute = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       // The screen is focused, fetch menu items again
       fetchMenuItems();
     });
-  
+
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [navigation]);
@@ -195,32 +210,34 @@ const SecondRoute = () => {
   const handleDelete = async (productId) => {
     try {
       // Make a DELETE request to the server to soft delete the product
-      const response = await fetch(`https://nl-app.onrender.com/products/${productId}`, {
-        method: 'DELETE',
-        // If needed, include headers for authorization or other information
-        // headers: {
-        //   'Authorization': 'Bearer your-token-here',
-        // },
-      });
+      const response = await fetch(
+        `https://nl-app.onrender.com/products/${productId}`,
+        {
+          method: "DELETE",
+          // If needed, include headers for authorization or other information
+          // headers: {
+          //   'Authorization': 'Bearer your-token-here',
+          // },
+        }
+      );
 
       // Check if the response is successful
       if (response.ok) {
-        console.log('Product soft deleted successfully');
+        console.log("Product soft deleted successfully");
         // Refresh the menu items to reflect the deletion
         fetchMenuItems();
       } else {
-        console.error('Failed to delete the product');
+        console.error("Failed to delete the product");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
   const handleEditPress = (product) => {
-    navigation.navigate('EditMenuKaart', { product: product });
+    navigation.navigate("EditMenuKaart", { product: product });
   };
-  
-  
+
   // Define a function to render options for a menu item
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
@@ -249,22 +266,32 @@ const SecondRoute = () => {
             <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
             {menuItem.options && renderMenuItemOptions(menuItem)}
             <View style={styles.menuItemDetails}>
-              <Text style={styles.menuItemPrice}>€{menuItem.price.toFixed(2)}</Text>
+              <Text style={styles.menuItemPrice}>
+                €{menuItem.price.toFixed(2)}
+              </Text>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.editButton}
                   onPress={() => handleEditPress(menuItem)}
                 >
-                  <MaterialCommunityIcons name="pencil" size={20} color="white" />
+                  <MaterialCommunityIcons
+                    name="pencil"
+                    size={20}
+                    color="white"
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.deleteButton}
                   onPress={() => handleDelete(menuItem._id)}
                 >
-                  <MaterialCommunityIcons name="delete" size={20} color="white" />
+                  <MaterialCommunityIcons
+                    name="delete"
+                    size={20}
+                    color="white"
+                  />
                 </TouchableOpacity>
               </View>
-          </View>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -283,11 +310,13 @@ const ThirdRoute = () => {
   const fetchMenuItems = async () => {
     try {
       // Make a GET request to the server to fetch food category products
-      const response = await fetch("https://nl-app.onrender.com/products/categories/snack");
+      const response = await fetch(
+        "https://nl-app.onrender.com/products/categories/snack"
+      );
       const data = await response.json();
 
       // Filter out products that have been marked as deleted
-      const activeProducts = data.filter(product => !product.deleted);
+      const activeProducts = data.filter((product) => !product.deleted);
 
       // Update the state with the active products
       setMenuItems(activeProducts);
@@ -298,11 +327,11 @@ const ThirdRoute = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       // The screen is focused, fetch menu items again
       fetchMenuItems();
     });
-  
+
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [navigation]);
@@ -311,30 +340,33 @@ const ThirdRoute = () => {
   const handleDelete = async (productId) => {
     try {
       // Make a DELETE request to the server to soft delete the product
-      const response = await fetch(`https://nl-app.onrender.com/products/${productId}`, {
-        method: 'DELETE',
-        // If needed, include headers for authorization or other information
-        // headers: {
-        //   'Authorization': 'Bearer your-token-here',
-        // },
-      });
+      const response = await fetch(
+        `https://nl-app.onrender.com/products/${productId}`,
+        {
+          method: "DELETE",
+          // If needed, include headers for authorization or other information
+          // headers: {
+          //   'Authorization': 'Bearer your-token-here',
+          // },
+        }
+      );
 
       // Check if the response is successful
       if (response.ok) {
-        console.log('Product soft deleted successfully');
+        console.log("Product soft deleted successfully");
         // Refresh the menu items to reflect the deletion
         fetchMenuItems();
       } else {
-        console.error('Failed to delete the product');
+        console.error("Failed to delete the product");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
   const handleEditPress = (product) => {
-    navigation.navigate('EditMenuKaart', { product: product });
+    navigation.navigate("EditMenuKaart", { product: product });
   };
-    
+
   // Define a function to render options for a menu item
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
@@ -363,22 +395,32 @@ const ThirdRoute = () => {
             <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
             {menuItem.options && renderMenuItemOptions(menuItem)}
             <View style={styles.menuItemDetails}>
-              <Text style={styles.menuItemPrice}>€{menuItem.price.toFixed(2)}</Text>
+              <Text style={styles.menuItemPrice}>
+                €{menuItem.price.toFixed(2)}
+              </Text>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.editButton}
                   onPress={() => handleEditPress(menuItem)}
                 >
-                  <MaterialCommunityIcons name="pencil" size={20} color="white" />
+                  <MaterialCommunityIcons
+                    name="pencil"
+                    size={20}
+                    color="white"
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.deleteButton}
                   onPress={() => handleDelete(menuItem._id)}
                 >
-                  <MaterialCommunityIcons name="delete" size={20} color="white" />
+                  <MaterialCommunityIcons
+                    name="delete"
+                    size={20}
+                    color="white"
+                  />
                 </TouchableOpacity>
               </View>
-          </View>
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -406,6 +448,7 @@ export default function TabViewExample() {
       <SafeAreaView style={{ backgroundColor: "#311213" }}>
         <Header name="Menukaart" />
       </SafeAreaView>
+
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -414,6 +457,7 @@ export default function TabViewExample() {
         initialLayout={{ width: layout.width }}
         style={styles.tabs}
       />
+
       <FloatingButton />
     </View>
   );
@@ -439,12 +483,12 @@ const styles = StyleSheet.create({
   },
   select: {
     borderWidth: 1,
-    borderColor: '#000', // Change border color
+    borderColor: "#000", // Change border color
     borderRadius: 10, // Add border radius for rounded corners
-    backgroundColor: '#f0f0f0', // Change background color
+    backgroundColor: "#f0f0f0", // Change background color
     marginBottom: 25,
     height: 50, // Adjust height as needed
-    justifyContent: 'center', // Center the picker content
+    justifyContent: "center", // Center the picker content
   },
   selectt: {
     //width: 200,
@@ -468,7 +512,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#e0d5d6",
     height: 1000,
   },
   maincontent: {
@@ -479,6 +523,8 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     textTransform: "",
     borderWidth: 1,
+    marginHorizontal: 20,
+    marginVertical: 50,
   },
   menuItems: {},
   menuItem: {
@@ -561,7 +607,5 @@ const styles = StyleSheet.create({
   },
   // ... other styles
 });
-
-
 
 // this is a test

@@ -252,6 +252,9 @@ const NieuweBestellingForm = () => {
 	return (
 		<View>
 			<View style={styles.page}>
+<Text style={styles.screendescription}>
+          Voeg hier een nieuwe bestelling toe.
+        </Text>
 				<Text style={styles.label}>Tafel:</Text>
 				<TextInput
 					style={styles.input}
@@ -270,9 +273,7 @@ const NieuweBestellingForm = () => {
 				<View style={styles.orderSummary}>
 					<View>
 						<View style={styles.spaceBetweenRow}>
-							<Text style={styles.menuItemName}>
-								Aantal producten:
-							</Text>
+							<Text style={styles.menuItemName}>Aantal producten:</Text>
 							<Text style={styles.menuItemPrice}>
 								{selectedProducts.length}
 							</Text>
@@ -289,9 +290,7 @@ const NieuweBestellingForm = () => {
 
 						<View style={[styles.spaceBetweenRow, styles.mro]}>
 							<Text style={styles.menuItemName}>Totaal:</Text>
-							<Text style={styles.menuItemPrice}>
-								€{totalPrice.toFixed(2)}
-							</Text>
+							<Text style={styles.menuItemPrice}>€{totalPrice.toFixed(2)}</Text>
 						</View>
 					</View>
 
@@ -304,13 +303,9 @@ const NieuweBestellingForm = () => {
 
 					<Pressable
 						style={styles.savebutton}
-						onPress={() =>
-							handleSubmit(table, selectedProducts, notes)
-						}
+						onPress={() => handleSubmit(table, selectedProducts, notes)}
 					>
-						<Text style={styles.buttontext}>
-							Bestelling aanmaken
-						</Text>
+						<Text style={styles.buttontext}>Nieuwe bestelling toevoegen</Text>
 					</Pressable>
 				</View>
 			</View>
@@ -335,9 +330,8 @@ const styles = StyleSheet.create({
 	buttontext: {
 		color: "white",
 		textAlign: "center",
-		fontWeight: "500",
-		fontSize: 15,
-	},
+		fontWeight: "600",
+			},
 	select: {
 		borderWidth: 1,
 		borderColor: "#000", // Change border color
@@ -357,6 +351,9 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
+screendescription: {
+    marginBottom: 40,
+  },
 
 	selectt: {
 		//width: 200,
@@ -553,7 +550,7 @@ const styles = StyleSheet.create({
 	},
 	orderSummary: {
 		backgroundColor: "white",
-		padding: 15,
+		padding: 20,
 		marginVertical: 0,
 	},
 	page: {

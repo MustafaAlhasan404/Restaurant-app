@@ -4,6 +4,7 @@ import {
 	Text,
 	StyleSheet,
 	FlatList,
+ScrollView,
 	TouchableOpacity,
 	Alert,
 } from "react-native";
@@ -22,9 +23,7 @@ const Bestellingen = ({ navigation }) => {
 	// Abstract the fetch logic into a function
 	const fetchOrders = async () => {
 		try {
-			const response = await axios.get(
-				"https://nl-app.onrender.com/orders"
-			);
+			const response = await axios.get("https://nl-app.onrender.com/orders");
 			// Sort the orders by date from newest to oldest
 			const sortedOrders = response.data.sort(
 				(a, b) => new Date(b.orderDate) - new Date(a.orderDate)
@@ -96,12 +95,12 @@ const Bestellingen = ({ navigation }) => {
 			if (response.status === 200) {
 				// Call fetchOrders to refresh the list after deletion
 				fetchOrders();
-				Alert.alert("Success", "Order deleted successfully");
+				Alert.alert("Voltooid", "Bestelling verwijderd.");
 			} else {
-				throw new Error("Failed to delete order");
+				throw new Error("Bestelling verwijderen mislukt.");
 			}
 		} catch (error) {
-			Alert.alert("Error", error.message || "Failed to delete order");
+			Alert.alert("Fout", error.message || "Bestelling verwijderen mislukt.");
 		}
 	};
 
@@ -113,17 +112,17 @@ const Bestellingen = ({ navigation }) => {
 				// Call fetchOrders to refresh the list after status change
 				fetchOrders();
 			} else {
-				throw new Error("Failed to update order status");
+				throw new Error("Status bijwerken mislukt.");
 			}
 		} catch (error) {
-			console.error("Error updating order status:", error);
+			console.error("Fout tijdens bijwerken status:", error);
 		}
 	};
 
 	const showStatusOptions = (orderId, currentStatus) => {
 		let newStatus = currentStatus === "unprocessed" ? "processed" : "paid";
 		Alert.alert(
-			"Change Order Status",
+			"Bestelling status aanpassen",
 			`Bestelling markeren als ${newStatus}?`,
 			[
 				{ text: "Annuleren", style: "cancel" },
@@ -138,11 +137,18 @@ const Bestellingen = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
+<SafeAreaView style={{ flex: 1 }}>
 			<SafeAreaView style={styles.safeArea}>
 				<Header name="Bestellingen" />
 			</SafeAreaView>
 
 			<View style={styles.mainContent}>
+<Text style={styles.screendescription}>
+            Bekijk hier alle geplaatste bestellingen. "Niet afgehandeld" moet
+            nog verwerkt worden. Nadat bestelling is afgehandeld: druk op
+            'Afhandelen'. Nadat bestelling is betaald: druk op 'Betaald'.
+          </Text>
+          <View contentContainerStyle={{ flex: 1 }}>
 				<FlatList
 					ref={flatListRef}
 					data={orders}
@@ -150,43 +156,48 @@ const Bestellingen = ({ navigation }) => {
 					renderItem={({ item }) => (
 						<View style={styles.orderItem}>
 							<View style={styles.centerSingleItem}>
-								<Text style={styles.orderId}>
-									Tafel {item.table}
-								</Text>
-							</View>
-							<View style={styles.spaceBetweenRow}>
-								<Text style={styles.orderDetail}>
+								<Text style={styles.orderId}>Tafel {item.table}</Text>
+							
+								<Text style={[styles.orderDetail, { fontSize: 18 }]}>
 									{new Date(item.orderDate).toDateString() ===
 									new Date().toDateString()
-										? new Date(
-												item.orderDate
-										  ).toLocaleTimeString([], {
+										? new Date(item.orderDate).toLocaleTimeString([], {
 												hour: "2-digit",
 												minute: "2-digit",
 												hour12: false, // Add this option to use 24-hour format
 										  })
-										: new Date(
-												item.orderDate
-										  ).toLocaleDateString("nl", {
+										: new Date(item.orderDate).toLocaleDateString("nl", {
 												year: "numeric",
 												month: "2-digit",
 												day: "2-digit",
 										  })}
 								</Text>
-								<Text style={styles.orderDetail}>
+								</View>
+                  <View style={styles.spaceBetweenRow}>
+                    <Text>&nbsp;</Text>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        marginBottom: 5,
+                        fontWeight: "bold",
+                        color:
+                          item.status === "unprocessed"
+                            ? "red"
+                            : item.status === "processed"
+                            ? "orange"
+                            : "#4a9c3a",
+                      }}
+                    >
 									{item.status === "unprocessed"
 										? "NIET AFGEHANDELD"
 										: item.status === "processed"
 										? "AFGEHANDELD"
-										: "BETLAAD"}
+										: "BETAALD"}
 								</Text>
 							</View>
 							<View style={styles.productCards}>
 								{item.products.map((product, index) => (
-									<View
-										key={index}
-										style={styles.productItem}
-									>
+									<View key={index} style={styles.productItem}>
 										<View style={styles.spaceBetweenRow}>
 											<Text style={styles.productDetail}>
 												{index + 1}. {product.name}
@@ -195,35 +206,19 @@ const Bestellingen = ({ navigation }) => {
 												€{product.price.toFixed(2)}
 											</Text>
 										</View>
-										{product.selectedOptions.map(
-											(option, index) => (
+										{product.selectedOptions.map((option, index) => (
 												<View
 													key={index}
-													style={[
-														styles.spaceBetweenRow,
-														styles.option,
-													]}
+													style={[styles.spaceBetweenRow, styles.option]}
 												>
-													<Text
-														style={
-															styles.optionText
-														}
-													>
+													<Text style={styles.optionText}>
 														+ {option.name}
 													</Text>
-													<Text
-														style={
-															styles.optionText
-														}
-													>
-														€
-														{option.price.toFixed(
-															2
-														)}
+													<Text style={styles.optionText}>
+														€{option.price.toFixed(2)}
 													</Text>
 												</View>
-											)
-										)}
+											))}
 										{/* <Text style={styles.productDetail}>
 											{product.selectedOptions
 												.map((option) => option.name)
@@ -232,9 +227,29 @@ const Bestellingen = ({ navigation }) => {
 									</View>
 								))}
 							</View>
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      backgroundColor: "#eee",
+                      padding: 8,
+                      marginBottom: 5,
+                    }}
+                  >
+                    <Text style={{ fontSize: 14, fontWeight: 600 }}>
+                      Totaal:
+                    </Text>
+                    <View>
+                      <Text style={styles.price}>
+                        €{item.totalPrice.toFixed(2)}
+                      </Text>
+                    </View>
+                  </View>
+
 							{item.notes && (
 								<View style={styles.notes}>
-									<Text>Notes:</Text>
+									<Text>Notities:</Text>
 									<Text>{item.notes}</Text>
 								</View>
 							)}
@@ -243,58 +258,50 @@ const Bestellingen = ({ navigation }) => {
 									{item.status === "unprocessed" && (
 										<TouchableOpacity
 											style={styles.editButton}
-											onPress={() =>
-												handleEditOrder(item._id)
-											}
+											onPress={() => handleEditOrder(item._id)}
 										>
-											<Icon
-												name="edit"
-												size={20}
-												color="white"
-											/>
+											<Icon name="edit" size={18} color="white" />
+<Text style={{ color: "white", marginLeft: 5 }}>
+                            Bewerken
+                          </Text>
 										</TouchableOpacity>
 									)}
+
 									{item.status !== "paid" && (
 										<TouchableOpacity
 											style={styles.statusButton}
 											onPress={() =>
-												showStatusOptions(
-													item._id,
-													item.status
-												)
+												showStatusOptions(item._id, item.status)
 											}
 										>
-											<Icon
-												name="arrow-right"
-												size={20}
-												color="#000"
-											/>
+											<Icon name="arrow-right" size={18} color="#fff" />
+                          <Text style={{ color: "white", marginLeft: 5 }}>
+                            {item.status === "unprocessed"
+                              ? "Afhandelen"
+                              : "Betaald"}
+                          </Text>
 										</TouchableOpacity>
 									)}
+{item.status !== "paid" &&
+                        item.status !== "processed" && (
 									<TouchableOpacity
 										style={styles.deleteButton}
-										onPress={() =>
-											handleDeleteOrder(item._id)
-										}
+										onPress={() => handleDeleteOrder(item._id)}
 									>
-										<Icon
-											name="trash"
-											size={20}
-											color="white"
-										/>
+										<Icon name="trash" size={18} color="white" />
 									</TouchableOpacity>
+)}
 								</View>
-								<Text style={styles.price}>
-									€{item.totalPrice.toFixed(2)}
-								</Text>
-							</View>
+															</View>
 						</View>
 					)}
 					showsVerticalScrollIndicator={false}
 				/>
+</View>
 			</View>
 
 			<FloatingButton />
+</SafeAreaView>
 		</View>
 	);
 };
@@ -311,7 +318,7 @@ const styles = StyleSheet.create({
 	mainContent: {
 		flex: 1,
 		paddingHorizontal: 20,
-		paddingVertical: 20,
+		paddingTop: 30,
 	},
 	welcomeText: {
 		fontSize: 18,
@@ -329,6 +336,9 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		elevation: 3,
 	},
+screendescription: {
+    marginBottom: 40,
+  },
 	orderId: {
 		fontSize: 20,
 		fontWeight: "bold",
@@ -352,7 +362,7 @@ const styles = StyleSheet.create({
 		padding: 10,
 		backgroundColor: "#e27b00",
 		borderRadius: 5,
-		marginRight: 10,
+		marginRight: 5,
 		alignSelf: "flex-start", // Align button to the start of the flex container
 		flexDirection: "row", // Align icon and text in a row
 		alignItems: "center", // Center items vertically
@@ -366,13 +376,14 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 	},
 	price: {
-		fontSize: 24,
+		fontSize: 14,
 		fontWeight: "bold",
 	},
 	centerSingleItem: {
 		width: "100%",
 		display: "flex",
 		flexDirection: "row",
+justifyContent: "space-between",
 	},
 	productCards: {
 		marginTop: 10,
@@ -392,11 +403,11 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	editButton: {
-		width: 40,
+		width: "auto",
 		padding: 10,
 		backgroundColor: "#007bff", // You can choose a different color
 		borderRadius: 5,
-		marginRight: 10,
+		marginRight: 5,
 		alignSelf: "flex-start",
 		flexDirection: "row",
 		justifyContent: "center",

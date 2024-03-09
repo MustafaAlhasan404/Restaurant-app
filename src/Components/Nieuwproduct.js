@@ -19,7 +19,7 @@ const Nieuwproduct = () => {
   const [price, setPrice] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [category, setCategory] = useState("food"); // Default to 'food' as per schema
-  const [stockable, setStockable] = useState(true); // Default to true as per schema
+  const [stockable, setStockable] = useState(false); // Default to true as per schema
   const [qty, setQty] = useState("");
   const [options, setOptions] = useState([]);
   const handleOptionNameChange = (index, value) => {
@@ -124,11 +124,15 @@ const Nieuwproduct = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "android" ? null : "padding"}
-      style={styles.container}
-    >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1, height: "auto" }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "android" ? null : "padding"}
+        style={styles.container}
+      >
+        <Text style={styles.screendescription}>
+          Voeg hier een nieuw product toe aan het menu.
+        </Text>
+
         {/* <Text style={styles.text}>Add Product</Text> */}
         <Text style={styles.formlabel}>Naam product:</Text>
         <TextInput style={styles.input} value={name} onChangeText={setName} />
@@ -192,10 +196,10 @@ const Nieuwproduct = () => {
           <Text style={styles.addButtonText}>Opties toevoegen</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Product toevoegen</Text>
+          <Text style={styles.buttonText}>Nieuw product toevoegen</Text>
         </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
@@ -212,6 +216,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     color: "#333",
+  },
+  screendescription: {
+    marginBottom: 40,
   },
   optionContainer: {
     flexDirection: "row",
@@ -279,7 +286,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   button: {
-    marginBottom: Platform.OS === "android" ? 20 : 0,
+    marginBottom: Platform.OS === "android" ? 60 : 0,
     backgroundColor: "#e27b00",
     padding: 15,
     borderRadius: 10,

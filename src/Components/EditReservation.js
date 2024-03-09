@@ -95,6 +95,9 @@ const EditReservation = ({ route, navigation }) => {
   // Render the form with the state variables and handleSave function
   return (
     <ScrollView style={styles.container}>
+      <Text style={styles.screendescription}>
+        Bewerk hier een bestaande reservering.
+      </Text>
       <View style={styles.inputContainer}>
         <Text style={styles.formlabel}>Naam:</Text>
         <TextInput style={styles.input} value={name} onChangeText={setName} />
@@ -177,6 +180,9 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 5,
+  },
+  screendescription: {
+    marginBottom: 40,
   },
   formlabel: { fontWeight: "700", fontSize: 14, marginBottom: 7 },
   input: {

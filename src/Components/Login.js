@@ -56,14 +56,14 @@ const Login = ({ navigation }) => {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Username"
+        placeholder="Gebruikersnaam"
         value={username}
         onChangeText={setUsername}
         autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Wachtwoord"
         value={password}
         onChangeText={setPassword}
         autoCapitalize="none"

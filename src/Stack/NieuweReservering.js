@@ -30,7 +30,7 @@ const ReservationItem = ({ item, onEdit, onDelete, canEdit }) => {
     <View style={styles.reservationItem}>
       <View style={styles.reservationInfo}>
         <Text style={styles.reservationText}>
-          {formatDateTime(item.dateTime)}
+          Datum: {formatDateTime(item.dateTime)} uur
         </Text>
         <Text>Naam: {item.name}</Text>
         <Text>Aantal gasten: {item.numGuests}</Text>
@@ -42,7 +42,7 @@ const ReservationItem = ({ item, onEdit, onDelete, canEdit }) => {
         ) : null}
         {/* Display notes if they exist */}
         {item.notes ? (
-          <Text style={styles.reservationNotes}>{item.notes}</Text>
+          <Text style={styles.reservationNotes}>Notities: {item.notes}</Text>
         ) : null}
       </View>
       {canEdit && (
@@ -138,6 +138,11 @@ const NieuweReservering = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.screendescription}>
+        Bekijk hier alle geplaatste reserveringen. Klik op de "+" rechtsonderin
+        om een nieuwe reservering te plaatsen.
+      </Text>
+
       <FlatList
         data={reservations}
         renderItem={({ item }) => (
@@ -167,6 +172,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#e0d5d6", // Changed to match Bestellingen.js
     padding: 20, // Existing padding from NieuweReservering.js
+    paddingTop: 30,
   },
   reservationItem: {
     backgroundColor: "#fff",
@@ -207,6 +213,9 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "500",
     marginRight: 10,
+  },
+  screendescription: {
+    marginBottom: 40,
   },
   deleteButton: {
     padding: 10,

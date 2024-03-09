@@ -68,6 +68,10 @@ const Signup = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.screendescription}>
+        Voeg hier een nieuwe medewerker toe.
+      </Text>
+
       <Text style={styles.formlabel}>Voornaam medewerker:</Text>
       <TextInput style={styles.input} value={name} onChangeText={setName} />
       <Text style={styles.formlabel}>Gebruikersnaam:</Text>
@@ -97,7 +101,7 @@ const Signup = ({ navigation }) => {
         <Text style={styles.toggleLabel}>Manager</Text>
       </View>
       <TouchableOpacity style={styles.button} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Nieuwe medewerker opslaan</Text>
+        <Text style={styles.buttonText}>Nieuwe medewerker toevoegen</Text>
       </TouchableOpacity>
     </View>
   );
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#e0d5d6", // Background color similar to Home.js
     paddingHorizontal: 20, // Horizontal padding similar to Home.js
-    paddingTop: 70,
+    paddingTop: 30,
   },
   input: {
     backgroundColor: "#fff",
@@ -138,6 +142,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center", // Center text horizontally
     marginTop: 20, // Margin top for button
+  },
+  screendescription: {
+    marginBottom: 40,
   },
   formlabel: { fontWeight: "700", fontSize: 14, marginBottom: 7 },
   buttonText: {

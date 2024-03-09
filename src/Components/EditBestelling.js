@@ -216,13 +216,13 @@ const EditBestelling = () => {
 
 	useEffect(() => {
 		dispatch(emptyOrder());
-
 		const fetchOrder = async () => {
 			try {
 				const response = await fetch(
 					`https://nl-app.onrender.com/orders/${orderId}`
 				);
 				const data = await response.json();
+				// setOrder(data);
 				setTable(data.table.toString());
 				setNotes(data.notes);
 				setSelectedProducts(data.products);
