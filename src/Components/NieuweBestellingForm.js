@@ -256,17 +256,18 @@ const NieuweBestellingForm = () => {
           keyboardType="numeric"
         />
 
-        <View style={{ height: 600 }}>
+        <View style={{ height: 600, marginBottom: 20 }}>
           <Text style={styles.label}>Kies product(en):</Text>
           <TabViewExample />
         </View>
 
+        <Text style={styles.label}>Controleer bestelling:</Text>
         <View style={styles.orderSummary}>
           <View>
             <View style={styles.spaceBetweenRow}>
-              <Text style={styles.menuItemName}>Aantal producten</Text>
+              <Text style={styles.menuItemName}>Aantal producten:</Text>
               <Text style={styles.menuItemPrice}>
-                {selectedProducts.length} Items
+                {selectedProducts.length}
               </Text>
             </View>
 
@@ -279,16 +280,15 @@ const NieuweBestellingForm = () => {
               </View>
             ))}
 
-            <View style={styles.spaceBetweenRow}>
-              <Text style={styles.menuItemName}>Total</Text>
+            <View style={[styles.spaceBetweenRow, styles.mro]}>
+              <Text style={styles.menuItemName}>Totaal:</Text>
               <Text style={styles.menuItemPrice}>€{totalPrice.toFixed(2)}</Text>
             </View>
           </View>
 
-          <Text style={styles.label}>Notes (Optional):</Text>
+          <Text style={styles.label}>Notities (Optioneel):</Text>
           <TextInput
             style={styles.input}
-            placeholder="Notes"
             value={notes}
             onChangeText={setNotes}
           />
@@ -297,7 +297,7 @@ const NieuweBestellingForm = () => {
             style={styles.savebutton}
             onPress={() => handleSubmit(table, selectedProducts, notes)}
           >
-            <Text style={styles.buttontext}>Place order</Text>
+            <Text style={styles.buttontext}>Bestelling aanmaken</Text>
           </Pressable>
         </View>
       </View>
@@ -394,16 +394,17 @@ const styles = StyleSheet.create({
     alignItems: "center", // Align items in the center vertically
   },
   menuItemTitle: {
-    fontWeight: "bold",
+    fontWeight: "100",
     fontSize: 14,
     color: "#333", // Darker text color for the title
   },
   menuItemName: {
-    fontSize: 14,
-    fontWeight: "bold",
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#e27b00",
   },
   menuItemIngredients: {
-    fontSize: 12,
+    fontSize: 16,
     color: "#666",
   },
   menuItemPrice: {
@@ -420,7 +421,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20, // Add padding inside the option container
     borderRadius: 5, // Rounded corners for option items
   },
-
+  mro: {
+    marginTop: 15,
+  },
   menuItemOptionLabel: {
     display: "flex",
     flexDirection: "row",
@@ -538,7 +541,7 @@ const styles = StyleSheet.create({
   orderSummary: {
     backgroundColor: "white",
     padding: 15,
-    marginVertical: 10,
+    marginVertical: 0,
   },
   page: {
     height: "auto",
@@ -549,5 +552,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginBottom: 15,
   },
 });

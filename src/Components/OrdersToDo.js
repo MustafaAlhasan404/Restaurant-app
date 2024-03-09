@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginBottom: 10,
     backgroundColor: "#fff",
-    padding: 15,
+    padding: 13,
     borderRadius: 10,
     shadowColor: "#000",
     alignSelf: "center",
