@@ -152,21 +152,24 @@ const Bestellingen = ({ navigation }) => {
               <View style={styles.spaceBetweenRow}>
                 <Text style={styles.orderDetail}>
                   {new Date(item.orderDate).toDateString() ===
-                  new Date().toDateString()
+                    new Date().toDateString()
                     ? new Date(item.orderDate).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
                     : new Date(item.orderDate).toLocaleDateString("nl", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                      })}
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })}
                 </Text>
                 <Text style={styles.orderDetail}>
-  {item.status === "unprocessed" ? "NIET AFGEHANDELD" : "AFGEHANDELD"}
-</Text>
-
+                  {item.status === "unprocessed"
+                    ? "NIET AFGEHANDELD"
+                    : item.status === "processed"
+                      ? "AFGEHANDELD"
+                      : "BETLAAD"}
+                </Text>
               </View>
               <View style={styles.productCards}>
                 {item.products.map((product, index) => (
@@ -209,17 +212,19 @@ const Bestellingen = ({ navigation }) => {
                   {item.status === "unprocessed" && (
                     <TouchableOpacity
                       style={styles.editButton}
-                      onPress={() => handleEditOrder(item._id)}
+                      onPress={() => handleEditOrder(item)}
                     >
                       <Icon name="edit" size={20} color="white" />
                     </TouchableOpacity>
                   )}
-                  <TouchableOpacity
-                    style={styles.statusButton}
-                    onPress={() => showStatusOptions(item._id, item.status)}
-                  >
-                    <Icon name="arrow-right" size={20} color="#000" />
-                  </TouchableOpacity>
+                  {item.status !== "paid" && (
+                    <TouchableOpacity
+                      style={styles.statusButton}
+                      onPress={() => showStatusOptions(item._id, item.status)}
+                    >
+                      <Icon name="arrow-right" size={20} color="#000" />
+                    </TouchableOpacity>
+                  )}
                   <TouchableOpacity
                     style={styles.deleteButton}
                     onPress={() => handleDeleteOrder(item._id)}
