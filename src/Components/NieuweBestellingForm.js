@@ -14,12 +14,12 @@ import {
   Alert,
 } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MenuItem from "./MenuItem";
 import AddedItem from "./AddedItem";
 import { useSelector, useDispatch } from "react-redux";
 import { emptyOrder } from "../State/orderSlice";
 import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
 const renderTabBar = (props) => (
   <TabBar
@@ -243,6 +243,14 @@ const NieuweBestellingForm = () => {
     }
     navigation.navigate("Home");
   };
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (!isFocused) {
+      dispatch(emptyOrder());
+    }
+  }, [isFocused, dispatch]);
 
   return (
     <View>
