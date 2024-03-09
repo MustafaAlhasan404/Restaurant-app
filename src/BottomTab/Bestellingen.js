@@ -150,19 +150,19 @@ const Bestellingen = ({ navigation }) => {
                 <Text style={styles.orderId}>Tafel {item.table}</Text>
               </View>
               <View style={styles.spaceBetweenRow}>
-                <Text style={styles.orderDetail}>
-                  {new Date(item.orderDate).toDateString() ===
-                    new Date().toDateString()
-                    ? new Date(item.orderDate).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                    : new Date(item.orderDate).toLocaleDateString("nl", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}
-                </Text>
+              <Text style={styles.orderDetail}>
+  {new Date(item.orderDate).toDateString() === new Date().toDateString()
+    ? new Date(item.orderDate).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false, // Add this option to use 24-hour format
+      })
+    : new Date(item.orderDate).toLocaleDateString("nl", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })}
+</Text>
                 <Text style={styles.orderDetail}>
                   {item.status === "unprocessed"
                     ? "NIET AFGEHANDELD"

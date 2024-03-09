@@ -17,6 +17,7 @@ const AccordionItem = ({ item, fetchOrders }) => {
   const orderTime = new Date(item.orderDate).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
+    hour12: false, // Add this option to use 24-hour format
   });
 
   const navigateToBestellingen = () => {

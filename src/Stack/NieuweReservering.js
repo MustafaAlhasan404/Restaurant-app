@@ -21,6 +21,7 @@ const ReservationItem = ({ item, onEdit, onDelete, canEdit }) => {
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+      hour12: false,
     };
     return new Date(dateTimeString).toLocaleDateString("nl", options);
   };
