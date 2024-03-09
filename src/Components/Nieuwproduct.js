@@ -47,14 +47,14 @@ const Nieuwproduct = () => {
     return options.map((option, index) => (
       <View key={index} style={styles.optionContainer}>
         <TextInput
-          style={styles.input}
-          placeholder="Option Name"
+          style={[styles.input, styles.marginr]}
+          placeholder="Optie naam"
           value={option.name}
           onChangeText={(text) => handleOptionNameChange(index, text)}
         />
         <TextInput
           style={styles.input}
-          placeholder="Option Price"
+          placeholder="Optie prijs"
           value={option.price.toString()}
           onChangeText={(text) => handleOptionPriceChange(index, text)}
           keyboardType="numeric"
@@ -76,7 +76,7 @@ const Nieuwproduct = () => {
   const handleSubmit = async () => {
     // Basic front-end validation
     if (!name || !price || (stockable && !qty)) {
-      Alert.alert("Error", "Please fill in all required fields.");
+      Alert.alert("Fout", "Vul alle verplichte velden in.");
       return;
     }
 
@@ -103,15 +103,13 @@ const Nieuwproduct = () => {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          "Failed to add product: " + (errorData.message || "Unknown error")
+          "Product toevoegen niet gelukt: " +
+            (errorData.message || "Unknown error")
         );
       }
 
       const responseData = await response.json();
-      Alert.alert(
-        "Success",
-        "Product added successfully: " + responseData.name
-      );
+      Alert.alert("Voltooid", "Product toegevoegd: " + responseData.name);
       // Reset form fields
       setName("");
       setPrice("");
@@ -131,38 +129,45 @@ const Nieuwproduct = () => {
       style={styles.container}
     >
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <Text style={styles.text}>Add Product</Text>
+        {/* <Text style={styles.text}>Add Product</Text> */}
+        <Text style={styles.formlabel}>Naam product:</Text>
+        <TextInput style={styles.input} value={name} onChangeText={setName} />
+
+        <Text style={styles.formlabel}>Prijs:</Text>
         <TextInput
           style={styles.input}
-          placeholder="Name"
-          value={name}
-          onChangeText={setName}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Price"
           value={price}
           onChangeText={setPrice}
           keyboardType="numeric"
         />
+        <Text style={styles.formlabel}>Omschrijving:</Text>
         <TextInput
           style={styles.input}
-          placeholder="Ingredients"
           value={ingredients}
           onChangeText={setIngredients}
         />
+
+        <Text style={styles.formlabel}>Productcategorie:</Text>
         <Picker
           selectedValue={category}
           onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
           style={styles.picker}
           mode="dropdown" // Android only
         >
-          <Picker.Item label="Food" value="food" />
-          <Picker.Item label="Drink" value="drink" />
-          <Picker.Item label="Snack" value="snack" />
+          <Picker.Item
+            style={styles.pickeritem}
+            label="Gerechten"
+            value="food"
+          />
+          <Picker.Item
+            style={styles.pickeritem}
+            label="Dranken"
+            value="drink"
+          />
+          <Picker.Item style={styles.pickeritem} label="Hapjes" value="snack" />
         </Picker>
+        <Text style={styles.formlabel}>Voorraad bijhouden?</Text>
         <View style={styles.switchContainer}>
-          <Text style={styles.switchLabel}>Stockable:</Text>
           <Switch
             trackColor={{ false: "#767577", true: "#767577" }}
             thumbColor={stockable ? "#e27b00" : "#f4f3f4"}
@@ -172,20 +177,22 @@ const Nieuwproduct = () => {
           />
         </View>
         {stockable && (
-          <TextInput
-            style={styles.input}
-            placeholder="Quantity"
-            value={qty}
-            onChangeText={setQty}
-            keyboardType="numeric"
-          />
+          <View>
+            <Text style={styles.formlabel}>Huidige voorraad:</Text>
+            <TextInput
+              style={styles.input}
+              value={qty}
+              onChangeText={setQty}
+              keyboardType="numeric"
+            />
+          </View>
         )}
         {renderOptions()}
         <TouchableOpacity style={styles.addButton} onPress={addOption}>
-          <Text style={styles.addButtonText}>Add Option</Text>
+          <Text style={styles.addButtonText}>Opties toevoegen</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Add Product</Text>
+          <Text style={styles.buttonText}>Product toevoegen</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -212,16 +219,17 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   addButton: {
-    backgroundColor: "#e27b00", // Adjust the color to match your app's theme if necessary
+    backgroundColor: "transparent", // Adjust the color to match your app's theme if necessary
     padding: 10,
     borderRadius: 10,
     alignItems: "center",
     marginBottom: 0,
+    borderWidth: 1,
+    borderColor: "#e27b00",
   },
   addButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
+    color: "#e27b00",
+    fontWeight: "600",
   },
   removeButton: {
     marginLeft: 10,
@@ -238,7 +246,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     padding: 10,
-    marginBottom: 10,
+    marginBottom: 20,
     borderRadius: 10,
     fontSize: 14,
     color: "#333",
@@ -250,28 +258,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#ddd",
-    marginBottom: 10,
+    marginBottom: 20,
     borderRadius: 10,
     fontSize: 14,
     color: "#333",
   },
+  formlabel: { fontWeight: "700", fontSize: 14, marginBottom: 7 },
+  pickeritem: {
+    fontSize: 14,
+  },
+  marginr: { marginRight: 10 },
   switchContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 10,
-    padding: 15,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
     justifyContent: "space-between",
   },
   switchLabel: {
     marginRight: 10,
-    fontSize: 18,
+    fontSize: 14,
   },
   button: {
     marginBottom: Platform.OS === "android" ? 20 : 0,
@@ -283,7 +288,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "600",
   },
 });

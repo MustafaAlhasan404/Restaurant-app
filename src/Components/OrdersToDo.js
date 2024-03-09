@@ -154,7 +154,7 @@ const OrdersToDo = () => {
 };
 const styles = StyleSheet.create({
   fixedSizeContainer: {
-    height: 400, // Set a fixed height for the FlatList container
+    height: "auto", // Set a fixed height for the FlatList container
     width: "100%", // Set the width to take up 100% of the parent container
   },
   container: {

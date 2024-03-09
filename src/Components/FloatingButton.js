@@ -158,7 +158,7 @@ const FloatingButton = () => {
               navigation.navigate("Nieuwe reservering"); // Navigate to NieuweReservering
             }}
           >
-            <Text style={styles.text}>Nieuwe reservering</Text>
+            <Text style={styles.text}>Bekijk reserveringen</Text>
           </Pressable>
         </Animated.View>
       </TouchableWithoutFeedback>
