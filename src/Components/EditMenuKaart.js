@@ -23,8 +23,10 @@ const EditMenuKaart = () => {
   const [ingredients, setIngredients] = useState(product.ingredients);
   const [category, setCategory] = useState(product.category);
   const [stockable, setStockable] = useState(product.stockable);
-  const [qty, setQty] = useState(product.qty.toString());
-  const [options, setOptions] = useState(product.options || []); // New state for options
+  // Check if qty is defined before calling toString()
+  const [qty, setQty] = useState(product.qty ? product.qty.toString() : "");
+  // Ensure options is an array before using it
+  const [options, setOptions] = useState(Array.isArray(product.options) ? product.options : []);
 
   // Function to handle option name change
   const handleOptionNameChange = (index, value) => {
@@ -35,7 +37,6 @@ const EditMenuKaart = () => {
 
   const handleOptionPriceChange = (index, value) => {
     const newOptions = [...options];
-    // Assuming option.price is a number, convert it to a string
     newOptions[index].price = value;
     setOptions(newOptions);
   };
@@ -53,7 +54,7 @@ const EditMenuKaart = () => {
   };
 
   const handleSubmit = async () => {
-    if (!name || !price || (stockable && !qty)) {
+    if (!name || !price || (stockable && qty === "")) {
       Alert.alert("Error", "Please fill in all required fields.");
       return;
     }
@@ -141,55 +142,63 @@ const EditMenuKaart = () => {
       <Text style={styles.formlabel}>Naam product:</Text>
       <TextInput style={styles.input} value={name} onChangeText={setName} />
 
-      <Text style={styles.formlabel}>Prijs:</Text>
-      <TextInput
-        style={styles.input}
-        value={price}
-        onChangeText={setPrice}
-        keyboardType="numeric"
-      />
+<Text style={styles.formlabel}>Prijs:</Text>
+<TextInput
+  style={styles.input}
+  value={price}
+  onChangeText={setPrice}
+  keyboardType="numeric"
+/>
 
-      <Text style={styles.formlabel}>Omschrijving:</Text>
-      <TextInput
-        style={styles.input}
-        value={ingredients}
-        onChangeText={setIngredients}
-      />
+<Text style={styles.formlabel}>Omschrijving:</Text>
+<TextInput
+  style={styles.input}
+  value={ingredients}
+  onChangeText={setIngredients}
+/>
 
-      <Text style={styles.formlabel}>Productcategorie:</Text>
-      <Picker
-        selectedValue={category}
-        onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
-        style={styles.picker}
-        mode="dropdown" // Android only
-      >
-        <Picker.Item style={styles.pickeritem} label="Gerechten" value="food" />
-        <Picker.Item style={styles.pickeritem} label="Drank" value="drink" />
-        <Picker.Item style={styles.pickeritem} label="Hapjes" value="snack" />
-      </Picker>
-      {stockable && (
-        <TextInput
-          style={styles.input}
-          placeholder="Quantity"
-          value={qty}
-          onChangeText={setQty}
-          keyboardType="numeric"
-        />
-      )}
-      <Text style={styles.formlabel}>Opties:</Text>
-      {renderOptions()}
-      <TouchableOpacity style={styles.addButton} onPress={addOption}>
-        <Text style={[styles.addButtonText, { fontWeight: 600 }]}>
-          Optie toevoegen
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={[styles.buttonText, { fontWeight: 600 }]}>
-          Wijzingen opslaan
-        </Text>
-      </TouchableOpacity>
-    </ScrollView>
-  );
+<Text style={styles.formlabel}>Productcategorie:</Text>
+<Picker
+  selectedValue={category}
+  onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
+  style={styles.picker}
+  mode="dropdown" // Android only
+>
+  <Picker.Item style={styles.pickeritem} label="Gerechten" value="food" />
+  <Picker.Item style={styles.pickeritem} label="Drank" value="drink" />
+  <Picker.Item style={styles.pickeritem} label="Hapjes" value="snack" />
+</Picker>
+
+<Text style={styles.formlabel}>Voorraad:</Text>
+<Switch
+  value={stockable}
+  onValueChange={setStockable}
+  style={styles.switch}
+/>
+{stockable && (
+  <TextInput
+    style={styles.input}
+    placeholder="Quantity"
+    value={qty}
+    onChangeText={setQty}
+    keyboardType="numeric"
+  />
+)}
+
+<Text style={styles.formlabel}>Opties:</Text>
+{renderOptions()}
+<TouchableOpacity style={styles.addButton} onPress={addOption}>
+  <Text style={[styles.addButtonText, { fontWeight: 600 }]}>
+    Optie toevoegen
+  </Text>
+</TouchableOpacity>
+<TouchableOpacity style={styles.button} onPress={handleSubmit}>
+  <Text style={[styles.buttonText, { fontWeight: 600 }]}>
+    Wijzingen opslaan
+  </Text>
+</TouchableOpacity>
+</ScrollView>
+);
 };
 
 export default EditMenuKaart;
@@ -197,7 +206,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 25,
-    backgroundColor: "#e0d5d6",
+    backgroundColor: "#ee0d5d6",
     height: "100%",
   },
   text: {

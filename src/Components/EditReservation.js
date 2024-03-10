@@ -29,6 +29,7 @@ const EditReservation = ({ route, navigation }) => {
     new Date(reservation.dateTime).toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
+      hour12: false,
     })
   );
   const [numGuests, setNumGuests] = useState(reservation.numGuests.toString());
@@ -49,6 +50,7 @@ const EditReservation = ({ route, navigation }) => {
       currentTime.toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
+        hour12: false,
       })
     );
   };
@@ -163,9 +165,9 @@ const EditReservation = ({ route, navigation }) => {
           />
         )}
       </View>
-      <View style={{ marginBottom: 100 }}>
-        <Button title="Reservering bijwerken" onPress={handleSave} />
-      </View>
+      <TouchableOpacity style={styles.button} onPress={handleSave}>
+        <Text style={styles.buttonText}>Reservering bijwerken</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -173,39 +175,56 @@ const EditReservation = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
     backgroundColor: "#e0d5d6",
+    paddingTop: 30,
   },
-  inputContainer: {},
+  formlabel: { fontWeight: "700", fontSize: 14, marginBottom: 7 },
+  inputContainer: {
+    marginBottom: 20,
+  },
   label: {
     fontSize: 16,
     marginBottom: 5,
+    color: "#333",
   },
-  screendescription: {
-    marginBottom: 40,
-  },
-  formlabel: { fontWeight: "700", fontSize: 14, marginBottom: 7 },
   input: {
     backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#ddd",
     padding: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     borderRadius: 10,
     fontSize: 14,
     color: "#333",
   },
   dateInput: {
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: "#fff",
-    backgroundColor: "white",
-    marginBottom: 20,
+    borderColor: "#ddd",
     padding: 10,
-    borderRadius: 6,
+    borderRadius: 10,
     justifyContent: "center",
+    marginBottom: 10,
   },
   dateText: {
     fontSize: 16,
+    color: "#333",
+  },
+  button: {
+    backgroundColor: "#e27b00",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 50,
+  },
+  screendescription: {
+    marginBottom: 40,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "600",
   },
   // Add any additional styles you may need here
 });

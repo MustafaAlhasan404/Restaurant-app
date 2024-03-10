@@ -38,13 +38,19 @@ const Voorraad = () => {
         "https://nl-app.onrender.com/products/stock"
       );
       const data = await response.json();
-      setProducts(data.filter((product) => product.stockable));
+      // Filter out products that are not deleted and are stockable
+      const stockableAndNotDeletedProducts = data.filter(
+        (product) => product.stockable && !product.deleted
+      );
+      setProducts(stockableAndNotDeletedProducts);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+  
+  
 
   // Use useFocusEffect to trigger a refresh whenever the screen comes into focus
   useFocusEffect(
