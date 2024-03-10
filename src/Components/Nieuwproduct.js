@@ -75,11 +75,11 @@ const Nieuwproduct = () => {
 
   const handleSubmit = async () => {
     // Basic front-end validation
-    if (!name || !price || (stockable && !qty)) {
+    if (!name || !price) {
       Alert.alert("Fout", "Vul alle verplichte velden in.");
       return;
     }
-
+  
     try {
       const product = {
         name,
@@ -87,10 +87,10 @@ const Nieuwproduct = () => {
         ingredients,
         category,
         stockable, // Send the boolean value directly
-        qty: stockable ? parseInt(qty, 10) : 0, // Set qty to 0 if stockable is false
+        qty: stockable ? parseInt(qty || 0, 10) : 0, // Set qty to 0 if stockable is false or qty is not entered
         options,
       };
-
+  
       const response = await fetch("https://nl-app.onrender.com/products", {
         method: "POST",
         headers: {
@@ -99,7 +99,7 @@ const Nieuwproduct = () => {
         },
         body: JSON.stringify(product),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
@@ -107,7 +107,7 @@ const Nieuwproduct = () => {
             (errorData.message || "Unknown error")
         );
       }
-
+  
       const responseData = await response.json();
       Alert.alert("Voltooid", "Product toegevoegd: " + responseData.name);
       // Reset form fields
@@ -116,12 +116,14 @@ const Nieuwproduct = () => {
       setIngredients("");
       setCategory("food"); // Reset to default as per schema
       setStockable(true); // Reset stockable to true
-      setQty("");
+      setQty(""); // Reset qty
     } catch (error) {
       console.error(error);
       Alert.alert("Error", error.message);
     }
   };
+  
+
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1, height: "auto" }}>

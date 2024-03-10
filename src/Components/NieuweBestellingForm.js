@@ -58,8 +58,8 @@ const FirstRoute = () => {
           "https://nl-app.onrender.com/products/categories/food"
         );
         const data = await response.json();
-        // Filter out items with qty 0 or less
-        const filteredData = data.filter((item) => item.qty > 0);
+        // Filter out items with qty 0 or less and not deleted
+        const filteredData = data.filter((item) => item.qty > 0 && !item.deleted);
         setMenuItems(filteredData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -97,8 +97,8 @@ const SecondRoute = () => {
           "https://nl-app.onrender.com/products/categories/drink"
         );
         const data = await response.json();
-        // Filter out items with qty 0 or less
-        const filteredData = data.filter((item) => item.qty > 0);
+        // Filter out items with qty 0 or less and not deleted
+        const filteredData = data.filter((item) => item.qty > 0 && !item.deleted);
         setMenuItems(filteredData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -136,8 +136,8 @@ const ThirdRoute = () => {
           "https://nl-app.onrender.com/products/categories/snack"
         );
         const data = await response.json();
-        // Filter out items with qty 0 or less
-        const filteredData = data.filter((item) => item.qty > 0);
+        // Filter out items with qty 0 or less and not deleted
+        const filteredData = data.filter((item) => item.qty > 0 && !item.deleted);
         setMenuItems(filteredData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -146,7 +146,6 @@ const ThirdRoute = () => {
 
     fetchData();
   }, []);
-
   return (
     <View
       style={{

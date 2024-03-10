@@ -222,7 +222,6 @@ const EditBestelling = () => {
           `https://nl-app.onrender.com/orders/${orderId}`
         );
         const data = await response.json();
-        // setOrder(data);
         setTable(data.table.toString());
         setNotes(data.notes);
         setSelectedProducts(data.products);
@@ -237,7 +236,7 @@ const EditBestelling = () => {
     };
 
     fetchOrder();
-  }, []);
+  }, [dispatch, orderId]);
 
   const navigation = useNavigation();
 
