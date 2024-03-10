@@ -14,7 +14,7 @@ const productSchema = new mongoose.Schema({
 	deleted: { type: Boolean, default: false }, // Add this line
 	qty: {
 		type: Number,
-		function() {
+		required: function() {
 			return this.stockable === true;
 		},
 	},

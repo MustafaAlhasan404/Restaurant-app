@@ -62,30 +62,30 @@ router.get("/:id", async (req, res) => {
 
 // CREATE product
 router.post("/", async (req, res) => {
-    const {
-        name,
-        price,
-        ingredients,
-        category,
-        options,
-        stockable = false,
-        qty = 10000, // Set default quantity to 10000
-    } = req.body;
+	const {
+		name,
+		price,
+		ingredients,
+		category,
+		options,
+		stockable = false, // Default value for when it is not passed to the API
+		qty = 0, // Default value
+	} = req.body;
 
-    try {
-        const product = await Product.create({
-            name,
-            price,
-            ingredients,
-            category,
-            options,
-            stockable,
-            qty: stockable ? qty : undefined, // Use the provided qty if stockable is true, otherwise undefined
-        });
-        res.status(201).json(product);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+	try {
+		const product = await Product.create({
+			name,
+			price,
+			ingredients,
+			category,
+			options,
+			stockable,
+			qty: stockable ? qty : undefined, // Only set qty if stockable is true
+		});
+		res.status(201).json(product);
+	} catch (error) {
+		res.status(400).json({ message: error.message });
+	}
 });
 
 // UPDATE product
