@@ -12,10 +12,12 @@ import {
 } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useUser } from "../contexts/UserContext"; // Import useUser hook
 import Header from "../Components/Header";
 import FloatingButton from "../Components/FloatingButton"; // Import the FloatingButton component
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
+
 const renderTabBar = (props) => (
   <TabBar
     renderLabel={({ route, focused }) => (
@@ -41,6 +43,7 @@ const renderTabBar = (props) => (
 const FirstRoute = () => {
   // Set up navigation so we can navigate to different screens
   const navigation = useNavigation();
+  const { user } = useUser(); // Use the useUser hook to access the user object
 
   // Create state variables to store the menu items
   const [menuItems, setMenuItems] = useState([]);
@@ -122,6 +125,8 @@ const FirstRoute = () => {
       </View>
     ));
   };
+  const canEdit = user && user.role === "manager";
+
   return (
     <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
       <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
@@ -141,28 +146,30 @@ const FirstRoute = () => {
               <Text style={styles.menuItemPrice}>
                 €{menuItem.price.toFixed(2)}
               </Text>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={styles.editButton}
-                  onPress={() => handleEditPress(menuItem)}
-                >
-                  <MaterialCommunityIcons
-                    name="pencil"
-                    size={20}
-                    color="white"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={() => handleDelete(menuItem._id)}
-                >
-                  <MaterialCommunityIcons
-                    name="delete"
-                    size={20}
-                    color="white"
-                  />
-                </TouchableOpacity>
-              </View>
+              {canEdit && (
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.editButton}
+                    onPress={() => handleEditPress(menuItem)}
+                  >
+                    <MaterialCommunityIcons
+                      name="pencil"
+                      size={20}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleDelete(menuItem._id)}
+                  >
+                    <MaterialCommunityIcons
+                      name="delete"
+                      size={20}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           </View>
         ))}
@@ -174,6 +181,7 @@ const FirstRoute = () => {
 const SecondRoute = () => {
   // Set up navigation so we can navigate to different screens
   const navigation = useNavigation();
+  const { user } = useUser(); // Use the useUser hook to access the user object
 
   // Create state variables to store the menu items
   const [menuItems, setMenuItems] = useState([]);
@@ -229,10 +237,10 @@ const SecondRoute = () => {
         // Refresh the menu items to reflect the deletion
         fetchMenuItems();
       } else {
-        console.error("Failed to delete the product");
+        console.error("Product verwijderen mislukt.");
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Fout:", error);
     }
   };
 
@@ -252,6 +260,8 @@ const SecondRoute = () => {
       </View>
     ));
   };
+
+  const canEdit = user && user.role === "manager";
 
   // Render the FirstRoute component
   return (
@@ -273,28 +283,31 @@ const SecondRoute = () => {
               <Text style={styles.menuItemPrice}>
                 €{menuItem.price.toFixed(2)}
               </Text>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={styles.editButton}
-                  onPress={() => handleEditPress(menuItem)}
-                >
-                  <MaterialCommunityIcons
-                    name="pencil"
-                    size={20}
-                    color="white"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={() => handleDelete(menuItem._id)}
-                >
-                  <MaterialCommunityIcons
-                    name="delete"
-                    size={20}
-                    color="white"
-                  />
-                </TouchableOpacity>
-              </View>
+
+              {canEdit && (
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.editButton}
+                    onPress={() => handleEditPress(menuItem)}
+                  >
+                    <MaterialCommunityIcons
+                      name="pencil"
+                      size={20}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleDelete(menuItem._id)}
+                  >
+                    <MaterialCommunityIcons
+                      name="delete"
+                      size={20}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           </View>
         ))}
@@ -306,6 +319,7 @@ const SecondRoute = () => {
 const ThirdRoute = () => {
   // Set up navigation so we can navigate to different screens
   const navigation = useNavigation();
+  const { user } = useUser(); // Use the useUser hook to access the user object
 
   // Create state variables to store the menu items
   const [menuItems, setMenuItems] = useState([]);
@@ -384,6 +398,8 @@ const ThirdRoute = () => {
     ));
   };
 
+  const canEdit = user && user.role === "manager";
+
   // Render the FirstRoute component
   return (
     <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
@@ -404,28 +420,30 @@ const ThirdRoute = () => {
               <Text style={styles.menuItemPrice}>
                 €{menuItem.price.toFixed(2)}
               </Text>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={styles.editButton}
-                  onPress={() => handleEditPress(menuItem)}
-                >
-                  <MaterialCommunityIcons
-                    name="pencil"
-                    size={20}
-                    color="white"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={() => handleDelete(menuItem._id)}
-                >
-                  <MaterialCommunityIcons
-                    name="delete"
-                    size={20}
-                    color="white"
-                  />
-                </TouchableOpacity>
-              </View>
+              {canEdit && (
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.editButton}
+                    onPress={() => handleEditPress(menuItem)}
+                  >
+                    <MaterialCommunityIcons
+                      name="pencil"
+                      size={20}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleDelete(menuItem._id)}
+                  >
+                    <MaterialCommunityIcons
+                      name="delete"
+                      size={20}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           </View>
         ))}

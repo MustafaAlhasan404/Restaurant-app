@@ -64,51 +64,46 @@ router.get("/unpaid", async (req, res) => {
 // Create a new order
 router.post("/", async (req, res) => {
 	try {
-		const { products, table, notes } = req.body;
-
-		if (!products || !table) {
-			return res.status(400).json({ error: "Required fields missing" });
+	  const { products, table, notes } = req.body;
+  
+	  if (!products || !table) {
+		return res.status(400).json({ error: "Required fields missing" });
+	  }
+  
+	  let totalPrice = 0;
+  
+	  // Loop through order products
+	  for (let product of products) {
+		const dbProduct = await Product.findById(product.product);
+  
+		if (!dbProduct) {
+		  return res.status(400).json({ error: "Invalid product" });
 		}
-
-		let totalPrice = 0;
-
-		// Loop through order products
-		for (let product of products) {
-			const dbProduct = await Product.findById(product.product);
-
-			if (!dbProduct) {
-				return res.status(400).json({ error: "Invalid product" });
-			}
-
-			totalPrice += dbProduct.price;
-
-			if (product.selectedOptions) {
-				for (let option of product.selectedOptions) {
-					totalPrice += option.price;
-				}
-			}
-
-			if (dbProduct.stockable) {
-				dbProduct.qty--;
-				await dbProduct.save();
-			}
+  
+		totalPrice += dbProduct.price;
+  
+		if (product.selectedOptions) {
+		  for (let option of product.selectedOptions) {
+			totalPrice += option.price;
+		  }
 		}
-
-		const newOrder = new Order({
-			products,
-			table,
-			totalPrice,
-			notes,
-		});
-
-		await newOrder.save();
-
-		res.status(201).json(newOrder);
+	  }
+  
+	  const newOrder = new Order({
+		products,
+		table,
+		totalPrice,
+		notes,
+	  });
+  
+	  await newOrder.save();
+  
+	  res.status(201).json(newOrder);
 	} catch (err) {
-		console.error(err);
-		res.status(500).json({ error: "Server error" });
+	  console.error(err);
+	  res.status(500).json({ error: "Server error" });
 	}
-});
+  });
 
 module.exports = router;
 
@@ -129,22 +124,37 @@ router.patch("/:orderId/unprocessed", async (req, res) => {
 	}
 });
 
-// Update order status to "processed"
 router.patch("/:orderId/processed", async (req, res) => {
 	try {
-		const { orderId } = req.params;
-
-		const updatedOrder = await Order.findByIdAndUpdate(
-			orderId,
-			{ status: "processed" },
-			{ new: true }
-		);
-
-		res.status(200).json(updatedOrder);
+	  const { orderId } = req.params;
+  
+	  const order = await Order.findById(orderId);
+  
+	  if (!order) {
+		return res.status(404).json({ error: "Order not found" });
+	  }
+  
+	  // Decrease product quantity for stockable products
+	  for (let product of order.products) {
+		const dbProduct = await Product.findById(product.product);
+  
+		if (dbProduct.stockable) {
+		  dbProduct.qty--;
+		  await dbProduct.save();
+		}
+	  }
+  
+	  const updatedOrder = await Order.findByIdAndUpdate(
+		orderId,
+		{ status: "processed" },
+		{ new: true }
+	  );
+  
+	  res.status(200).json(updatedOrder);
 	} catch (error) {
-		res.status(400).json({ message: error.message });
+	  res.status(400).json({ message: error.message });
 	}
-});
+  });
 
 // Update order status to "paid"
 router.patch("/:orderId/paid", async (req, res) => {

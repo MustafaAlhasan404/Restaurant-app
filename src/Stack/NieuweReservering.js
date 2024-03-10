@@ -45,22 +45,21 @@ const ReservationItem = ({ item, onEdit, onDelete, canEdit }) => {
           <Text style={styles.reservationNotes}>Notities: {item.notes}</Text>
         ) : null}
       </View>
-      {canEdit && (
-        <View style={styles.buttonGroup}>
-          <TouchableOpacity
-            onPress={() => onEdit(item)}
-            style={styles.editButton}
-          >
-            <MaterialCommunityIcons name="pencil" size={20} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => onDelete(item._id)}
-            style={styles.deleteButton}
-          >
-            <MaterialCommunityIcons name="delete" size={20} color="white" />
-          </TouchableOpacity>
-        </View>
-      )}
+
+      <View style={styles.buttonGroup}>
+        <TouchableOpacity
+          onPress={() => onEdit(item)}
+          style={styles.editButton}
+        >
+          <MaterialCommunityIcons name="pencil" size={20} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => onDelete(item._id)}
+          style={styles.deleteButton}
+        >
+          <MaterialCommunityIcons name="delete" size={20} color="white" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -150,20 +149,17 @@ const NieuweReservering = () => {
             item={item}
             onEdit={() => handleEdit(item)}
             onDelete={() => handleDelete(item._id)}
-            canEdit={canEdit}
           />
         )}
         keyExtractor={(item) => item._id.toString()}
       />
 
-      {canEdit && (
-        <FAB
-          style={styles.fab}
-          icon="plus"
-          color="white"
-          onPress={() => navigation.navigate("AddReservation")}
-        />
-      )}
+      <FAB
+        style={styles.fab}
+        icon="plus"
+        color="white"
+        onPress={() => navigation.navigate("AddReservation")}
+      />
     </View>
   );
 };

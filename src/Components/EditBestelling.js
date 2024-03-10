@@ -253,10 +253,7 @@ const EditBestelling = () => {
   const handleSubmit = async (table, products) => {
     // Check if no products are selected
     if (products.length === 0) {
-      Alert.alert(
-        "Error",
-        "Please select at least one product to place an order."
-      );
+      Alert.alert("Fout", "Selecteer minstens één product.");
       return;
     }
 
@@ -286,7 +283,7 @@ const EditBestelling = () => {
       dispatch(emptyOrder());
       Alert.alert("Voltooid", "Bestelling is bijgewerkt.");
     }
-    navigation.navigate("Home");
+    navigation.navigate("Bestellingen");
   };
 
   return (

@@ -118,12 +118,15 @@ const Bestellingen = ({ navigation }) => {
       console.error("Fout tijdens bijwerken status:", error);
     }
   };
+  
 
   const showStatusOptions = (orderId, currentStatus) => {
     let newStatus = currentStatus === "unprocessed" ? "processed" : "paid";
     Alert.alert(
-      "Bestelling status aanpassen",
-      `Bestelling markeren als ${newStatus}?`,
+      "Status aanpassen",
+      `Bestelling markeren als ${
+        newStatus === "processed" ? "Afgehandeld" : "Betaald"
+      }?`,
       [
         { text: "Annuleren", style: "cancel" },
         {
@@ -338,7 +341,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: 25,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
