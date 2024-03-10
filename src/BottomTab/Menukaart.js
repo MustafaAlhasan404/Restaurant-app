@@ -138,9 +138,11 @@ const FirstRoute = () => {
               {/* You may want to add onPress functionality to it */}
             </View>
             <Text style={styles.menuItemName}>{menuItem.name}</Text>
-            <Text style={styles.menuItemIngredients}>
-              {menuItem.ingredients}
-            </Text>
+            {menuItem.ingredients && (
+              <Text style={styles.menuItemIngredients}>
+                {menuItem.ingredients}
+              </Text>
+            )}
             {menuItem.options && renderMenuItemOptions(menuItem)}
             <View style={styles.menuItemDetails}>
               <Text style={styles.menuItemPrice}>
@@ -474,7 +476,7 @@ export default function TabViewExample() {
       </SafeAreaView>
 
       <View style={{ marginHorizontal: 20 }}>
-        <Text style={styles.screendescription}>
+        <Text style={[styles.screendescription, { marginTop: 25 }]}>
           Bekijk hier alle producten van de menukaart.
         </Text>
       </View>
@@ -537,6 +539,10 @@ const styles = StyleSheet.create({
     height: 58,
     padding: 15,
   },
+  menuItemIngredients: {
+    color: "#bbb",
+    marginBottom: 8,
+  },
   addeditems: {
     paddingVertical: 10,
   },
@@ -561,7 +567,7 @@ const styles = StyleSheet.create({
   menuItem: {
     flexDirection: "column",
     paddingHorizontal: 15,
-    paddingVertical: 17,
+    paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#bababa",
     backgroundColor: "#f9f9f9", // Example background color for menu items
@@ -575,12 +581,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     color: "#333", // Darker text color for the title
+    marginTop: -20,
   },
   menuItemName: {
-    textAlign: "center",
     fontWeight: "bold",
     fontSize: 16,
-    marginBottom: 10, // Add some space between the title and name
+    marginBottom: 4, // Add some space between the title and name
   },
   menuItemNameIngredients: {
     textAlign: "center",
@@ -590,19 +596,19 @@ const styles = StyleSheet.create({
   },
   menuItemPrice: {
     color: "#e27b00",
-    marginTop: 15, // Add some space between the options and price
+    marginTop: 5, // Add some space between the options and price
     fontWeight: "bold", // Make the price bold
-    fontSize: 20, // Increase font size for the price
+    fontSize: 16, // Increase font size for the price
   },
   menuItemOption: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: 2.5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 0,
     backgroundColor: "#f8f8f8",
     borderRadius: 5,
-    marginVertical: 2,
+    marginVertical: 0,
   },
 
   menuItemOptionDivider: {

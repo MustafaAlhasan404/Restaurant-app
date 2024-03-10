@@ -127,6 +127,12 @@ const Voorraad = () => {
         <Header name="Voorraad" />
       </SafeAreaView>
 
+      <Text style={[styles.screendescription, { marginTop: 25 }]}>
+        Bekijk hier de voorraad van producten en pas deze eventueel aan. Alleen
+        als "Voorraad bijhouden?" is aangevinkt bij het aanmaken van het
+        product, wordt deze hier getoond.
+      </Text>
+
       <ScrollView style={styles.menuItems}>
         {products.map((product, index) => (
           <View key={index} style={styles.menuItem}>
@@ -204,7 +210,7 @@ export default Voorraad;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#e0d5d6",
   },
   menuItems: {
     paddingHorizontal: 20,
@@ -267,6 +273,10 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 14,
     fontWeight: "500",
+  },
+  screendescription: {
+    marginBottom: 40,
+    marginHorizontal: 25,
   },
   prompt: {
     position: "absolute",

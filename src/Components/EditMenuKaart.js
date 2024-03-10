@@ -88,10 +88,7 @@ const EditMenuKaart = () => {
       }
 
       const responseData = await response.json();
-      Alert.alert(
-        "Success",
-        "Product updated successfully: " + responseData.name
-      );
+      Alert.alert("Voltooid", "Product gewijzigd: " + responseData.name);
 
       // Invoke the callback function if provided
       if (route.params.onProductUpdated) {
@@ -109,13 +106,13 @@ const EditMenuKaart = () => {
     return options.map((option, index) => (
       <View key={index} style={styles.optionContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { width: 150 }]}
           placeholder="Option Name"
           value={option.name}
           onChangeText={(text) => handleOptionNameChange(index, text)}
         />
         <TextInput
-          style={styles.input}
+          style={[styles.input, { marginLeft: 7 }]}
           placeholder="Option Price"
           value={option.price.toString()}
           onChangeText={(text) => handleOptionPriceChange(index, text)}
@@ -188,7 +185,7 @@ const EditMenuKaart = () => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={[styles.buttonText, { fontWeight: 600 }]}>
-          Nieuw product toevoegen
+          Wijzingen opslaan
         </Text>
       </TouchableOpacity>
     </ScrollView>

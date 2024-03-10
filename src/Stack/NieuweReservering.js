@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   buttonGroup: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
   },
   editButton: {
@@ -208,7 +208,8 @@ const styles = StyleSheet.create({
     borderRadius: 5, // Increased rounded corners
     color: "#fff",
     fontWeight: "500",
-    marginRight: 10,
+    marginRight: 0,
+    marginBottom: 10,
   },
   screendescription: {
     marginBottom: 40,

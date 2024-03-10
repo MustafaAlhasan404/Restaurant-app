@@ -69,7 +69,8 @@ const Signup = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.screendescription}>
-        Voeg hier een nieuwe medewerker toe.
+        Voeg hier een nieuwe medewerker toe. Noteer de gebruikersnaam en het
+        wachtwoord ergens.
       </Text>
 
       <Text style={styles.formlabel}>Voornaam medewerker:</Text>
