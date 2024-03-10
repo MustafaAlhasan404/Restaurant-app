@@ -125,7 +125,9 @@ const FloatingButton = () => {
                 navigation.navigate("Nieuw product"); // Navigate to AddVoorraad
               }}
             >
-              <Text style={styles.text}>Nieuw product</Text>
+              <Text style={[styles.text, { fontWeight: 500 }]}>
+                Nieuw product
+              </Text>
             </Pressable>
           </Animated.View>
         </TouchableWithoutFeedback>
@@ -142,7 +144,9 @@ const FloatingButton = () => {
                 navigation.navigate("Signup"); // Navigate to Signup
               }}
             >
-              <Text style={styles.text}>Nieuwe medewerker</Text>
+              <Text style={[styles.text, { fontWeight: 500 }]}>
+                Nieuwe medewerker
+              </Text>
             </Pressable>
           </Animated.View>
         </TouchableWithoutFeedback>
@@ -158,7 +162,9 @@ const FloatingButton = () => {
               navigation.navigate("Nieuwe reservering"); // Navigate to NieuweReservering
             }}
           >
-            <Text style={styles.text}>Bekijk reserveringen</Text>
+            <Text style={[styles.text, { fontWeight: 500 }]}>
+              Bekijk reserveringen
+            </Text>
           </Pressable>
         </Animated.View>
       </TouchableWithoutFeedback>
@@ -172,7 +178,9 @@ const FloatingButton = () => {
               navigation.navigate("Nieuwe bestelling"); // Navigate to NieuweBestelling
             }}
           >
-            <Text style={styles.text}>Nieuwe bestelling</Text>
+            <Text style={[styles.text, { fontWeight: 500 }]}>
+              Nieuwe bestelling
+            </Text>
           </Pressable>
         </Animated.View>
       </TouchableWithoutFeedback>
@@ -212,7 +220,7 @@ const styles = StyleSheet.create({
   secondary: {
     width: 190,
     height: "auto",
-    borderRadius: 24,
+    borderRadius: 10,
     backgroundColor: "#fce9d2",
     borderWidth: 1,
     borderColor: "#dedede",

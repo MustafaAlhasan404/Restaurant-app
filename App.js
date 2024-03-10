@@ -213,6 +213,7 @@ function StackNavigator() {
             backgroundColor: "#311213",
           },
           headerTintColor: "#e27b00",
+          headerTitle: "Bestelling bewerken",
         }}
       />
       <Stack.Screen
@@ -224,6 +225,7 @@ function StackNavigator() {
             backgroundColor: "#311213",
           },
           headerTintColor: "#e27b00",
+          headerTitle: "Product bijwerken",
         }}
       />
     </Stack.Navigator>

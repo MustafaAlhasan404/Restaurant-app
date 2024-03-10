@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   menuItemIngredients: {
-    fontSize: 13,
+    fontSize: 10,
     color: "#666",
   },
   menuItemPrice: {

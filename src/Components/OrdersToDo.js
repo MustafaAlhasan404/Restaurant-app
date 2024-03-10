@@ -73,12 +73,12 @@ const AccordionItem = ({ item, fetchOrders }) => {
             <Text style={styles.orderdate}>Geplaatst: {orderTime}</Text>
           </View>
           {/* Arrow Icon Button */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={handleStatusChangePress}
             style={styles.statusChangeButton}
           >
             <Icon name="arrow-right" size={24} color="#000" style={{}} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </TouchableOpacity>

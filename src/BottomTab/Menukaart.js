@@ -133,7 +133,9 @@ const FirstRoute = () => {
               {/* You may want to add onPress functionality to it */}
             </View>
             <Text style={styles.menuItemName}>{menuItem.name}</Text>
-            <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
+            <Text style={styles.menuItemIngredients}>
+              {menuItem.ingredients}
+            </Text>
             {menuItem.options && renderMenuItemOptions(menuItem)}
             <View style={styles.menuItemDetails}>
               <Text style={styles.menuItemPrice}>
@@ -263,7 +265,9 @@ const SecondRoute = () => {
               {/* You may want to add onPress functionality to it */}
             </View>
             <Text style={styles.menuItemName}>{menuItem.name}</Text>
-            <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
+            <Text style={styles.menuItemIngredients}>
+              {menuItem.ingredients}
+            </Text>
             {menuItem.options && renderMenuItemOptions(menuItem)}
             <View style={styles.menuItemDetails}>
               <Text style={styles.menuItemPrice}>
@@ -392,7 +396,9 @@ const ThirdRoute = () => {
               {/* You may want to add onPress functionality to it */}
             </View>
             <Text style={styles.menuItemName}>{menuItem.name}</Text>
-            <Text style={styles.menuItemName}>{menuItem.ingredients}</Text>
+            <Text style={styles.menuItemIngredients}>
+              {menuItem.ingredients}
+            </Text>
             {menuItem.options && renderMenuItemOptions(menuItem)}
             <View style={styles.menuItemDetails}>
               <Text style={styles.menuItemPrice}>
@@ -448,6 +454,12 @@ export default function TabViewExample() {
       <SafeAreaView style={{ backgroundColor: "#311213" }}>
         <Header name="Menukaart" />
       </SafeAreaView>
+
+      <View style={{ marginHorizontal: 20 }}>
+        <Text style={styles.screendescription}>
+          Bekijk hier alle producten van de menukaart.
+        </Text>
+      </View>
 
       <TabView
         navigationState={{ index, routes }}
@@ -525,6 +537,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginHorizontal: 20,
     marginVertical: 50,
+    height: 3000,
   },
   menuItems: {},
   menuItem: {
@@ -549,6 +562,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 16,
+    marginBottom: 10, // Add some space between the title and name
+  },
+  menuItemNameIngredients: {
+    textAlign: "center",
+    fontWeight: 100,
+    fontSize: 14,
     marginBottom: 10, // Add some space between the title and name
   },
   menuItemPrice: {
