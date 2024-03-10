@@ -77,7 +77,6 @@ const Bestellingen = ({ navigation }) => {
         }
       }
     });
-
     return unsubscribe;
   }, [navigation, orders, route.params?.orderId]);
 
