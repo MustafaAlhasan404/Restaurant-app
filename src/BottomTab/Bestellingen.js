@@ -48,7 +48,7 @@ const Bestellingen = ({ navigation }) => {
       );
       setOrders(ordersWithDetails);
     } catch (error) {
-      console.error("Error fetching orders", error);
+      console.error("Error ofetching orders", error);
     }
   };
 
@@ -117,7 +117,6 @@ const Bestellingen = ({ navigation }) => {
       console.error("Fout tijdens bijwerken status:", error);
     }
   };
-  
 
   const showStatusOptions = (orderId, currentStatus) => {
     let newStatus = currentStatus === "unprocessed" ? "processed" : "paid";

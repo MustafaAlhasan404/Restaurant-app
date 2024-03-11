@@ -65,7 +65,7 @@ const FirstRoute = () => {
         );
         const data = await response.json();
         // Filter out items with qty 0 or less
-        const filteredData = data.filter((item) => item.qty > 0);
+        const filteredData = data.filter((item) => !item.deleted);
         setMenuItems(filteredData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -104,7 +104,7 @@ const SecondRoute = () => {
         );
         const data = await response.json();
         // Filter out items with qty 0 or less
-        const filteredData = data.filter((item) => item.qty > 0);
+        const filteredData = data.filter((item) => !item.deleted);
         setMenuItems(filteredData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -143,7 +143,7 @@ const ThirdRoute = () => {
         );
         const data = await response.json();
         // Filter out items with qty 0 or less
-        const filteredData = data.filter((item) => item.qty > 0);
+        const filteredData = data.filter((item) => !item.deleted);
         setMenuItems(filteredData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -312,13 +312,13 @@ const EditBestelling = () => {
             </View>
 
             {order.items.map((item, index) => (
-              <View key={index}>
-                <AddedItem
-                  productID={item.product}
-                  selectedOptions={item.selectedOptions}
-                />
-              </View>
-            ))}
+  <View key={`${item.product}_${index}`}>
+    <AddedItem
+      productID={item.product}
+      selectedOptions={item.selectedOptions}
+    />
+  </View>
+))}
 
             <View
               style={[

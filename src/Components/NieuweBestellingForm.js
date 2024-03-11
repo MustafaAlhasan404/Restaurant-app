@@ -98,7 +98,7 @@ const SecondRoute = () => {
         );
         const data = await response.json();
         // Filter out items with qty 0 or less and not deleted
-        const filteredData = data.filter((item) => item.qty > 0 && !item.deleted);
+        const filteredData = data.filter((item) => !item.deleted);
         setMenuItems(filteredData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -137,7 +137,7 @@ const ThirdRoute = () => {
         );
         const data = await response.json();
         // Filter out items with qty 0 or less and not deleted
-        const filteredData = data.filter((item) => item.qty > 0 && !item.deleted);
+        const filteredData = data.filter((item) => !item.deleted);
         setMenuItems(filteredData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -224,7 +224,7 @@ const NieuweBestellingForm = () => {
       Alert.alert("Fout", "Selecteer minimaal één product.");
       return; // Exit the function early if no products are selected
     }
-  
+
     console.log("Submitting order...");
     console.log(products);
     const response = await fetch("https://nl-app.onrender.com/orders", {
@@ -247,7 +247,6 @@ const NieuweBestellingForm = () => {
     }
     navigation.navigate("HomeScreen");
   };
-  
 
   return (
     <View>
