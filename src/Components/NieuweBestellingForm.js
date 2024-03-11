@@ -278,14 +278,17 @@ const NieuweBestellingForm = () => {
               </Text>
             </View>
 
+            <View key={selectedProducts.length}>
             {selectedProducts.map((item, index) => (
-              <View key={index}>
-                <AddedItem
-                  productID={item.product}
-                  selectedOptions={item.selectedOptions}
-                />
-              </View>
-            ))}
+  <View key={`${item.product}-${index}`}>
+    <AddedItem
+      productID={item.product}
+      selectedOptions={item.selectedOptions}
+    />
+  </View>
+))}
+</View>
+
 
             <View style={[styles.spaceBetweenRow, styles.mro]}>
               <Text style={styles.menuItemName}>Totaal:</Text>
