@@ -45,7 +45,7 @@ const AccordionItem = ({ item, fetchOrders }) => {
   // Function to change the order status
   const changeOrderStatus = async (orderId, newStatus) => {
     try {
-      let patchUrl = `https://nl-app.onrender.com/orders/${orderId}/${newStatus}`;
+      let patchUrl = `http://208.109.231.135/orders/${orderId}/${newStatus}`;
       const response = await axios.patch(patchUrl);
       if (response.status === 200) {
         // Call fetchOrders to refresh the list after status change
@@ -91,7 +91,7 @@ const OrdersToDo = () => {
   const fetchOrders = async () => {
     try {
       // Fetch all orders from the backend
-      const response = await fetch("https://nl-app.onrender.com/orders");
+      const response = await fetch("http://208.109.231.135/orders");
       const data = await response.json();
 
       // Filter out only unprocessed orders

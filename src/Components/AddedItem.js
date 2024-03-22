@@ -9,13 +9,14 @@ import { addItem, removeItem } from "../State/orderSlice";
 const AddedItem = ({ productID, selectedOptions }) => {
   const [menuItem, setMenuItem] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
+  const [dataFetched, setDataFetched] = useState(false); // State to track if data is fetched
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         console.log(productID);
         const response = await fetch(
-          `https://nl-app.onrender.com/products/${productID}`
+          `http://208.109.231.135/products/${productID}`
         );
         const data = await response.json();
         setMenuItem(data);
@@ -24,12 +25,13 @@ const AddedItem = ({ productID, selectedOptions }) => {
           price += selectedOptions[i].price;
         }
         setTotalPrice(price);
+        setDataFetched(true); // Set dataFetched to true after data is successfully fetched
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-  }, []);
+  }, [productID, selectedOptions]);
 
   const dispatch = useDispatch();
 
@@ -48,7 +50,7 @@ const AddedItem = ({ productID, selectedOptions }) => {
       <View style={styles.menuItemHeader}>
         <View style={styles.spaceBetweenRow}>
           <Text style={styles.menuItemName}>{menuItem.name}</Text>
-          <Text style={styles.menuItemPrice}>€{menuItem.price}</Text>
+          <Text style={styles.menuItemPrice}>SRD {menuItem.price}</Text>
         </View>
       </View>
 
@@ -58,7 +60,7 @@ const AddedItem = ({ productID, selectedOptions }) => {
             <View key={index} style={styles.menuItemOption}>
               <Text style={styles.menuItemOptionName}>{option.name}</Text>
               <Text style={styles.menuItemOptionPrice}>
-                €{option.price.toFixed(2)}
+                SRD {option.price.toFixed(2)}
               </Text>
             </View>
           );
@@ -67,14 +69,16 @@ const AddedItem = ({ productID, selectedOptions }) => {
 
       <View style={styles.menuItemFooter}>
         <Text style={styles.menuItemPrice}>
-          Productprijs: €{totalPrice.toFixed(2)}
+          Productprijs: SRD {totalPrice.toFixed(2)}
         </Text>
-        <Pressable
-          style={styles.addButton}
-          onPress={() => handleRemoveProduct(productID, selectedOptions)}
-        >
-          <MaterialCommunityIcons name="delete" size={20} color="white" />
-        </Pressable>
+        {dataFetched && (
+          <Pressable
+            style={styles.addButton}
+            onPress={() => handleRemoveProduct(productID, selectedOptions)}
+          >
+            <MaterialCommunityIcons name="delete" size={20} color="white" />
+          </Pressable>
+        )}
       </View>
     </View>
   );

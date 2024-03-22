@@ -17,7 +17,7 @@ import Header from "../Components/Header";
 import FloatingButton from "../Components/FloatingButton"; // Import the FloatingButton component
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
-
+import { useFocusEffect } from '@react-navigation/native';
 const renderTabBar = (props) => (
   <TabBar
     renderLabel={({ route, focused }) => (
@@ -53,7 +53,7 @@ const FirstRoute = () => {
     try {
       // Make a GET request to the server to fetch food category products
       const response = await fetch(
-        "https://nl-app.onrender.com/products/categories/food"
+        "http://208.109.231.135/products/categories/food"
       );
       const data = await response.json();
 
@@ -90,7 +90,7 @@ const FirstRoute = () => {
     try {
       // Make a DELETE request to the server to soft delete the product
       const response = await fetch(
-        `https://nl-app.onrender.com/products/${productId}`,
+        `http://208.109.231.135/products/${productId}`,
         {
           method: "DELETE",
           // If needed, include headers for authorization or other information
@@ -118,7 +118,7 @@ const FirstRoute = () => {
     return menuItem.options.map((option, optionIndex) => (
       <View key={optionIndex} style={styles.menuItemOption}>
         <Text style={styles.menuItemOptionName}>{option.name}</Text>
-        <Text style={styles.menuItemOptionPrice}>€{option.price}</Text>
+        <Text style={styles.menuItemOptionPrice}>SRD {option.price}</Text>
         {optionIndex < menuItem.options.length && (
           <View style={styles.menuItemOptionDivider} />
         )}
@@ -146,7 +146,7 @@ const FirstRoute = () => {
             {menuItem.options && renderMenuItemOptions(menuItem)}
             <View style={styles.menuItemDetails}>
               <Text style={styles.menuItemPrice}>
-                €{menuItem.price.toFixed(2)}
+                SRD {menuItem.price.toFixed(2)}
               </Text>
               {canEdit && (
                 <View style={styles.buttonContainer}>
@@ -193,7 +193,7 @@ const SecondRoute = () => {
     try {
       // Make a GET request to the server to fetch food category products
       const response = await fetch(
-        "https://nl-app.onrender.com/products/categories/drink"
+        "http://208.109.231.135/products/categories/drink"
       );
       const data = await response.json();
 
@@ -208,6 +208,13 @@ const SecondRoute = () => {
     }
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchMenuItems();
+    }, [])
+  );
+
+
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       // The screen is focused, fetch menu items again
@@ -218,12 +225,19 @@ const SecondRoute = () => {
     return unsubscribe;
   }, [navigation]);
 
+  const handleEditPress = (product) => {
+    navigation.navigate("EditMenuKaart", {
+      product: product,
+      onProductUpdated: fetchMenuItems, // Pass fetchMenuItems as a callback
+    });
+  };
+
   // Define a function to handle the deletion of a menu item
   const handleDelete = async (productId) => {
     try {
       // Make a DELETE request to the server to soft delete the product
       const response = await fetch(
-        `https://nl-app.onrender.com/products/${productId}`,
+        `http://208.109.231.135/products/${productId}`,
         {
           method: "DELETE",
           // If needed, include headers for authorization or other information
@@ -239,15 +253,11 @@ const SecondRoute = () => {
         // Refresh the menu items to reflect the deletion
         fetchMenuItems();
       } else {
-        console.error("Product verwijderen mislukt.");
+        console.error("Failed to delete the product");
       }
     } catch (error) {
-      console.error("Fout:", error);
+      console.error("Error:", error);
     }
-  };
-
-  const handleEditPress = (product) => {
-    navigation.navigate("EditMenuKaart", { product: product });
   };
 
   // Define a function to render options for a menu item
@@ -255,17 +265,15 @@ const SecondRoute = () => {
     return menuItem.options.map((option, optionIndex) => (
       <View key={optionIndex} style={styles.menuItemOption}>
         <Text style={styles.menuItemOptionName}>{option.name}</Text>
-        <Text style={styles.menuItemOptionPrice}>€{option.price}</Text>
-        {optionIndex < menuItem.options.length - 1 && (
+        <Text style={styles.menuItemOptionPrice}>SRD {option.price}</Text>
+        {optionIndex < menuItem.options.length && (
           <View style={styles.menuItemOptionDivider} />
         )}
       </View>
     ));
   };
-
   const canEdit = user && user.role === "manager";
 
-  // Render the FirstRoute component
   return (
     <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
       <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
@@ -277,15 +285,16 @@ const SecondRoute = () => {
               {/* You may want to add onPress functionality to it */}
             </View>
             <Text style={styles.menuItemName}>{menuItem.name}</Text>
-            <Text style={styles.menuItemIngredients}>
-              {menuItem.ingredients}
-            </Text>
+            {menuItem.ingredients && (
+              <Text style={styles.menuItemIngredients}>
+                {menuItem.ingredients}
+              </Text>
+            )}
             {menuItem.options && renderMenuItemOptions(menuItem)}
             <View style={styles.menuItemDetails}>
               <Text style={styles.menuItemPrice}>
-                €{menuItem.price.toFixed(2)}
+                SRD {menuItem.price.toFixed(2)}
               </Text>
-
               {canEdit && (
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity
@@ -331,7 +340,7 @@ const ThirdRoute = () => {
     try {
       // Make a GET request to the server to fetch food category products
       const response = await fetch(
-        "https://nl-app.onrender.com/products/categories/snack"
+        "http://208.109.231.135/products/categories/snack"
       );
       const data = await response.json();
 
@@ -346,6 +355,13 @@ const ThirdRoute = () => {
     }
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchMenuItems();
+    }, [])
+  );
+
+
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       // The screen is focused, fetch menu items again
@@ -356,12 +372,19 @@ const ThirdRoute = () => {
     return unsubscribe;
   }, [navigation]);
 
+  const handleEditPress = (product) => {
+    navigation.navigate("EditMenuKaart", {
+      product: product,
+      onProductUpdated: fetchMenuItems, // Pass fetchMenuItems as a callback
+    });
+  };
+
   // Define a function to handle the deletion of a menu item
   const handleDelete = async (productId) => {
     try {
       // Make a DELETE request to the server to soft delete the product
       const response = await fetch(
-        `https://nl-app.onrender.com/products/${productId}`,
+        `http://208.109.231.135/products/${productId}`,
         {
           method: "DELETE",
           // If needed, include headers for authorization or other information
@@ -383,26 +406,21 @@ const ThirdRoute = () => {
       console.error("Error:", error);
     }
   };
-  const handleEditPress = (product) => {
-    navigation.navigate("EditMenuKaart", { product: product });
-  };
 
   // Define a function to render options for a menu item
   const renderMenuItemOptions = (menuItem) => {
     return menuItem.options.map((option, optionIndex) => (
       <View key={optionIndex} style={styles.menuItemOption}>
         <Text style={styles.menuItemOptionName}>{option.name}</Text>
-        <Text style={styles.menuItemOptionPrice}>€{option.price}</Text>
-        {optionIndex < menuItem.options.length - 1 && (
+        <Text style={styles.menuItemOptionPrice}>SRD {option.price}</Text>
+        {optionIndex < menuItem.options.length && (
           <View style={styles.menuItemOptionDivider} />
         )}
       </View>
     ));
   };
-
   const canEdit = user && user.role === "manager";
 
-  // Render the FirstRoute component
   return (
     <View style={{ flex: 1, paddingTop: 0, paddingHorizontal: 0, height: 500 }}>
       <ScrollView style={styles.menuItems} nestedScrollEnabled={true}>
@@ -414,13 +432,15 @@ const ThirdRoute = () => {
               {/* You may want to add onPress functionality to it */}
             </View>
             <Text style={styles.menuItemName}>{menuItem.name}</Text>
-            <Text style={styles.menuItemIngredients}>
-              {menuItem.ingredients}
-            </Text>
+            {menuItem.ingredients && (
+              <Text style={styles.menuItemIngredients}>
+                {menuItem.ingredients}
+              </Text>
+            )}
             {menuItem.options && renderMenuItemOptions(menuItem)}
             <View style={styles.menuItemDetails}>
               <Text style={styles.menuItemPrice}>
-                €{menuItem.price.toFixed(2)}
+                SRD {menuItem.price.toFixed(2)}
               </Text>
               {canEdit && (
                 <View style={styles.buttonContainer}>

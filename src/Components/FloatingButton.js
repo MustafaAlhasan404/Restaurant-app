@@ -111,6 +111,23 @@ const FloatingButton = () => {
       },
     ],
   };
+  const OmzetcijfersStyle = {
+    transform: [
+      { scale: animation },
+      {
+        translateX: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -80], // Adjust the horizontal position
+        }),
+      },
+      {
+        translateY: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -320], // Adjust the vertical position
+        }),
+      },
+    ],
+  };
 
   return (
     <View style={[styles.container]}>
@@ -184,6 +201,25 @@ const FloatingButton = () => {
           </Pressable>
         </Animated.View>
       </TouchableWithoutFeedback>
+
+      {user && user.role === "manager" && (
+  <TouchableWithoutFeedback>
+    <Animated.View
+      style={[styles.button, styles.secondary, OmzetcijfersStyle]}
+    >
+      <Pressable
+        onPress={() => {
+          toggleMenu(); // Close the menu when an option is selected
+          navigation.navigate("Omzetcijfers"); // Navigate to Omzetcijfers
+        }}
+      >
+        <Text style={[styles.text, { fontWeight: 500 }]}>
+          Omzetcijfers
+        </Text>
+      </Pressable>
+    </Animated.View>
+  </TouchableWithoutFeedback>
+)}
 
       <FAB
         style={[styles.fab, rotation]}

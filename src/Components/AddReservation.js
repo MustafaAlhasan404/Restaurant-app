@@ -62,7 +62,7 @@ const AddReservation = ({ navigation }) => {
 
     try {
       const response = await axios.post(
-        "https://nl-app.onrender.com/reservations",
+        "http://208.109.231.135/reservations",
         {
           name,
           dateTime,

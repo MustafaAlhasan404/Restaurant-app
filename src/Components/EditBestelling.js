@@ -61,7 +61,7 @@ const FirstRoute = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://nl-app.onrender.com/products/categories/food"
+          "http://208.109.231.135/products/categories/food"
         );
         const data = await response.json();
         // Filter out items with qty 0 or less
@@ -100,7 +100,7 @@ const SecondRoute = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://nl-app.onrender.com/products/categories/drink"
+          "http://208.109.231.135/products/categories/drink"
         );
         const data = await response.json();
         // Filter out items with qty 0 or less
@@ -139,7 +139,7 @@ const ThirdRoute = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://nl-app.onrender.com/products/categories/snack"
+          "http://208.109.231.135/products/categories/snack"
         );
         const data = await response.json();
         // Filter out items with qty 0 or less
@@ -219,7 +219,7 @@ const EditBestelling = () => {
     const fetchOrder = async () => {
       try {
         const response = await fetch(
-          `https://nl-app.onrender.com/orders/${orderId}`
+          `http://208.109.231.135/orders/${orderId}`
         );
         const data = await response.json();
         setTable(data.table.toString());
@@ -258,13 +258,13 @@ const EditBestelling = () => {
 
     console.log("Submitting order...");
     const deleteResponse = await fetch(
-      `https://nl-app.onrender.com/orders/${orderId}`,
+      `http://208.109.231.135/orders/${orderId}`,
       {
         method: "DELETE",
       }
     );
 
-    const response = await fetch(`https://nl-app.onrender.com/orders`, {
+    const response = await fetch(`http://208.109.231.135/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -327,7 +327,7 @@ const EditBestelling = () => {
               ]}
             >
               <Text style={styles.menuItemName}>Totaal</Text>
-              <Text style={styles.menuItemPrice}>€{totalPrice.toFixed(2)}</Text>
+              <Text style={styles.menuItemPrice}>SRD {totalPrice.toFixed(2)}</Text>
             </View>
           </View>
 

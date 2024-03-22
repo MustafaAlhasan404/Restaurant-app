@@ -75,7 +75,7 @@ const NieuweReservering = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://nl-app.onrender.com/reservations/${id}`);
+      await axios.delete(`http://208.109.231.135/reservations/${id}`);
       setReservations(
         reservations.filter((reservation) => reservation._id !== id)
       );
@@ -88,7 +88,7 @@ const NieuweReservering = () => {
   const fetchReservations = async () => {
     try {
       const response = await axios.get(
-        "http://nl-app.onrender.com/reservations"
+        "http://208.109.231.135/reservations"
       );
       const sortedReservations = response.data.sort((a, b) => {
         // Convert dateTime strings to Date objects

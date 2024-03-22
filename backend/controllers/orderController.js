@@ -1,41 +1,72 @@
 const express = require("express");
-const router = express.Router();
 const Product = require("../models/product");
 const Order = require("../models/order");
+const router = express.Router();
 
 // Get all orders, sorted by unprocessed first, then processed, then paid
 router.get("/", async (req, res) => {
-	try {
-		const orders = await Order.find();
-		const sortedOrders = orders.sort((a, b) => {
-			const statusOrder = ["unprocessed", "processed", "paid"];
-			return (
-				statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status)
-			);
-		});
-		res.json(sortedOrders);
-	} catch (error) {
-		res.status(500).json({ message: error.message });
-	}
+  try {
+    const orders = await Order.find();
+    const sortedOrders = orders.sort((a, b) => {
+      const statusOrder = ["unprocessed", "processed", "paid"];
+      return (
+        statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status)
+      );
+    });
+    res.json(sortedOrders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
-// Get order by id
-router.get("/:id", async (req, res) => {
-	try {
-		const { id } = req.params;
+// Get revenue by timeframe
+router.get("/revenue/:timeframe", async (req, res) => {
+  const { timeframe } = req.params; // 'daily', 'monthly', 'yearly'
+  const { startDate, endDate } = req.query; // Expecting ISO date strings
 
-		const order = await Order.findById(id);
+  // Define the MongoDB aggregation pipeline
+  let groupBy = {};
+  switch (timeframe) {
+    case 'daily':
+      groupBy = { $dateToString: { format: "%Y-%m-%d", date: "$orderDate" } };
+      break;
+    case 'monthly':
+      groupBy = { $dateToString: { format: "%Y-%m", date: "$orderDate" } };
+      break;
+    case 'yearly':
+      groupBy = { $dateToString: { format: "%Y", date: "$orderDate" } };
+      break;
+    default:
+      return res.status(400).json({ error: "Invalid timeframe specified" });
+  }
 
-		if (!order) {
-			return res.status(404).json({ error: "Order not found" });
-		}
+  try {
+    const revenueData = await Order.aggregate([
+      {
+        $match: {
+          status: "paid",
+          orderDate: {
+            $gte: new Date(startDate),
+            $lte: new Date(endDate)
+          }
+        }
+      },
+      {
+        $group: {
+          _id: groupBy,
+          totalRevenue: { $sum: "$totalPrice" },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } } // Sort by date ascending
+    ]);
 
-		res.json(order);
-	} catch (err) {
-		console.error(err);
-		res.status(500).json({ error: "Server error" });
-	}
+    res.json(revenueData);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
+  
 
 // Get unpaid orders (unprocessed, then processed)
 router.get("/unpaid", async (req, res) => {
@@ -58,6 +89,24 @@ router.get("/unpaid", async (req, res) => {
 		res.json(unpaidOrders);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
+	}
+});
+
+// Get order by id
+router.get("/:id", async (req, res) => {
+	try {
+		const { id } = req.params;
+
+		const order = await Order.findById(id);
+
+		if (!order) {
+			return res.status(404).json({ error: "Order not found" });
+		}
+
+		res.json(order);
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: "Server error" });
 	}
 });
 
@@ -105,8 +154,6 @@ router.post("/", async (req, res) => {
 	}
   });
 
-module.exports = router;
-
 // Update order status to "unprocessed"
 router.patch("/:orderId/unprocessed", async (req, res) => {
 	try {
@@ -127,12 +174,12 @@ router.patch("/:orderId/unprocessed", async (req, res) => {
 router.patch("/:orderId/processed", async (req, res) => {
 	try {
 	  const { orderId } = req.params;
-  
 	  const order = await Order.findById(orderId);
-  
 	  if (!order) {
 		return res.status(404).json({ error: "Order not found" });
 	  }
+  
+	  let lowStockProducts = []; // Array to keep track of low stock products
   
 	  // Decrease product quantity for stockable products
 	  for (let product of order.products) {
@@ -140,6 +187,9 @@ router.patch("/:orderId/processed", async (req, res) => {
   
 		if (dbProduct.stockable) {
 		  dbProduct.qty--;
+		  if (dbProduct.qty < 10) {
+			lowStockProducts.push(dbProduct); // Add to low stock array
+		  }
 		  await dbProduct.save();
 		}
 	  }
@@ -150,12 +200,16 @@ router.patch("/:orderId/processed", async (req, res) => {
 		{ new: true }
 	  );
   
-	  res.status(200).json(updatedOrder);
+	  // Include low stock information in the response
+	  res.status(200).json({
+		updatedOrder,
+		lowStockProducts: lowStockProducts.length > 0 ? lowStockProducts : null
+	  });
 	} catch (error) {
 	  res.status(400).json({ message: error.message });
 	}
   });
-
+  
 // Update order status to "paid"
 router.patch("/:orderId/paid", async (req, res) => {
 	try {

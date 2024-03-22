@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { useUser } from "../contexts/UserContext"; // Import useUser hook
 
@@ -19,7 +20,7 @@ const Login = ({ navigation }) => {
 
   const handleLogin = () => {
     setLoading(true);
-    const loginUrl = "https://nl-app.onrender.com/users/login";
+    const loginUrl = "http://208.109.231.135/users/login";
 
     fetch(loginUrl, {
       method: "POST",
@@ -47,13 +48,23 @@ const Login = ({ navigation }) => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        Alert.alert("Login Error", "Invalid username or password.");
+        Alert.alert("Login Error", "Ongeldige gebruikersnaam/wachtwoord.");
         setLoading(false);
       });
   };
 
   return (
     <View style={styles.container}>
+      <View style={styles.logocontainer}>
+        <Image
+          style={{ width: 70, height: 70 }}
+          source={require("../../assets/AceLogo.png")}
+        />
+        <Text style={[styles.logo, { color: "#311213", marginLeft: 20 }]}>
+          Ace Lounge
+        </Text>
+      </View>
+
       <TextInput
         style={styles.input}
         placeholder="Gebruikersnaam"
@@ -88,8 +99,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#e0d5d6",
     paddingHorizontal: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    paddingTop: 100,
+    //justifyContent: "center",
+    //alignItems: "center",
+  },
+  logocontainer: {
+    flexDirection: "row",
+    marginBottom: 100,
+  },
+  logo: {
+    fontSize: 35,
+    fontWeight: "bold",
   },
   input: {
     width: "100%",

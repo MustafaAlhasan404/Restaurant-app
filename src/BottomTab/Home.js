@@ -14,18 +14,36 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import OrdersToDo from "../Components/OrdersToDo";
 import FloatingButton from "../Components/FloatingButton";
 import axios from "axios";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 const Home = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused(); // Hook to check if the screen is focused
   const [reservations, setReservations] = useState([]);
   const [selectedReservationId, setSelectedReservationId] = useState(null);
+  const [lowStockProducts, setLowStockProducts] = useState([]);
+
+  const fetchLowStockProducts = useCallback(async () => {
+    try {
+      const response = await axios.get("http://208.109.231.135/products"); // Replace with your actual API endpoint
+      const lowStock = response.data.filter(
+        (product) => product.stockable && product.qty < 10
+      );
+      setLowStockProducts(lowStock);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchLowStockProducts();
+    }
+  }, [isFocused, fetchLowStockProducts]);
 
   const fetchReservations = useCallback(async () => {
     try {
-      const response = await axios.get(
-        "https://nl-app.onrender.com/reservations"
-      );
+      const response = await axios.get("http://208.109.231.135/reservations");
       const today = new Date();
       let todaysReservations = response.data.filter((reservation) => {
         const reservationDate = new Date(reservation.dateTime);
@@ -67,6 +85,30 @@ const Home = () => {
         <Header name="Home" />
       </SafeAreaView>
       <View style={styles.maincontent}>
+        {lowStockProducts.length > 0 && (
+          <View>
+            <View style={{ flexDirection: "row", marginTop: 20 }}>
+              <MaterialIcons
+                color="#e27b00"
+                size={24}
+                name="warning"
+                style={{ marginTop: -2 }}
+              />
+              <Text style={styles.contentheader}>Voorraad bijna op:</Text>
+            </View>
+            <View style={styles.lowStockContainer}>
+              {lowStockProducts.map((product) => (
+                <View key={product._id} style={styles.lowStockItem}>
+                  <Text style={styles.lowStockText}>{product.name}</Text>
+                  <Text style={styles.lowStockText}>
+                    Huidige voorraad: {product.qty}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+
         <OrdersToDo />
 
         <View
@@ -170,4 +212,32 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   // ... other styles you may have
+  lowStockContainer: {
+    marginTop: 15,
+    paddingHorizontal: 13,
+    paddingVertical: 8,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
+  lowStockHeader: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#e27b00",
+  },
+  lowStockItem: {
+    paddingVertical: 5,
+    borderBottomColor: "#eee",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  lowStockText: {
+    fontSize: 14,
+    fontWeight: "400",
+  },
 });

@@ -82,7 +82,7 @@ const EditReservation = ({ route, navigation }) => {
       console.log("Attempting to save:", updatedReservation);
 
       const response = await axios.patch(
-        `https://nl-app.onrender.com/reservations/${reservation._id}`,
+        `http://208.109.231.135/reservations/${reservation._id}`,
         updatedReservation
       );
 

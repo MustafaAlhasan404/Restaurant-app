@@ -1,10 +1,17 @@
 import React, { useState } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  TouchableNativeFeedback,
+} from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Toast from "react-native-toast-message";
 
 // State
-import { useSelector, useDispatch } from "react-redux";
-import { addItem, removeItem } from "../State/orderSlice";
+import { useDispatch } from "react-redux";
+import { addItem } from "../State/orderSlice";
 
 const MenuItem = ({ menuItem }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -17,9 +24,10 @@ const MenuItem = ({ menuItem }) => {
 
   const handleSelectOption = (optionName, optionPrice) => {
     setSelectedOptions((prevOptions) => {
-      if (
-        prevOptions.findIndex((option) => option.name === optionName) !== -1
-      ) {
+      const optionIndex = prevOptions.findIndex(
+        (option) => option.name === optionName
+      );
+      if (optionIndex !== -1) {
         // option already exists, remove it
         setTotalPrice((currPrice) => currPrice - optionPrice);
         return prevOptions.filter((option) => option.name !== optionName);
@@ -42,14 +50,23 @@ const MenuItem = ({ menuItem }) => {
       })
     );
     resetItem();
+    // Show a toast message
+    Toast.show({
+      type: "success",
+      position: "bottom",
+      text1: "Item added to order!",
+      visibilityTime: 4000,
+      autoHide: true,
+      topOffset: 30,
+      bottomOffset: 40,
+    });
   };
 
   const renderOptions = () => {
     return menuItem.options.map((option, index) => {
-      const isSelected =
-        selectedOptions.findIndex(
-          (selectedOption) => selectedOption.name === option.name
-        ) !== -1;
+      const isSelected = selectedOptions.some(
+        (selectedOption) => selectedOption.name === option.name
+      );
 
       return (
         <Pressable
@@ -69,7 +86,7 @@ const MenuItem = ({ menuItem }) => {
               </View>
               <Text style={styles.menuItemOptionName}>{option.name}</Text>
             </View>
-            <Text>€{option.price.toFixed(2)}</Text>
+            <Text>SRD {option.price.toFixed(2)}</Text>
           </View>
         </Pressable>
       );
@@ -83,21 +100,23 @@ const MenuItem = ({ menuItem }) => {
           <Text style={styles.menuItemName}>{menuItem.name}</Text>
           <Text style={styles.menuItemIngredients}>{menuItem.ingredients}</Text>
         </View>
-        <Text style={styles.menuItemPrice}>€{menuItem.price.toFixed(2)}</Text>
+        <Text style={styles.menuItemPrice}>SRD {menuItem.price.toFixed(2)}</Text>
       </View>
 
       <View style={styles.menuItemOptions}>{renderOptions()}</View>
 
       <View style={styles.menuItemFooter}>
         <Text style={styles.menuItemPrice}>
-          Total: €{totalPrice.toFixed(2)}
+          Total: SRD {totalPrice.toFixed(2)}
         </Text>
         <Pressable
-          style={styles.addButton}
-          onPress={() => handleSelectProduct()}
+          style={({ pressed }) => [
+            styles.addButton,
+            { backgroundColor: pressed ? "#f09324" : "#e27b00" },
+          ]}
+          onPress={handleSelectProduct}
         >
           <MaterialCommunityIcons name="plus" size={20} color="white" />
-          {/* <Text style={styles.buttontext}>Add</Text> */}
         </Pressable>
       </View>
     </View>
