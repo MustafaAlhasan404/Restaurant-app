@@ -47,8 +47,8 @@ router.get("/revenue/:timeframe", async (req, res) => {
           status: "paid",
           orderDate: {
             $gte: new Date(startDate),
-            $lte: new Date(endDate)
-          }
+			$lte: new Date(new Date(endDate).setHours(23, 59, 59, 999))
+		}
         }
       },
       {

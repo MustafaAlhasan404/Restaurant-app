@@ -129,6 +129,7 @@ function RootStackNavigator() {
           },
           headerTintColor: "#e27b00",
           headerTitle: "Nieuwe medewerker",
+          headerBackTitleVisible: false
         }}
       />
       <RootStack.Screen name="Main" component={TabNavigator} />
@@ -141,7 +142,9 @@ function StackNavigator() {
       <Stack.Screen
         name="HomeScreen"
         component={Home}
-        options={{ headerShown: false }}
+        options={{ headerShown: false,
+          headerBackTitleVisible: false
+         }}
       />
 
       <Stack.Screen
@@ -153,6 +156,7 @@ function StackNavigator() {
             backgroundColor: "#311213",
           },
           headerTintColor: "#e27b00",
+          headerBackTitleVisible: false
         }}
       />
 
@@ -166,6 +170,7 @@ function StackNavigator() {
           },
           headerTintColor: "#e27b00",
           headerTitle: "Alle reserveringen",
+          headerBackTitleVisible: false
         }}
       />
 
@@ -179,6 +184,7 @@ function StackNavigator() {
           },
           headerTintColor: "#e27b00",
           headerTitle: "Nieuwe reservering",
+          headerBackTitleVisible: false
         }}
       />
 
@@ -192,6 +198,7 @@ function StackNavigator() {
           },
           headerTintColor: "#e27b00",
           headerTitle: "Reservering bewerken",
+          headerBackTitleVisible: false
         }}
       />
       <Stack.Screen
@@ -203,6 +210,8 @@ function StackNavigator() {
             backgroundColor: "#311213",
           },
           headerTintColor: "#e27b00",
+          headerTitle: "Nieuw product",
+          headerBackTitleVisible: false
         }}
       />
       <Stack.Screen
@@ -214,7 +223,8 @@ function StackNavigator() {
             backgroundColor: "#311213",
           },
           headerTintColor: "#e27b00",
-          headerTitle: "Bestelling bewerken",
+          headerTitle: "Edit Bestelling",
+          headerBackTitleVisible: false
         }}
       />
       <Stack.Screen
@@ -226,7 +236,8 @@ function StackNavigator() {
             backgroundColor: "#311213",
           },
           headerTintColor: "#e27b00",
-          headerTitle: "Product bijwerken",
+          headerTitle: "Edit MenuKaart",
+          headerBackTitleVisible: false
         }}
       />
        <Stack.Screen
@@ -239,6 +250,7 @@ function StackNavigator() {
           },
           headerTintColor: "#e27b00",
           headerTitle: "Omzetcijfers",
+          headerBackTitleVisible: false
         }}
       />
     </Stack.Navigator>

@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Nethrlands-App",
-    "slug": "restaurant-app",
+    "name": "Ace Lounge",
+    "slug": "aceloungeres",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/AceLogo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -20,25 +20,38 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/AceLogo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "Netherlands.app"
+      "package": "aceloungesu.app",
+      "permissions": [
+        "android.permission.INTERNET"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "8852ced2-2da9-42da-9821-c2c2d8229549"
-      }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/8852ced2-2da9-42da-9821-c2c2d8229549"
+      "url": "https://u.expo.dev/3414ad64-db2c-430f-995c-1fbe9c25e8b4"
     },
-    "owner": "bigdickdaddies"
+    "owner": "mustafa_alhasan12",
+    "extra": {
+      "eas": {
+        "projectId": "3414ad64-db2c-430f-995c-1fbe9c25e8b4"
+      }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ]
   }
 }
