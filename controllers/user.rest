@@ -1,0 +1,42 @@
+### Get all users
+GET http://localhost:3000/users
+
+### Get user by ID
+GET http://localhost:3000/users/1234567890abcdef12345678
+
+### Create new user
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "Name": "John Nakhoy",
+  "username": "Helloworld",
+  "password": "s3cr3t",
+  "role": "employee"
+}
+
+### Update user
+PATCH http://localhost:3000/users/65db3a5e644fc317e6a9b047
+Content-Type: application/json
+
+{
+  "Name": "Jane Nakhoy123",
+  "role": "employee"
+}
+
+### Delete user
+DELETE http://localhost:3000/users/1234567890abcdef12345678
+
+@host = http://localhost:3000
+@username = Hello
+@password = s3cr3t
+
+###
+
+POST {{host}}/users/login
+Content-Type: application/json
+
+{
+    "username": "{{username}}",
+    "password": "{{password}}"
+}

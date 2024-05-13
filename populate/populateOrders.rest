@@ -1,0 +1,83 @@
+POST http://localhost:3000/orders
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "product": "65e07c58711954e375ec49d6",
+      "selectedOptions": []
+    }
+  ],
+  "table": 1
+}
+
+###
+
+POST http://localhost:3000/orders  
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "product": "65e07c58711954e375ec49d6",
+      "selectedOptions": []
+    },
+    {
+      "product": "65e07c58711954e375ec49d6", 
+      "selectedOptions": []
+    }
+  ],
+  "table": 2
+}
+
+### 
+
+POST http://localhost:3000/orders
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "product": "65e07c58711954e375ec49da",
+      "selectedOptions": []
+    },
+    {
+      "product": "65e07c58711954e375ec49da",
+      "selectedOptions": []
+    }
+  ],
+  "table": 3  
+}
+
+###
+
+POST http://localhost:3000/orders
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "product": "65e07c58711954e375ec49da",
+      "selectedOptions": []
+    }
+  ],
+  "table": 4
+}
+###
+
+POST http://localhost:3000/orders
+Content-Type: application/json  
+
+{
+  "products": [
+    {
+      "product": "65e07c58711954e375ec49e2",
+      "selectedOptions": []
+    },
+    {
+      "product": "65e07c58711954e375ec49e2",
+      "selectedOptions": []
+    }
+  ],
+  "table": 69
+}

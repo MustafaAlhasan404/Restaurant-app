@@ -1,0 +1,31 @@
+### Get all orders
+GET https://vivid-primacy-416521.lm.r.appspot.com/orders
+role: employee
+
+### Get unpaid orders
+GET http://localhost:3000/orders/revenue/daily
+role: employee
+
+### Get order by ID 
+GET http://localhost:3000/orders/65dbad38a99e866200021810
+
+###
+// Change status to "processed"
+PATCH http://localhost:3000/orders/65dbad38a99e866200021810/processed
+
+###
+// Change status to "paid"  
+PATCH http://localhost:3000/orders/65dbad38a99e866200021810/paid
+
+###
+POST http://localhost:3000/orders
+Content-Type: application/json
+
+{
+  "products": [
+    {
+      "product": "65d7d82714056c7ab1b24562"
+    }
+  ],
+  "table": 5
+}
