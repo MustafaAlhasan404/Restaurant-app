@@ -1,9 +1,57 @@
 {
   "expo": {
+    "name": "Ace Lounge",
+    "slug": "acelounge",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/AceLogo.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "Netherlands.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/AceLogo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "aceloungesu.app",
+      "permissions": [
+        "android.permission.INTERNET"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/eba68b9d-0b97-4af5-af2a-fe71ea0daa67"
+    },
+    "owner": "aceloungeorginization",
     "extra": {
       "eas": {
         "projectId": "eba68b9d-0b97-4af5-af2a-fe71ea0daa67"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ]
   }
 }

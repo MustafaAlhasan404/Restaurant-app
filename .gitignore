@@ -1,14 +1,35 @@
-# Ignore all .log files
-*.log
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-# Ignore node_modules directory
+# dependencies
 node_modules/
 
-# Ignore all files in any directory named temp
-temp/
+# Expo
+.expo/
+dist/
+web-build/
 
-# Ignore a specific file
-config.env
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
 
-# Exclude files from being ignored
-!important.log
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
