@@ -105,17 +105,25 @@ const Receipt = ({ route }) => {
                 >{`SRD ${productMap[key].subtotal.toFixed(2)}`}</Text>
               </View>
             ))}
+            <View style={styles.tableRow}>
+              <Text style={[styles.itemText, styles.itemData]}>Tax</Text>
+              <Text style={[styles.itemText, styles.qtyData]}>-</Text>
+              <Text style={[styles.itemText, styles.subtotalData]}>
+                {`SRD ${order.tax.toFixed(2)}`}
+              </Text>
+            </View>
 
             <View style={styles.totalRow}>
               <Text style={styles.total}>Total</Text>
               <Text
                 style={[styles.total, styles.totalAmount]}
-              >{`SRD ${order.totalPrice.toFixed(2)}`}</Text>
+              >{`SRD ${order.totalPricePreTax.toFixed(2)}`}</Text>
             </View>
             <Text style={styles.date}>{currentDateTime.toLocaleString()}</Text>
             <Text style={styles.legal}>
               Thanks for visiting us. Scan below QR code and leave us a review!
             </Text>
+
             <Image
               source={require("../../assets/qrace.png")}
               style={styles.qrcode}
@@ -169,6 +177,7 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: 10, // Add margin bottom to increase spacing
   },
   header: {
     fontSize: 16,
@@ -198,7 +207,8 @@ const styles = StyleSheet.create({
   tableRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 5,
+    marginBottom: 10,
+    marginTop: 10, // Add margin bottom to increase spacing between menu items
   },
   itemText: {
     fontSize: 16,

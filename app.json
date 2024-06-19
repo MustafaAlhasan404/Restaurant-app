@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Ace Lounge",
-    "slug": "acelounge",
+    "slug": "aceloungenewaccount",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/AceLogo.png",
@@ -31,16 +31,15 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
+    "runtimeVersion": "1.0.0",
     "updates": {
-      "url": "https://u.expo.dev/eba68b9d-0b97-4af5-af2a-fe71ea0daa67"
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/317d5d85-ae7d-443a-9c5f-d69cdd8d8042"
     },
-    "owner": "aceloungeorginization",
+    "owner": "aceloungenew",
     "extra": {
       "eas": {
-        "projectId": "eba68b9d-0b97-4af5-af2a-fe71ea0daa67"
+        "projectId": "317d5d85-ae7d-443a-9c5f-d69cdd8d8042"
       }
     },
     "plugins": [
@@ -51,7 +50,8 @@
             "usesCleartextTraffic": true
           }
         }
-      ]
+      ],
+      "expo-asset"
     ]
   }
 }

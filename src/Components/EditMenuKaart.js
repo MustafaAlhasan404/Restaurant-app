@@ -175,7 +175,8 @@ const EditMenuKaart = () => {
       <Switch
         value={stockable}
         onValueChange={setStockable}
-        style={styles.switch}
+        trackColor={{ false: "#767577", true: "#e27b00" }} // Change the track color
+        thumbColor={stockable ? "#e27b00" : "#767577"} // Change the thumb color
       />
       {stockable && (
         <TextInput

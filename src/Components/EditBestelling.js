@@ -202,8 +202,6 @@ export function TabViewExample() {
 }
 
 const EditBestelling = () => {
-  // const [order, setOrder] = useState({});
-
   const route = useRoute();
   const orderId = route.params.order;
 
@@ -211,7 +209,8 @@ const EditBestelling = () => {
   const [notes, setNotes] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-
+  const [totalPricePreTax, setTotalPricePreTax] = useState(0);
+  const [tax, setTax] = useState(0);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -226,6 +225,8 @@ const EditBestelling = () => {
         setNotes(data.notes);
         setSelectedProducts(data.products);
         setTotalPrice(data.totalPrice);
+        setTotalPricePreTax(data.totalPricePreTax);
+        setTax(data.tax);
 
         dispatch(createOrder(data));
 
@@ -249,8 +250,23 @@ const EditBestelling = () => {
     setTotalPrice(price);
   }, [order, price]);
 
+  // Recalculate tax and total price whenever selectedProducts changes
+  useEffect(() => {
+    const calculateTotalPricePreTax = () => {
+      return selectedProducts.reduce((total, item) => {
+        return total + item.price;
+      }, 0);
+    };
+
+    const newTotalPricePreTax = calculateTotalPricePreTax();
+    const newTax = (newTotalPricePreTax / 1.1) * 0.1; // Adjusted tax calculation
+
+    setTotalPricePreTax(newTotalPricePreTax);
+    setTax(newTax);
+    setTotalPrice(newTotalPricePreTax + newTax);
+  }, [selectedProducts]);
+
   const handleSubmit = async (table, products) => {
-    // Check if no products are selected
     if (products.length === 0) {
       Alert.alert("Fout", "Selecteer minstens één product.");
       return;
@@ -273,6 +289,9 @@ const EditBestelling = () => {
         table: table,
         products: products,
         notes: notes,
+        totalPrice: totalPricePreTax + tax,
+        totalPricePreTax: totalPricePreTax,
+        tax: tax,
       }),
     });
     const data = await response.json();
@@ -311,23 +330,24 @@ const EditBestelling = () => {
               </Text>
             </View>
             <View key={selectedProducts.length}>
-              {order.items.map((item,index) => (
+              {order.items.map((item, index) => (
                 <View key={`${item.product}-${index}`}>
-                <AddedItem
-                  productID={item.product}
-                  selectedOptions={item.selectedOptions}
-                />
-              </View>
+                  <AddedItem
+                    productID={item.product}
+                    selectedOptions={item.selectedOptions}
+                  />
+                </View>
               ))}
             </View>
-            <View
-              style={[
-                styles.spaceBetweenRow,
-                { marginTop: 10, marginBottom: 10 },
-              ]}
-            >
-              <Text style={styles.menuItemName}>Totaal</Text>
-              <Text style={styles.menuItemPrice}>SRD {totalPrice.toFixed(2)}</Text>
+
+            <View style={[styles.spaceBetweenRow, styles.mro]}>
+              <Text style={styles.menuItemNameS}>Tax:</Text>
+              <Text style={styles.menuItemPriceS}>SRD {tax.toFixed(2)}</Text>
+            </View>
+
+            <View style={[styles.spaceBetweenRow, styles.mro]}>
+              <Text style={styles.menuItemName}>Totaal:</Text>
+              <Text style={styles.menuItemPrice}>SRD {(totalPricePreTax).toFixed(2)}</Text>
             </View>
           </View>
 
@@ -398,6 +418,7 @@ const styles = StyleSheet.create({
   },
   selectoption: {},
   label: {
+    marginTop:10,
     marginBottom: 7,
     fontWeight: "600",
   },
@@ -597,5 +618,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  menuItemNameS: {
+    fontSize: 15,
+    fontWeight: "400",
+    color: "#000000",
+  },
+  menuItemPriceS: {
+    color: "#000000",
+    fontWeight: "400",
+    fontSize: 15,
+  },
+  mro: {
+    marginTop: 8,
   },
 });

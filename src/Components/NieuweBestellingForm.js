@@ -198,6 +198,8 @@ const NieuweBestellingForm = () => {
   const [table, setTable] = useState("1");
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+
   // Empty cart when opening the form
   useEffect(() => {
     dispatch(emptyOrder());
@@ -209,13 +211,17 @@ const NieuweBestellingForm = () => {
   const order = useSelector((state) => state.order);
   const [selectedProducts, setSelectedProducts] = useState(order.items);
 
-  const navigation = useNavigation();
-
   useEffect(() => {
     // Sync local state with Redux on change
     setSelectedProducts(order.items);
     setTotalPrice(price);
   }, [order, price]);
+
+  // Calculate tax and final total
+  const taxRate = 0.10; // 10%
+  const amountExcludingTax = totalPrice / (1 + taxRate);
+  const tax = totalPrice - amountExcludingTax;
+  const finalTotal = totalPrice;
 
   const dispatch = useDispatch();
   const handleSubmit = async (table, products, notes) => {
@@ -223,6 +229,7 @@ const NieuweBestellingForm = () => {
     // Check if no products are selected
     if (products.length === 0) {
       Alert.alert("Fout", "Selecteer minimaal één product.");
+      setLoading(false); // Reset loading state
       return; // Exit the function early if no products are selected
     }
 
@@ -237,6 +244,8 @@ const NieuweBestellingForm = () => {
         table: table,
         products: products,
         notes: notes,
+        totalPrice: finalTotal,
+        totalPricePreTax: amountExcludingTax, // Include totalPricePreTax
       }),
     });
     const data = await response.json();
@@ -246,6 +255,7 @@ const NieuweBestellingForm = () => {
       dispatch(emptyOrder());
       Alert.alert("Voltooid", "Bestelling geplaatst.");
     }
+    setLoading(false); // Reset loading state
     navigation.navigate("HomeScreen");
   };
 
@@ -290,10 +300,14 @@ const NieuweBestellingForm = () => {
               ))}
             </View>
 
+            <View style={[styles.spaceBetweenRow, styles.mro]}>
+              <Text style={styles.menuItemNameS}>Tax:</Text>
+              <Text style={styles.menuItemPriceS}>SRD {tax.toFixed(2)}</Text>
+            </View>
 
             <View style={[styles.spaceBetweenRow, styles.mro]}>
               <Text style={styles.menuItemName}>Totaal:</Text>
-              <Text style={styles.menuItemPrice}>SRD {totalPrice.toFixed(2)}</Text>
+              <Text style={styles.menuItemPrice}>SRD {(finalTotal).toFixed(2)}</Text>
             </View>
           </View>
 
@@ -304,17 +318,17 @@ const NieuweBestellingForm = () => {
             onChangeText={setNotes}
           />
 
-<Pressable
-        style={styles.savebutton}
-        onPress={() => handleSubmit(table, selectedProducts, notes)}
-        disabled={loading} // Disable the button when loading
-      >
-        {loading ? (
-          <ActivityIndicator size="small" color="#fff" />
-        ) : (
-          <Text style={styles.buttontext}>Nieuwe bestelling toevoegen</Text>
-        )}
-      </Pressable>
+          <Pressable
+            style={styles.savebutton}
+            onPress={() => handleSubmit(table, selectedProducts, notes)}
+            disabled={loading} // Disable the button when loading
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text style={styles.buttontext}>Nieuwe bestelling toevoegen</Text>
+            )}
+          </Pressable>
         </View>
       </View>
     </View>
@@ -421,6 +435,16 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#e27b00",
   },
+  menuItemNameS: {
+    fontSize: 15,
+    fontWeight: "400",
+    color: "#000000",
+  },
+  menuItemPriceS: {
+    color: "#000000",
+    fontWeight: "400",
+    fontSize: 15,
+  },
   menuItemIngredients: {
     fontSize: 16,
     color: "#666",
@@ -440,7 +464,7 @@ const styles = StyleSheet.create({
     borderRadius: 5, // Rounded corners for option items
   },
   mro: {
-    marginTop: 15,
+    marginTop: 5,
   },
   menuItemOptionLabel: {
     display: "flex",

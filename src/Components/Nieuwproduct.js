@@ -97,7 +97,7 @@ const Nieuwproduct = () => {
         options,
       };
 
-      const response = await fetch("http://yourapi.com/products", {
+      const response = await fetch("http://208.109.231.135/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -175,8 +175,8 @@ const Nieuwproduct = () => {
         <Text style={styles.formlabel}>Voorraad bijhouden?</Text>
         <View style={styles.switchContainer}>
           <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={stockable ? "#f5dd4b" : "#f4f3f4"}
+            trackColor={{ false: "#767577", true: "#767570" }}
+            thumbColor={stockable ? "#e27b00" : "#767577"}
             ios_backgroundColor="#3e3e3e"
             onValueChange={setStockable}
             value={stockable}
