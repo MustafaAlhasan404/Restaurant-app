@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker"; // Import the Picker component
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import { BASE_URL } from '../../config';
 const EditMenuKaart = () => {
   const route = useRoute();
   const product = route.params.product; // Get the product data passed from Menukaart.js
@@ -73,7 +73,7 @@ const EditMenuKaart = () => {
       };
 
       const response = await fetch(
-        `http://208.109.231.135/products/${product._id}`,
+        `${BASE_URL}/products/${product._id}`,
         {
           method: "PATCH",
           headers: {

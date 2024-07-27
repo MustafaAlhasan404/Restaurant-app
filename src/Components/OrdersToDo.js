@@ -10,6 +10,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios"; // Import axios
 import Icon from "react-native-vector-icons/FontAwesome"; // Import Icon
+import { BASE_URL } from '../../config';
 const AccordionItem = ({ item, fetchOrders }) => {
   const [isOpened, setIsOpened] = useState(false);
   const navigation = useNavigation();
@@ -44,7 +45,7 @@ const AccordionItem = ({ item, fetchOrders }) => {
   // Function to change the order status
   const changeOrderStatus = async (orderId, newStatus) => {
     try {
-      let patchUrl = `http://208.109.231.135/orders/${orderId}/${newStatus}`;
+      let patchUrl = `${BASE_URL}/orders/${orderId}/${newStatus}`;
       const response = await axios.patch(patchUrl);
       if (response.status === 200) {
         // Call fetchOrders to refresh the list after status change
@@ -90,7 +91,7 @@ const OrdersToDo = () => {
   const fetchOrders = async () => {
     try {
       // Fetch all orders from the backend
-      const response = await fetch("http://208.109.231.135/orders");
+      const response = await fetch(`${BASE_URL}/orders`);
       const data = await response.json();
 
       // Filter out only unprocessed orders

@@ -18,6 +18,7 @@ import FloatingButton from "../Components/FloatingButton"; // Import the Floatin
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
 import { useFocusEffect } from '@react-navigation/native';
+import { BASE_URL } from '../../config';
 const renderTabBar = (props) => (
   <TabBar
     renderLabel={({ route, focused }) => (
@@ -53,7 +54,7 @@ const FirstRoute = () => {
     try {
       // Make a GET request to the server to fetch food category products
       const response = await fetch(
-        "http://208.109.231.135/products/categories/food"
+        `${BASE_URL}/products/categories/food`
       );
       const data = await response.json();
 
@@ -90,7 +91,7 @@ const FirstRoute = () => {
     try {
       // Make a DELETE request to the server to soft delete the product
       const response = await fetch(
-        `http://208.109.231.135/products/${productId}`,
+        `${BASE_URL}/products/${productId}`,
         {
           method: "DELETE",
           // If needed, include headers for authorization or other information
@@ -193,7 +194,7 @@ const SecondRoute = () => {
     try {
       // Make a GET request to the server to fetch food category products
       const response = await fetch(
-        "http://208.109.231.135/products/categories/drink"
+        `${BASE_URL}/products/categories/drink`
       );
       const data = await response.json();
 
@@ -237,7 +238,7 @@ const SecondRoute = () => {
     try {
       // Make a DELETE request to the server to soft delete the product
       const response = await fetch(
-        `http://208.109.231.135/products/${productId}`,
+        `${BASE_URL}/products/${productId}`,
         {
           method: "DELETE",
           // If needed, include headers for authorization or other information
@@ -340,7 +341,7 @@ const ThirdRoute = () => {
     try {
       // Make a GET request to the server to fetch food category products
       const response = await fetch(
-        "http://208.109.231.135/products/categories/snack"
+        `${BASE_URL}/products/categories/snack`
       );
       const data = await response.json();
 
@@ -384,7 +385,7 @@ const ThirdRoute = () => {
     try {
       // Make a DELETE request to the server to soft delete the product
       const response = await fetch(
-        `http://208.109.231.135/products/${productId}`,
+        `${BASE_URL}/products/${productId}`,
         {
           method: "DELETE",
           // If needed, include headers for authorization or other information

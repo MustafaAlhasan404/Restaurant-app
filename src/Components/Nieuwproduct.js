@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import RNPickerSelect from 'react-native-picker-select';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import { BASE_URL } from '../../config';
 const Nieuwproduct = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -97,7 +97,7 @@ const Nieuwproduct = () => {
         options,
       };
 
-      const response = await fetch("http://208.109.231.135/products", {
+      const response = await fetch(`${BASE_URL}/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

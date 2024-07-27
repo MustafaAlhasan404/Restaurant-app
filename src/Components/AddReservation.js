@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import axios from "axios";
-
+import { BASE_URL } from '../../config';
 const AddReservation = ({ navigation }) => {
   // Initialize state variables with default values for adding a new reservation
   const [name, setName] = useState("");
@@ -75,7 +75,7 @@ const AddReservation = ({ navigation }) => {
       console.log("Attempting to save:", newReservation);
 
       const response = await axios.post(
-        `http://208.109.231.135/reservations`,
+        `${BASE_URL}/reservations`,
         newReservation
       );
 

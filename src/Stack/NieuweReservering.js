@@ -12,7 +12,7 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { useUser } from "../contexts/UserContext";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import { BASE_URL } from '../../config';
 const ReservationItem = ({ item, onEdit, onDelete }) => {
   // Simplify the dateTime display without specifying a time zone
   const [datePart, timePart] = item.dateTime.split('T');
@@ -65,7 +65,7 @@ const NieuweReservering = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://208.109.231.135/reservations/${id}`);
+      await axios.delete(`${BASE_URL}/reservations/${id}`);
       setReservations(
         reservations.filter((reservation) => reservation._id !== id)
       );
@@ -78,7 +78,7 @@ const NieuweReservering = () => {
   const fetchReservations = async () => {
     try {
       const response = await axios.get(
-        "http://208.109.231.135/reservations"
+        `${BASE_URL}/reservations`
       );
       const sortedReservations = response.data.sort((a, b) => {
         return new Date(a.dateTime) - new Date(b.dateTime);

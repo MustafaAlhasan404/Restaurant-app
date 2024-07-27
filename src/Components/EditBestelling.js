@@ -26,7 +26,7 @@ import {
   emptyOrder,
 } from "../State/orderSlice";
 import { useNavigation } from "@react-navigation/native";
-
+import { BASE_URL } from '../../config';
 const renderTabBar = (props) => (
   <TabBar
     renderLabel={({ route, focused }) => (
@@ -61,7 +61,7 @@ const FirstRoute = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://208.109.231.135/products/categories/food"
+          `${BASE_URL}/products/categories/food`
         );
         const data = await response.json();
         // Filter out items with qty 0 or less
@@ -100,7 +100,7 @@ const SecondRoute = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://208.109.231.135/products/categories/drink"
+          `${BASE_URL}/products/categories/drink`
         );
         const data = await response.json();
         // Filter out items with qty 0 or less
@@ -139,7 +139,7 @@ const ThirdRoute = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://208.109.231.135/products/categories/snack"
+          `${BASE_URL}/products/categories/snack`
         );
         const data = await response.json();
         // Filter out items with qty 0 or less
@@ -218,7 +218,7 @@ const EditBestelling = () => {
     const fetchOrder = async () => {
       try {
         const response = await fetch(
-          `http://208.109.231.135/orders/${orderId}`
+          `${BASE_URL}/orders/${orderId}`
         );
         const data = await response.json();
         setTable(data.table.toString());
@@ -274,13 +274,13 @@ const EditBestelling = () => {
 
     console.log("Submitting order...");
     const deleteResponse = await fetch(
-      `http://208.109.231.135/orders/${orderId}`,
+      `${BASE_URL}/orders/${orderId}`,
       {
         method: "DELETE",
       }
     );
 
-    const response = await fetch(`http://208.109.231.135/orders`, {
+    const response = await fetch(`${BASE_URL}/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

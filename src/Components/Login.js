@@ -11,7 +11,7 @@ import {
   Image,
 } from "react-native";
 import { useUser } from "../contexts/UserContext"; // Import useUser hook
-
+import { BASE_URL } from '../../config';
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +20,7 @@ const Login = ({ navigation }) => {
 
   const handleLogin = () => {
     setLoading(true);
-    const loginUrl = "http://208.109.231.135/users/login";
+    const loginUrl =`${BASE_URL}/users/login`;
 
     fetch(loginUrl, {
       method: "POST",

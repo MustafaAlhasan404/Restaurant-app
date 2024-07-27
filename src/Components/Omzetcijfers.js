@@ -9,7 +9,7 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { BarChart } from "react-native-chart-kit";
 import axios from "axios";
-
+import { BASE_URL } from '../../config';
 const Omzetcijfers = () => {
   // Calculate last month's start and end dates
 // Calculate the start of the current month and today's date
@@ -30,7 +30,7 @@ const initialEndDate = today; // This is already today's date, so it's fine as i
   const fetchRevenueData = async () => {
     try {
       const response = await axios.get(
-        `http://208.109.231.135/orders/revenue/${timeframe}`,
+        `${BASE_URL}/orders/revenue/${timeframe}`,
         {
           params: {
             startDate: startDate.toISOString().split("T")[0],

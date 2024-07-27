@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import axios from "axios";
-
+import { BASE_URL } from '../../config';
 const EditReservation = ({ route, navigation }) => {
   const reservation = route.params?.reservation;
 
@@ -82,7 +82,7 @@ const EditReservation = ({ route, navigation }) => {
       console.log("Attempting to save:", updatedReservation);
 
       const response = await axios.patch(
-        `http://208.109.231.135/reservations/${reservation._id}`,
+        `${BASE_URL}/reservations/${reservation._id}`,
         updatedReservation
       );
 

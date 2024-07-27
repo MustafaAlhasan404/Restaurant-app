@@ -20,7 +20,7 @@ import AddedItem from "./AddedItem";
 import { useSelector, useDispatch } from "react-redux";
 import { emptyOrder } from "../State/orderSlice";
 import { useNavigation } from "@react-navigation/native";
-
+import { BASE_URL } from '../../config';
 const renderTabBar = (props) => (
   <TabBar
     renderLabel={({ route, focused }) => (
@@ -55,7 +55,7 @@ const FirstRoute = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://208.109.231.135/products/categories/food"
+          `${BASE_URL}/products/categories/food`
         );
         const data = await response.json();
         // Filter out items with qty 0 or less and not deleted
@@ -94,7 +94,7 @@ const SecondRoute = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://208.109.231.135/products/categories/drink"
+          `${BASE_URL}/products/categories/drink`
         );
         const data = await response.json();
         // Filter out items with qty 0 or less and not deleted
@@ -133,7 +133,7 @@ const ThirdRoute = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://208.109.231.135/products/categories/snack"
+          `${BASE_URL}/products/categories/snack`
         );
         const data = await response.json();
         // Filter out items with qty 0 or less and not deleted
@@ -235,7 +235,7 @@ const NieuweBestellingForm = () => {
 
     console.log("Submitting order...");
     console.log(products);
-    const response = await fetch("http://208.109.231.135/orders", {
+    const response = await fetch(`${BASE_URL}/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

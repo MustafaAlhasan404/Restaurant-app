@@ -9,7 +9,7 @@ import {
   StyleSheet,
   Switch,
 } from "react-native";
-
+import { BASE_URL } from '../../config';
 const Signup = ({ navigation }) => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -24,7 +24,7 @@ const Signup = ({ navigation }) => {
       return;
     }
 
-    const signupUrl = "http://208.109.231.135/users"; // Replace with your backend's actual URL
+    const signupUrl = `${BASE_URL}/users`; // Replace with your backend's actual URL
 
     fetch(signupUrl, {
       method: "POST",

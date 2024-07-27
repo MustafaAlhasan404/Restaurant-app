@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import { BASE_URL } from '../../config';
 // State
 import { useSelector, useDispatch } from "react-redux";
 import { addItem, removeItem } from "../State/orderSlice";
@@ -16,7 +16,7 @@ const AddedItem = ({ productID, selectedOptions }) => {
       try {
         console.log(productID);
         const response = await fetch(
-          `http://208.109.231.135/products/${productID}`
+          `${BASE_URL}/products/${productID}`
         );
         const data = await response.json();
         setMenuItem(data);

@@ -14,7 +14,7 @@ import OrdersToDo from "../Components/OrdersToDo";
 import FloatingButton from "../Components/FloatingButton";
 import axios from "axios";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-
+import { BASE_URL } from '../../config';
 const Home = () => {
   const isFocused = useIsFocused(); // Hook to check if the screen is focused
   const [reservations, setReservations] = useState([]);
@@ -23,7 +23,7 @@ const Home = () => {
 
   const fetchLowStockProducts = useCallback(async () => {
     try {
-      const response = await axios.get("http://208.109.231.135/products"); // Replace with your actual API endpoint
+      const response = await axios.get(`${BASE_URL}/products`);
       const lowStock = response.data.filter(
         (product) => product.stockable && product.qty < 10
       );
@@ -42,7 +42,7 @@ const Home = () => {
   const fetchReservations = useCallback(async () => {
     try {
       // Updated to use the new /today endpoint
-      const response = await axios.get("http://208.109.231.135/reservations/today");
+      const response = await axios.get(`${BASE_URL}/reservations/today`);
       setReservations(response.data);
     } catch (error) {
       console.error("Error fetching reservations:", error);
