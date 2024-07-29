@@ -6,6 +6,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "react-native-paper";
 import Nieuwproduct from "./src/Components/Nieuwproduct";
+import { ThemeProvider } from './src/contexts/ThemeContext';
 // Import UserProvider from the context file
 import { UserProvider } from "./src/contexts/UserContext";
 // Import screens and components
@@ -143,9 +144,10 @@ function StackNavigator() {
       <Stack.Screen
         name="HomeScreen"
         component={Home}
-        options={{ headerShown: false,
+        options={{
+          headerShown: false,
           headerBackTitleVisible: false
-         }}
+        }}
       />
 
       <Stack.Screen
@@ -241,7 +243,7 @@ function StackNavigator() {
           headerBackTitleVisible: false
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="Omzetcijfers"
         component={Omzetcijfers}
         options={{
@@ -254,7 +256,7 @@ function StackNavigator() {
           headerBackTitleVisible: false
         }}
       />
-             <Stack.Screen
+      <Stack.Screen
         name="Receipt"
         component={Receipt}
         options={{
@@ -279,11 +281,13 @@ export default function App() {
   return (
     // Wrap the entire application with UserProvider
     <Provider store={store}>
-      <UserProvider>
-        <NavigationContainer>
-          <RootStackNavigator />
-        </NavigationContainer>
-      </UserProvider>
+      <ThemeProvider>
+        <UserProvider>
+          <NavigationContainer>
+            <RootStackNavigator />
+          </NavigationContainer>
+        </UserProvider>
+      </ThemeProvider>
     </Provider>
   );
 }

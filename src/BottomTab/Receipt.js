@@ -71,7 +71,7 @@ const Receipt = ({ route }) => {
               }}
             >
               <Image
-                source={require("../../assets/AceLogo.png")}
+                source={require("../../assets/icon.png")}
                 style={styles.logo}
               />
               <View>

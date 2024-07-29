@@ -1,148 +1,137 @@
-// src/Components/Login.js
-import React, { useState } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import {
   View,
   Text,
   TextInput,
   Alert,
-  StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-  Image,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  Keyboard,
 } from "react-native";
-import { useUser } from "../contexts/UserContext"; // Import useUser hook
+import { useUser } from "../contexts/UserContext";
 import { BASE_URL } from '../../config';
+import { useTheme } from "../contexts/ThemeContext";
+
 const Login = ({ navigation }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [credentials, setCredentials] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const { setUser } = useUser(); // Use the useUser hook to access setUser
+  const { setUser } = useUser();
+  const { theme, isDark, toggleTheme } = useTheme();
+  const passwordInputRef = useRef(null);
 
-  const handleLogin = () => {
+  const handleInputChange = useCallback((field) => (value) => {
+    setCredentials(prev => ({ ...prev, [field]: value }));
+  }, []);
+
+  const handleLogin = useCallback(() => {
     setLoading(true);
-    const loginUrl =`${BASE_URL}/users/login`;
-
-    fetch(loginUrl, {
+    fetch(`${BASE_URL}/users/login`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error("Login failed");
-          setLoading(false);
-        }
+        if (!response.ok) throw new Error("Login failed");
         return response.json();
       })
       .then((data) => {
-        // Assuming the response contains the user object on successful login
-        console.log("Login successful:", data.user);
         setLoading(false);
-        setUser(data.user); // Set the user globally using the context
-        navigation.navigate("Main"); // Navigate to the main screen or dashboard after login
+        setUser(data.user);
+        navigation.navigate("Main");
       })
       .catch((error) => {
         console.error("Error:", error);
-        Alert.alert("Login Error", "Ongeldige gebruikersnaam/wachtwoord.");
+        Alert.alert("Login Error", "Invalid username/password.");
         setLoading(false);
       });
-  };
+  }, [credentials, setUser, navigation]);
+
+  const handleUsernameSubmit = useCallback(() => {
+    Keyboard.dismiss();
+    setTimeout(() => {
+      passwordInputRef.current?.focus();
+    }, 50);
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.logocontainer}>
-        <Image
-          style={{ width: 70, height: 70 }}
-          source={require("../../assets/AceLogo.png")}
-        />
-        <Text style={[styles.logo, { color: "#311213", marginLeft: 20 }]}>
-          Ace Lounge
-        </Text>
-      </View>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Gebruikersnaam"
-        value={username}
-        onChangeText={setUsername}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Wachtwoord"
-        value={password}
-        onChangeText={setPassword}
-        autoCapitalize="none"
-        secureTextEntry
-      />
-      <TouchableOpacity
-        disabled={loading}
-        // style={styles.button}
-        style={[styles.button, loading && styles.buttonLoading]}
-        onPress={handleLogin}
+    <SafeAreaView className={`flex-1 ${theme.background}`}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={theme.background} />
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
       >
-        {!loading && <Text style={styles.buttonText}>Inloggen</Text>}
-        {/* {loading && <Text style={styles.buttonText}>Logging in</Text>} */}
-        {loading && <ActivityIndicator size="small" color="#000000" />}
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity 
+          activeOpacity={1} 
+          onPress={Keyboard.dismiss} 
+          className="flex-1 px-8 justify-center"
+        >
+          <View className="items-center my-8">
+            <Text className={`text-5xl font-bold ${theme.text.primary} tracking-wide mb-2`}>
+              AceLounge
+            </Text>
+          </View>
+  
+          <View className={`${theme.surface} p-8 rounded-3xl shadow-xl`}>
+            <View className="mb-4">
+              <Text className={`${theme.text.secondary} text-sm font-semibold mb-2`}>Username</Text>
+              <TextInput
+                className={`w-full p-4 ${theme.input.border} rounded-xl ${theme.input.background} ${theme.text.primary}`}
+                placeholder="Enter your username"
+                placeholderTextColor={theme.text.tertiary}
+                value={credentials.username}
+                onChangeText={handleInputChange("username")}
+                autoCapitalize="none"
+                autoCorrect={false}
+                returnKeyType="next"
+                onSubmitEditing={handleUsernameSubmit}
+                blurOnSubmit={false}
+              />
+            </View>
+            
+            <View className="mb-6">
+              <Text className={`${theme.text.secondary} text-sm font-semibold mb-2`}>Password</Text>
+              <TextInput
+                ref={passwordInputRef}
+                className={`w-full p-4 ${theme.input.border} rounded-xl ${theme.input.background} ${theme.text.primary}`}
+                placeholder="Enter your password"
+                placeholderTextColor={theme.text.tertiary}
+                value={credentials.password}
+                onChangeText={handleInputChange("password")}
+                autoCapitalize="none"
+                secureTextEntry
+                returnKeyType="done"
+                onSubmitEditing={handleLogin}
+              />
+            </View>
+            
+            <TouchableOpacity
+              disabled={loading}
+              className={`w-full p-4 rounded-xl items-center ${
+                loading ? theme.primaryVariant : theme.primary
+              }`}
+              onPress={handleLogin}
+            >
+              {!loading && <Text className="text-white font-bold text-lg">Login</Text>}
+              {loading && <ActivityIndicator size="small" color="#ffffff" />}
+            </TouchableOpacity>
+          </View>
+  
+          <TouchableOpacity className="mt-4 items-center" onPress={toggleTheme}>
+            <Text className={`${theme.text.secondary} text-base font-semibold`}>Toggle Theme</Text>
+          </TouchableOpacity>
+  
+          <TouchableOpacity className="mt-4 items-center">
+            <Text className={`${theme.text.secondary} text-base font-semibold`}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#e0d5d6",
-    paddingHorizontal: 20,
-    paddingTop: 100,
-    //justifyContent: "center",
-    //alignItems: "center",
-  },
-  logocontainer: {
-    flexDirection: "row",
-    marginBottom: 100,
-  },
-  logo: {
-    fontSize: 35,
-    fontWeight: "bold",
-  },
-  input: {
-    width: "100%",
-    marginVertical: 10,
-    padding: 15,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 5,
-    backgroundColor: "white",
-  },
-  button: {
-    backgroundColor: "#e27b00",
-    padding: 15,
-    width: "100%",
-    borderRadius: 5,
-    alignItems: "center",
-    marginTop: 20,
-  },
-  buttonLoading: {
-    backgroundColor: "#e27b00",
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "600",
-  },
-  signupPrompt: {
-    marginTop: 20,
-    fontSize: 16,
-  },
-  signupLink: {
-    color: "#e27b00",
-    fontWeight: "bold",
-  },
-});
-
-export default Login;
+export default React.memo(Login);
