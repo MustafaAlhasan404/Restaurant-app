@@ -1,14 +1,12 @@
-// src/contexts/ThemeContext.tsx
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
 const lightTheme = {
   background: 'bg-gray-100',
   surface: 'bg-white',
-  primary: 'bg-blue-600',
-  primaryVariant: 'bg-blue-500',
-  secondary: 'bg-purple-400',
+  primary: 'bg-black',
+  accent: 'bg-orange-500',
   text: {
-    primary: 'text-gray-900',
+    primary: 'text-black',
     secondary: 'text-gray-600',
     tertiary: 'text-gray-400',
   },
@@ -16,22 +14,29 @@ const lightTheme = {
     background: 'bg-gray-50',
     border: 'border-gray-200',
   },
+  statusBar: {
+    backgroundColor: '#f3f4f6',
+    barStyle: 'dark-content',
+  },
 };
 
 const darkTheme = {
   background: 'bg-gray-900',
   surface: 'bg-gray-800',
-  primary: 'bg-purple-700',
-  primaryVariant: 'bg-purple-800',
-  secondary: 'bg-teal-400',
+  primary: 'bg-white',
+  accent: 'bg-orange-500',
   text: {
     primary: 'text-white',
-    secondary: 'text-gray-200',
+    secondary: 'text-gray-300',
     tertiary: 'text-gray-500',
   },
   input: {
     background: 'bg-gray-700',
     border: 'border-gray-600',
+  },
+  statusBar: {
+    backgroundColor: '#111827',
+    barStyle: 'light-content',
   },
 };
 

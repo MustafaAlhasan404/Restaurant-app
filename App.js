@@ -125,7 +125,7 @@ function RootStackNavigator() {
         name="Signup"
         component={Signup}
         options={{
-          headerShown: true,
+          headerShown: false,
           headerStyle: {
             backgroundColor: "#311213",
           },
