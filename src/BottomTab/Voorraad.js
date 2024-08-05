@@ -15,7 +15,7 @@ import { useUser } from "../contexts/UserContext";
 import FloatingButton from "../Components/FloatingButton";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { BASE_URL } from '../../config';
+
 const Voorraad = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,9 +35,9 @@ const Voorraad = () => {
   const fetchStockableProducts = async () => {
     try {
       const response = await fetch(
-        `${BASE_URL}/products/stock`
+        "http://208.109.231.135/products/stock"
       );
-      const data = await responsve.json();
+      const data = await response.json();
       // Filter out products that are not deleted and are stockable
       const stockableAndNotDeletedProducts = data.filter(
         (product) => product.stockable && !product.deleted
@@ -69,7 +69,7 @@ const Voorraad = () => {
   const handleUpdateQuantity = async () => {
     try {
       const response = await fetch(
-        `${BASE_URL}/products/stock/${editProductId}`,
+        `http://208.109.231.135/products/stock/${editProductId}`,
         {
           method: "PATCH",
           headers: {
@@ -96,7 +96,7 @@ const Voorraad = () => {
   const handleDelete = async (productId) => {
     try {
       const response = await fetch(
-        `${BASE_URL}/products/${productId}`,
+        `http://208.109.231.135/products/${productId}`,
         {
           method: "DELETE",
           headers: {

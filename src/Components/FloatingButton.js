@@ -1,69 +1,54 @@
 import React, { useState, useRef } from "react";
-import {
-  StyleSheet,
-  View,
-  Animated,
-  Text,
-  Pressable,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { View, Animated, Text, TouchableOpacity, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FAB } from "react-native-paper";
-import { useUser } from "../contexts/UserContext"; // Import useUser hook
+import { useUser } from "../contexts/UserContext";
+import { useTheme } from "../contexts/ThemeContext";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { BlurView } from 'expo-blur';
 
 const FloatingButton = () => {
   const [open, setOpen] = useState(false);
-  const animation = useRef(new Animated.Value(0)).current; // Use useRef to persist the animated value
-  const { user } = useUser(); // Use the useUser hook to access the user object
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const animation = useRef(new Animated.Value(0)).current;
+  const { user } = useUser();
+  const { theme } = useTheme();
   const navigation = useNavigation();
 
   const toggleMenu = () => {
-    const toValue = open ? 0 : 1;
-
-    Animated.spring(animation, {
-      toValue,
-      useNativeDriver: true,
-      friction: 5,
-    }).start();
-
-    setOpen(!open);
+    if (open) {
+      // Close the menu
+      Animated.spring(animation, {
+        toValue: 0,
+        useNativeDriver: true,
+        friction: 5,
+      }).start();
+      setOpen(false);
+      setIsMenuOpen(false);
+    } else {
+      // Open the menu
+      Animated.spring(animation, {
+        toValue: 1,
+        useNativeDriver: true,
+        friction: 5,
+      }).start();
+      setOpen(true);
+      setIsMenuOpen(true);
+    }
   };
 
-  const NweBestellingStyle = {
+  const getAnimatedStyle = (index) => ({
     transform: [
       { scale: animation },
       {
-        translateX: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -80], // Adjust the horizontal position
-        }),
-      },
-      {
         translateY: animation.interpolate({
           inputRange: [0, 1],
-          outputRange: [0, -80],
+          outputRange: [0, -65 * (index + 1)],
         }),
       },
     ],
-  };
-
-  const NweReserveringStyle = {
-    transform: [
-      { scale: animation },
-      {
-        translateX: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -80], // Adjust the horizontal position
-        }),
-      },
-      {
-        translateY: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -140],
-        }),
-      },
-    ],
-  };
+    opacity: animation,
+  });
 
   const rotation = {
     transform: [
@@ -76,201 +61,122 @@ const FloatingButton = () => {
     ],
   };
 
-  const NieuweEmployeeStyle = {
-    transform: [
-      { scale: animation },
-      {
-        translateX: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -80], // Adjust the horizontal position
-        }),
-      },
-      {
-        translateY: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -200],
-        }),
-      },
-    ],
-  };
+  const renderButton = (title, icon, onPress, index) => (
+    <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+      <Animated.View style={[styles.button, getAnimatedStyle(index)]}>
+        <View style={styles.iconContainer}>
+          <Icon name={icon} size={24} color="#FFF" />
+        </View>
+        <Text style={styles.buttonText}>{title}</Text>
+      </Animated.View>
+    </TouchableOpacity>
+  );
 
-  const NieuweProductStyle = {
-    transform: [
-      { scale: animation },
-      {
-        translateX: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -80], // Adjust the horizontal position
-        }),
-      },
-      {
-        translateY: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -260],
-        }),
-      },
-    ],
-  };
-  const OmzetcijfersStyle = {
-    transform: [
-      { scale: animation },
-      {
-        translateX: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -80], // Adjust the horizontal position
-        }),
-      },
-      {
-        translateY: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -320], // Adjust the vertical position
-        }),
-      },
-    ],
-  };
+  const BlurredOverlay = () => (
+    <TouchableWithoutFeedback onPress={toggleMenu}>
+      <BlurView 
+        intensity={200} 
+        style={StyleSheet.absoluteFill} 
+        tint="Dark"
+      />
+    </TouchableWithoutFeedback>
+  );
 
   return (
-    <View style={[styles.container]}>
-      {user && user.role === "manager" && (
-        <TouchableWithoutFeedback>
-          <Animated.View
-            style={[styles.button, styles.secondary, NieuweProductStyle]}
-          >
-            <Pressable
-              onPress={() => {
-                toggleMenu(); // Close the menu when an option is selected
-                navigation.navigate("Nieuw product"); // Navigate to AddVoorraad
-              }}
-            >
-              <Text style={[styles.text, { fontWeight: 500 }]}>
-                Nieuw product
-              </Text>
-            </Pressable>
-          </Animated.View>
-        </TouchableWithoutFeedback>
-      )}
-
-      {user && user.role === "manager" && (
-        <TouchableWithoutFeedback>
-          <Animated.View
-            style={[styles.button, styles.secondary, NieuweEmployeeStyle]}
-          >
-            <Pressable
-              onPress={() => {
-                toggleMenu(); // Close the menu when an option is selected
-                navigation.navigate("Signup"); // Navigate to Signup
-              }}
-            >
-              <Text style={[styles.text, { fontWeight: 500 }]}>
-                Nieuwe medewerker
-              </Text>
-            </Pressable>
-          </Animated.View>
-        </TouchableWithoutFeedback>
-      )}
-
-      <TouchableWithoutFeedback>
-        <Animated.View
-          style={[styles.button, styles.secondary, NweReserveringStyle]}
-        >
-          <Pressable
-            onPress={() => {
-              toggleMenu(); // Close the menu when an option is selected
-              navigation.navigate("Nieuwe reservering"); // Navigate to NieuweReservering
-            }}
-          >
-            <Text style={[styles.text, { fontWeight: 500 }]}>
-              Bekijk reserveringen
-            </Text>
-          </Pressable>
-        </Animated.View>
-      </TouchableWithoutFeedback>
-      <TouchableWithoutFeedback>
-        <Animated.View
-          style={[styles.button, styles.secondary, NweBestellingStyle]}
-        >
-          <Pressable
-            onPress={() => {
-              toggleMenu(); // Close the menu when an option is selected
-              navigation.navigate("Nieuwe bestelling"); // Navigate to NieuweBestelling
-            }}
-          >
-            <Text style={[styles.text, { fontWeight: 500 }]}>
-              Nieuwe bestelling
-            </Text>
-          </Pressable>
-        </Animated.View>
-      </TouchableWithoutFeedback>
-
-      {user && user.role === "manager" && (
-  <TouchableWithoutFeedback>
-    <Animated.View
-      style={[styles.button, styles.secondary, OmzetcijfersStyle]}
-    >
-      <Pressable
-        onPress={() => {
-          toggleMenu(); // Close the menu when an option is selected
-          navigation.navigate("Omzetcijfers"); // Navigate to Omzetcijfers
-        }}
-      >
-        <Text style={[styles.text, { fontWeight: 500 }]}>
-          Omzetcijfers
-        </Text>
-      </Pressable>
-    </Animated.View>
-  </TouchableWithoutFeedback>
-)}
-
-      <FAB
-        style={[styles.fab, rotation]}
-        icon="plus"
-        color="white"
-        onPress={toggleMenu} // Make sure this is correctly bound
-      />
-    </View>
+    <TouchableWithoutFeedback onPress={isMenuOpen ? toggleMenu : null}>
+      <View style={styles.container}>
+        {isMenuOpen && <BlurredOverlay />}
+        {user && user.role === "manager" && (
+          <>
+            {renderButton("Add product", "hamburger-plus", () => {
+              toggleMenu();
+              navigation.navigate("Nieuw product");
+            }, 4)}
+            {renderButton("Add Employee", "account-plus", () => {
+              toggleMenu();
+              navigation.navigate("Signup");
+            }, 3)}
+            {renderButton("Statistics", "chart-line", () => {
+              toggleMenu();
+              navigation.navigate("Omzetcijfers");
+            }, 2)}
+          </>
+        )}
+        {renderButton("Reservations", "calendar-check", () => {
+          toggleMenu();
+          navigation.navigate("Nieuwe reservering");
+        }, 1)}
+        {renderButton("Add Order", "cart-plus", () => {
+          toggleMenu();
+          navigation.navigate("Nieuwe bestelling");
+        }, 0)}
+        <FAB
+          style={[styles.fab, rotation]}
+          icon="plus"
+          color="#FFF"
+          onPress={toggleMenu}
+        />
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
-export default FloatingButton;
-
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    bottom: 20,
-    right: 20,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
   },
   button: {
-    position: "absolute",
-    width: 48,
-    height: 48,
-    borderRadius: 100,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowColor: "#333",
-    shadowOffset: { height: 3, width: 0 },
-    elevation: 2,
+    position: 'absolute',
+    right: 10,
+    bottom: 110,
+    backgroundColor: '#e27b00',
+    borderRadius: 30,
+    width: 220,
+    height: 56,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  secondary: {
-    width: 190,
-    height: "auto",
-    borderRadius: 10,
-    backgroundColor: "#fce9d2",
-    borderWidth: 1,
-    borderColor: "#dedede",
-    paddingVertical: 15,
-    paddingHorizontal: 5,
-    position: "absolute",
-    right: -90,
+  iconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  text: {
-    color: "black",
+  buttonText: {
+    marginLeft: 10,
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   fab: {
-    backgroundColor: "#e27b00",
-    borderRadius: 100,
-    padding: 7,
+    position: 'absolute',
+    right: 10,
+    bottom: 110,
+    backgroundColor: '#e27b00',
+    borderRadius: 30,
+    width: 56,
+    height: 56,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
   },
 });
+
+export default FloatingButton;
