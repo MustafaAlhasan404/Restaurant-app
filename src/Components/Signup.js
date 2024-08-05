@@ -1,52 +1,50 @@
-import React, { useState, useCallback } from "react";
+// src/Components/Signup.js
+import React, { useState } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
-  StatusBar,
-  KeyboardAvoidingView,
-  Platform,
   Alert,
+  StyleSheet,
   Switch,
   KeyboardAvoidingView, // New import for keyboard handling
   ScrollView, // New import for scrollable content
   Platform, // New import for platform-specific behavior
 } from "react-native";
-import { useTheme } from "../contexts/ThemeContext";
 import { BASE_URL } from '../../config';
-import { Ionicons } from '@expo/vector-icons';
 
 const Signup = ({ navigation }) => {
-  const [credentials, setCredentials] = useState({ name: "", username: "", password: "" });
-  const [isManager, setIsManager] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { theme, isDark, toggleTheme } = useTheme();
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isManager, setIsManager] = useState(false); // Toggle state
 
-  const handleInputChange = useCallback((field) => (value) => {
-    setCredentials(prev => ({ ...prev, [field]: value }));
-  }, []);
-
-  const handleSignup = useCallback(() => {
-    if (credentials.password.length < 8) {
+  // Function to handle the signup action
+  const handleSignup = () => {
+    // Check if the password length is less than 8 characters
+    if (password.length < 8) {
       Alert.alert("Fout", "Wachtwoord moet minimaal 8 tekens zijn.");
       return;
     }
 
-    setLoading(true);
-    fetch(`${BASE_URL}/users`, {
+    const signupUrl = `${BASE_URL}/users`; // Replace with your backend's actual URL
+
+    fetch(signupUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
-        Name: credentials.name,
-        username: credentials.username,
-        password: credentials.password,
-        role: isManager ? "manager" : "employee",
+        Name: name,
+        username: username,
+        password: password,
+        role: isManager ? "manager" : "employee", // Set role based on toggle
       }),
     })
       .then((response) => {
         if (!response.ok) {
+          // If the response status code is 400, it could be a validation error like duplicate username
           if (response.status === 400) {
             return response.json().then((data) => {
               throw new Error(data.message || "Accountregistratie mislukt");
@@ -58,7 +56,9 @@ const Signup = ({ navigation }) => {
         return response.json();
       })
       .then((data) => {
+        // Assuming the response contains the created user object
         console.log("Accountregistratie gelukt:", data);
+        // Navigate to the login page after successful signup
         navigation.navigate("Login");
       })
       .catch((error) => {
@@ -67,100 +67,113 @@ const Signup = ({ navigation }) => {
           "Accountregistatie fout",
           "Er was een probleem met de accountregistratie. Controleer alle velden."
         );
-      })
-      .finally(() => setLoading(false));
-  }, [credentials, isManager, navigation]);
+      });
+  };
 
   return (
-    <SafeAreaView className={`flex-1 ${theme.background}`}>
-      <StatusBar backgroundColor={theme.statusBar.backgroundColor} barStyle={theme.statusBar.barStyle} />
-      
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1 justify-center px-6"
+    // New KeyboardAvoidingView to handle keyboard interactions
+    <KeyboardAvoidingView 
+      style={styles.container} 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={100}
+    >
+      {/* New ScrollView to make content scrollable */}
+      <ScrollView 
+        contentContainerStyle={styles.scrollViewContent}
+        keyboardShouldPersistTaps="handled"
       >
-        <View className={`${theme.surface} p-6 rounded-3xl shadow-md`}>
-          <Text className={`text-2xl font-bold ${theme.text.primary} mb-6`}>Sign Up</Text>
+        <Text style={styles.screendescription}>
+          Voeg hier een nieuwe medewerker toe. Noteer de gebruikersnaam en het
+          wachtwoord ergens.
+        </Text>
 
-          <View className="space-y-4 mb-6">
-            <View className={`${theme.input.background} rounded-full flex-row items-center px-4 py-3`}>
-              <Ionicons name="person-outline" size={20} color={isDark ? "white" : "gray"} />
-              <TextInput
-                className={`flex-1 ml-2 ${theme.text.primary}`}
-                placeholder="Name"
-                placeholderTextColor={theme.text.tertiary}
-                value={credentials.name}
-                onChangeText={handleInputChange("name")}
-              />
-            </View>
-            <View className={`${theme.input.background} rounded-full flex-row items-center px-4 py-3`}>
-              <Ionicons name="at-outline" size={20} color={isDark ? "white" : "gray"} />
-              <TextInput
-                className={`flex-1 ml-2 ${theme.text.primary}`}
-                placeholder="Username"
-                placeholderTextColor={theme.text.tertiary}
-                value={credentials.username}
-                onChangeText={handleInputChange("username")}
-                autoCapitalize="none"
-              />
-            </View>
-            <View className={`${theme.input.background} rounded-full flex-row items-center px-4 py-3`}>
-              <Ionicons name="lock-closed-outline" size={20} color={isDark ? "white" : "gray"} />
-              <TextInput
-                className={`flex-1 ml-2 ${theme.text.primary}`}
-                placeholder="Password"
-                placeholderTextColor={theme.text.tertiary}
-                value={credentials.password}
-                onChangeText={handleInputChange("password")}
-                secureTextEntry
-              />
-            </View>
-            <View className="flex-row items-center justify-between mx-3">
-              <Text className={theme.text.secondary}>Role:</Text>
-              <View className="flex-row items-center">
-                <Text className={theme.text.secondary}>Employee</Text>
-                <Switch
-                  trackColor={{ false: theme.accent, true: theme.accent }}
-                  thumbColor={isManager ? theme.primary : theme.surface}
-                  onValueChange={() => setIsManager(prev => !prev)}
-                  value={isManager}
-                  className="mx-2"
-                />
-                <Text className={theme.text.secondary}>Manager</Text>
-              </View>
-            </View>
-          </View>
-
-          <TouchableOpacity
-            className={`${theme.primary} rounded-full items-center py-4 mb-4`}
-            onPress={handleSignup}
-            disabled={loading}
-          >
-            <Text className={`${isDark ? 'text-black' : 'text-white'} font-bold text-lg`}>
-              {loading ? 'Signing up...' : 'Sign Up'}
-            </Text>
-          </TouchableOpacity>
-
-          <View className="flex-row justify-center mb-4">
-            <Text className={theme.text.secondary}>Already have an account?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text className={`${theme.text.secondary} underline ml-2`}>Login</Text>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity 
-            className={`${theme.input.background} rounded-full flex-row items-center justify-center py-3`}
-            onPress={toggleTheme}
-          >
-            <Ionicons name={isDark ? "sunny-outline" : "moon-outline"} size={20} color={isDark ? "white" : "black"} />
-            <Text className={`ml-2 ${theme.text.primary}`}>
-              {isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            </Text>
-          </TouchableOpacity>
+        <Text style={styles.formlabel}>Voornaam medewerker:</Text>
+        <TextInput style={styles.input} value={name} onChangeText={setName} />
+        <Text style={styles.formlabel}>Gebruikersnaam:</Text>
+        <TextInput
+          style={styles.input}
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none" // New prop for better input handling
+          keyboardType="default" // New prop for appropriate keyboard type
+        />
+        <Text style={styles.formlabel}>Wachtwoord:</Text>
+        <TextInput
+          style={styles.input}
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+        <Text style={styles.formlabel}>Rol:</Text>
+        <View style={styles.toggleContainer}>
+          <Text style={styles.toggleLabel}>Personeel</Text>
+          <Switch
+            trackColor={{ false: "#e27b00", true: "#e27b00" }} // Adjusted to match the button color
+            thumbColor={isManager ? "#fff" : "#fff"} // Thumb color when off is grey, white when on
+            ios_backgroundColor="#ddd" // Background color for iOS when the switch is off
+            onValueChange={() => setIsManager((previousState) => !previousState)}
+            value={isManager}
+            style={styles.switch}
+          />
+          <Text style={styles.toggleLabel}>Manager</Text>
         </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        <TouchableOpacity style={styles.button} onPress={handleSignup}>
+          <Text style={styles.buttonText}>Nieuwe medewerker toevoegen</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
-export default React.memo(Signup);
+const styles = StyleSheet.create({
+  // New container style for KeyboardAvoidingView
+  container: {
+    flex: 1,
+    backgroundColor: "#e0d5d6", // Background color similar to Home.js
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingHorizontal: 20, // Horizontal padding similar to Home.js
+    paddingTop: 30,
+    paddingBottom: 20,
+  },
+  input: {
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 10,
+    marginBottom: 20,
+    borderRadius: 10,
+    fontSize: 14,
+    color: "#333",
+  },
+  toggleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  toggleLabel: {
+    fontSize: 14,
+    color: "#333", // Text color for the labels
+  },
+  switch: {
+    marginHorizontal: 10, // Space around the switch
+  },
+  button: {
+    backgroundColor: "#e27b00", // Button background color similar to Home.js
+    padding: 15,
+    width: "100%",
+    borderRadius: 5,
+    alignItems: "center", // Center text horizontally
+    marginTop: 20, // Margin top for button
+  },
+  screendescription: {
+    marginBottom: 40,
+  },
+  formlabel: { fontWeight: "700", fontSize: 14, marginBottom: 7 },
+  buttonText: {
+    color: "white", // Button text color
+    fontWeight: "600", // Font weight for button text
+  },
+});
+
+export default Signup;

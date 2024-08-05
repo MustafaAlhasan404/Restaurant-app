@@ -4,7 +4,7 @@
     "slug": "aceloungenewaccount",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/AceLogo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -20,7 +20,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
+        "foregroundImage": "./assets/AceLogo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "aceloungesu.app",
