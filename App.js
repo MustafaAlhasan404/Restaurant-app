@@ -1,3 +1,4 @@
+import "./global.css"
 import React from "react";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
@@ -27,7 +28,6 @@ import EditMenuKaart from "./src/Components/EditMenuKaart";
 import store from "./store";
 import { Provider } from "react-redux";
 import Omzetcijfers from "./src/Components/Omzetcijfers";
-
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 const RootStack = createStackNavigator();
@@ -38,7 +38,7 @@ function TabNavigator() {
       activeColor="#e27b00"
       inactiveColor="#e0d5d6"
       barStyle={{
-        position:'absolute',
+        position: 'absolute',
         backgroundColor: "#311213",
         height: 100,
       }}

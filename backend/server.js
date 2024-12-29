@@ -20,7 +20,7 @@ app.use("/orders", ordersRouter);
 app.use("/users", usersRouter);
 
 // MongoDB Connection
-const uri = "mongodb://Mustafa:00313Anamoe2903!Acepass123!@localhost:20313/AceLoungeDatabase";
+const uri = "mongodb://atlas-sql-67717cef74ee353776309d9c-gb5f4.a.query.mongodb.net/myVirtualDatabase?ssl=true&authSource=admin";
 
 async function connectToDatabase() {
     try {

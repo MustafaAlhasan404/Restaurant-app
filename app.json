@@ -29,7 +29,8 @@
       ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
     },
     "runtimeVersion": "1.0.0",
     "updates": {

@@ -5,18 +5,18 @@ import {
   Text,
   TextInput,
   Alert,
-  StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
   Image,
 } from "react-native";
-import { useUser } from "../contexts/UserContext"; // Import useUser hook
+import { useUser } from "../contexts/UserContext";
 import { BASE_URL } from '../../config';
+
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setUser } = useUser(); // Use the useUser hook to access setUser
+  const { setUser } = useUser();
 
   const handleLogin = () => {
     setLoading(true);
@@ -35,16 +35,14 @@ const Login = ({ navigation }) => {
       .then((response) => {
         if (!response.ok) {
           throw new Error("Login failed");
-          setLoading(false);
         }
         return response.json();
       })
       .then((data) => {
-        // Assuming the response contains the user object on successful login
         console.log("Login successful:", data.user);
         setLoading(false);
-        setUser(data.user); // Set the user globally using the context
-        navigation.navigate("Main"); // Navigate to the main screen or dashboard after login
+        setUser(data.user);
+        navigation.navigate("Main");
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -54,26 +52,26 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.logocontainer}>
+    <View className="flex-1 bg-[#e0d5d6] px-5 pt-24">
+      <View className="flex-row mb-24">
         <Image
-          style={{ width: 70, height: 70 }}
+          className="w-[70px] h-[70px]"
           source={require("../../assets/AceLogo.png")}
         />
-        <Text style={[styles.logo, { color: "#311213", marginLeft: 20 }]}>
+        <Text className="text-[35px] font-bold text-[#311213] ml-5">
           Ace Lounge
         </Text>
       </View>
 
       <TextInput
-        style={styles.input}
+        className="w-full my-2.5 p-4 border border-gray-400 rounded bg-white"
         placeholder="Gebruikersnaam"
         value={username}
         onChangeText={setUsername}
         autoCapitalize="none"
       />
       <TextInput
-        style={styles.input}
+        className="w-full my-2.5 p-4 border border-gray-400 rounded bg-white"
         placeholder="Wachtwoord"
         value={password}
         onChangeText={setPassword}
@@ -82,67 +80,14 @@ const Login = ({ navigation }) => {
       />
       <TouchableOpacity
         disabled={loading}
-        // style={styles.button}
-        style={[styles.button, loading && styles.buttonLoading]}
+        className={`bg-[#e27b00] p-4 w-full rounded items-center mt-5 ${loading ? 'opacity-70' : ''}`}
         onPress={handleLogin}
       >
-        {!loading && <Text style={styles.buttonText}>Inloggen</Text>}
-        {/* {loading && <Text style={styles.buttonText}>Logging in</Text>} */}
+        {!loading && <Text className="text-white font-semibold">Inloggen</Text>}
         {loading && <ActivityIndicator size="small" color="#000000" />}
       </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#e0d5d6",
-    paddingHorizontal: 20,
-    paddingTop: 100,
-    //justifyContent: "center",
-    //alignItems: "center",
-  },
-  logocontainer: {
-    flexDirection: "row",
-    marginBottom: 100,
-  },
-  logo: {
-    fontSize: 35,
-    fontWeight: "bold",
-  },
-  input: {
-    width: "100%",
-    marginVertical: 10,
-    padding: 15,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 5,
-    backgroundColor: "white",
-  },
-  button: {
-    backgroundColor: "#e27b00",
-    padding: 15,
-    width: "100%",
-    borderRadius: 5,
-    alignItems: "center",
-    marginTop: 20,
-  },
-  buttonLoading: {
-    backgroundColor: "#e27b00",
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "600",
-  },
-  signupPrompt: {
-    marginTop: 20,
-    fontSize: 16,
-  },
-  signupLink: {
-    color: "#e27b00",
-    fontWeight: "bold",
-  },
-});
 
 export default Login;
