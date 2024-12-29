@@ -20,8 +20,7 @@ app.use("/orders", ordersRouter);
 app.use("/users", usersRouter);
 
 // MongoDB Connection
-const uri = "mongodb://atlas-sql-67717cef74ee353776309d9c-gb5f4.a.query.mongodb.net/myVirtualDatabase?ssl=true&authSource=admin";
-
+const uri = "mongodb+srv://Mustafa:Mustafa00313@data.gb5f4.mongodb.net/?retryWrites=true&w=majority&appName=Data";
 async function connectToDatabase() {
     try {
         await mongoose.connect(uri, {

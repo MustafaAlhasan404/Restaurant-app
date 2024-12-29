@@ -3,11 +3,7 @@ const Reservation = require("../models/reservation"); // Replace with the correc
 
 // Connect to the MongoDB database
 mongoose.connect(
-    "mongodb+srv://Mustafa:Mustafa00313@cluster0.9n4bpm2.mongodb.net/?retryWrites=true&w=majority",
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    }
+  "mongodb+srv://Mustafa:Mustafa00313@data.gb5f4.mongodb.net/?retryWrites=true&w=majority&appName=Data"
 );
 
 // Create an array of reservation items
