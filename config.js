@@ -1,1 +1,1 @@
-export const BASE_URL = 'http://208.109.231.135';
+export const BASE_URL = 'https://restaurant-app-no2e.onrender.com';

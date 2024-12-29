@@ -9,9 +9,9 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "Name": "John Nakhoy",
-  "username": "Helloworld",
-  "password": "s3cr3t",
+  "Name": "employee",
+  "username": "employee",
+  "password": "employee",
   "role": "employee"
 }
 
